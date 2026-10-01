@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Background shape -->
+    <path
+        android:fillColor="#006A6A"
+        android:pathData="M24,0h60c13.25,0 24,10.75 24,24v60c0,13.25 -10.75,24 -24,24h-60c-13.25,0 -24,-10.75 -24,-24v-60c0,-13.25 10.75,-24 24,-24z"/>
+    <!-- Medical Cross Logo -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,28h12v20h20v12h-20v20h-12v-20h-20v-12h20z"/>
+</vector>
