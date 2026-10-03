@@ -1,10 +1,13 @@
 package com.medi.reminder
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.animateFloatAsState
@@ -40,6 +43,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalHospital
 import androidx.compose.material.icons.outlined.Medication
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
@@ -78,6 +82,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -86,10 +91,43 @@ import com.medi.reminder.ui.theme.Success
 import com.medi.reminder.ui.theme.SuccessContainer
 import kotlinx.coroutines.delay
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
 class MainActivity : ComponentActivity() {
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission is granted
+        } else {
+            // Explain to the user that the feature is unavailable
+        }
+    }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // Granted
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val dataManager = DataManager(applicationContext)
+        
+        askNotificationPermission()
+        AlarmScheduler.scheduleAll(applicationContext)
+
         setContent {
             MediTheme {
                 var showSplash by remember { mutableStateOf(true) }
@@ -100,7 +138,7 @@ class MainActivity : ComponentActivity() {
                 if (showSplash) {
                     MediSplashScreen()
                 } else {
-                    MediApp()
+                    MediApp(dataManager)
                 }
             }
         }
@@ -163,30 +201,64 @@ private val TODAY: Int get() = getTodayDayOfMonth()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MediApp() {
+fun MediApp(dataManager: DataManager) {
+    val context = LocalContext.current
+    var userProfile by remember { mutableStateOf(dataManager.loadUserProfile()) }
     var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
     var tab by remember { mutableStateOf("Today") }
-    var nextId by remember { mutableStateOf(100) }
-    val medicines = remember { mutableStateListOf(*initialMedicines.toTypedArray()) }
+
+    BackHandler(enabled = tab != "Today") {
+        tab = "Today"
+    }
+
+    var nextId by remember { mutableStateOf(dataManager.loadNextId()) }
+    val savedMedicines = remember { dataManager.loadMedicines() }
+    val medicines = remember { mutableStateListOf(*savedMedicines.toTypedArray()) }
     var editing by remember { mutableStateOf<Medicine?>(null) }
     var reminder by remember { mutableStateOf<Medicine?>(null) }
     var showCalendar by remember { mutableStateOf(false) }
 
     val scheduledMedicines = medicines.filter { isMedicineScheduledOnDate(it, selectedCalendar) }
-    val completed = scheduledMedicines.count { it.taken }
+    val completed = scheduledMedicines.count { it.isTakenOn(selectedCalendar) }
 
-    fun toggle(id: Int) {
+    fun persistMedicines() {
+        dataManager.saveMedicines(medicines)
+    }
+
+    fun toggle(id: Int, cal: Calendar) {
         val i = medicines.indexOfFirst { it.id == id }
-        if (i >= 0) medicines[i] = medicines[i].copy(taken = !medicines[i].taken)
+        if (i >= 0) {
+            val med = medicines[i]
+            val dateIso = getIsoDateForCalendar(cal)
+            val newTakenDates = med.takenDates.toMutableSet()
+            if (newTakenDates.contains(dateIso)) {
+                newTakenDates.remove(dateIso)
+            } else {
+                newTakenDates.add(dateIso)
+            }
+            medicines[i] = med.copy(takenDates = newTakenDates)
+            persistMedicines()
+            AlarmScheduler.scheduleNextAlarm(context, medicines[i])
+        }
     }
 
     fun save(med: Medicine) {
         val i = medicines.indexOfFirst { it.id == med.id }
         if (i >= 0) medicines[i] = med else medicines.add(med)
+        persistMedicines()
+        dataManager.saveNextId(nextId)
+        AlarmScheduler.scheduleNextAlarm(context, med)
     }
 
     fun delete(id: Int) {
         medicines.removeAll { it.id == id }
+        persistMedicines()
+        AlarmScheduler.cancelAlarm(context, id)
+    }
+
+    fun updateProfile(newProfile: UserProfile) {
+        userProfile = newProfile
+        dataManager.saveUserProfile(newProfile)
     }
 
     Scaffold(
@@ -216,9 +288,20 @@ fun MediApp() {
         ) {
             Spacer(Modifier.height(12.dp))
             TopBar(
+                userProfile = userProfile,
                 onBell = {
-                    reminder = medicines.firstOrNull { !it.taken } ?: medicines.firstOrNull()
+                    reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
                 },
+                onAmbulanceClick = {
+                    val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
+                    val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        // In case dialer not found
+                    }
+                },
+                onAvatarClick = { tab = "Profile" },
             )
             Spacer(Modifier.height(20.dp))
 
@@ -234,8 +317,18 @@ fun MediApp() {
                 ScheduleSection(
                     selectedCalendar = selectedCalendar,
                     medicines = scheduledMedicines,
-                    onToggle = { toggle(it) },
-                    onEdit = { editing = it },
+                    onToggle = { toggle(it, selectedCalendar) }
+                )
+            } else if (tab == "Medicine") {
+                MedicineListScreen(
+                    medicines = medicines,
+                    onEdit = { editing = it }
+                )
+            } else if (tab == "Profile") {
+                ProfileScreen(
+                    profile = userProfile,
+                    onSaveProfile = { updateProfile(it) },
+                    onBack = { tab = "Today" },
                 )
             } else {
                 EmptyView(tab) { tab = "Today" }
@@ -277,26 +370,51 @@ fun MediApp() {
             medicine = med,
             onSnooze = { reminder = null },
             onTake = {
-                toggle(med.id)
+                toggle(med.id, Calendar.getInstance())
                 reminder = null
             },
         )
     }
 }
 
+private fun getGreetingMessage(): String {
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    return when (hour) {
+        in 5..11 -> "Good morning"
+        in 12..16 -> "Good afternoon"
+        in 17..21 -> "Good evening"
+        else -> "Good night"
+    }
+}
+
 @Composable
-private fun TopBar(onBell: () -> Unit) {
+private fun TopBar(
+    userProfile: UserProfile,
+    onBell: () -> Unit,
+    onAmbulanceClick: () -> Unit,
+    onAvatarClick: () -> Unit,
+) {
     val cs = MaterialTheme.colorScheme
+    val greeting = getGreetingMessage()
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
-            Text("Good morning", style = MaterialTheme.typography.labelLarge, color = cs.onSurfaceVariant)
-            Text("Hi, Maya", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = cs.onSurface)
+            Text(greeting, style = MaterialTheme.typography.labelLarge, color = cs.onSurfaceVariant)
+            Text("Hi, ${userProfile.firstName}", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = cs.onSurface)
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilledTonalIconButton(
+                onClick = onAmbulanceClick,
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = cs.errorContainer,
+                    contentColor = cs.onErrorContainer,
+                ),
+            ) {
+                Icon(Icons.Outlined.LocalHospital, contentDescription = "Call Ambulance")
+            }
             FilledTonalIconButton(
                 onClick = onBell,
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
@@ -310,10 +428,16 @@ private fun TopBar(onBell: () -> Unit) {
                 Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(cs.primaryContainer),
+                    .background(cs.primaryContainer)
+                    .clickable { onAvatarClick() },
                 contentAlignment = Alignment.Center,
             ) {
-                Text("MB", color = cs.onPrimaryContainer, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
+                Text(
+                    userProfile.initials,
+                    color = cs.onPrimaryContainer,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleSmall,
+                )
             }
         }
     }
@@ -334,8 +458,12 @@ private fun DateSection(
     val isToday = selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
             selectedCalendar.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR)
 
-    val titleText = if (isToday) "Today" else SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(selectedCalendar.time)
-    val subtitleText = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(selectedCalendar.time)
+    val titleText = if (isToday) "Today" else SimpleDateFormat("EEEE", Locale.getDefault()).format(selectedCalendar.time)
+    val subtitleText = if (isToday) {
+        SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(selectedCalendar.time)
+    } else {
+        SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(selectedCalendar.time)
+    }
     val selectedDay = selectedCalendar.get(Calendar.DAY_OF_MONTH)
 
     Row(
@@ -475,7 +603,6 @@ private fun ScheduleSection(
     selectedCalendar: Calendar,
     medicines: List<Medicine>,
     onToggle: (Int) -> Unit,
-    onEdit: (Medicine) -> Unit,
 ) {
     val cs = MaterialTheme.colorScheme
     val todayCal = Calendar.getInstance()
@@ -531,6 +658,8 @@ private fun ScheduleSection(
     } else {
         medicines.forEachIndexed { index, medicine ->
             val (time, period) = formatTime(medicine.time24)
+            val isTakenToday = medicine.isTakenOn(selectedCalendar)
+
             Row(Modifier.fillMaxWidth()) {
                 Column(
                     Modifier.width(52.dp),
@@ -548,11 +677,11 @@ private fun ScheduleSection(
                         Modifier
                             .size(20.dp)
                             .clip(CircleShape)
-                            .background(if (medicine.taken) medicine.color else cs.surface)
+                            .background(if (isTakenToday) medicine.color else cs.surface)
                             .border(2.dp, medicine.color, CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
-                        if (medicine.taken) {
+                        if (isTakenToday) {
                             Icon(Icons.Filled.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
                         }
                     }
@@ -567,12 +696,11 @@ private fun ScheduleSection(
                 }
                 Spacer(Modifier.width(12.dp))
                 Card(
-                    onClick = { onEdit(medicine) },
                     shape = MaterialTheme.shapes.large,
                     colors = CardDefaults.cardColors(
-                        containerColor = if (medicine.taken) cs.surfaceContainer else cs.surfaceContainerLowest,
+                        containerColor = if (isTakenToday) cs.surfaceContainer else cs.surfaceContainerLowest,
                     ),
-                    border = if (medicine.taken) null else BorderStroke(1.dp, cs.outlineVariant),
+                    border = if (isTakenToday) null else BorderStroke(1.dp, cs.outlineVariant),
                     modifier = Modifier
                         .weight(1f)
                         .padding(bottom = 14.dp),
@@ -593,12 +721,12 @@ private fun ScheduleSection(
                                 Text(medicine.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = cs.onSurface)
                                 Text(medicineDetail(medicine), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                             }
-                            TakeButton(medicine.taken) { onToggle(medicine.id) }
+                            TakeButton(taken = isTakenToday, enabled = isToday) { onToggle(medicine.id) }
                         }
                         if (medicine.stock <= medicine.refillAt) {
                             Spacer(Modifier.height(10.dp))
                             AssistChip(
-                                onClick = { onEdit(medicine) },
+                                onClick = { },
                                 label = { Text("Refill soon · ${medicine.stock} left") },
                                 colors = AssistChipDefaults.assistChipColors(
                                     containerColor = cs.errorContainer,
@@ -614,10 +742,11 @@ private fun ScheduleSection(
 }
 
 @Composable
-private fun TakeButton(taken: Boolean, onClick: () -> Unit) {
+private fun TakeButton(taken: Boolean, enabled: Boolean, onClick: () -> Unit) {
     if (taken) {
         FilledTonalButton(
             onClick = onClick,
+            enabled = enabled,
             colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
                 containerColor = SuccessContainer,
                 contentColor = Success,
@@ -627,7 +756,7 @@ private fun TakeButton(taken: Boolean, onClick: () -> Unit) {
             Icon(Icons.Filled.Check, contentDescription = "Taken", modifier = Modifier.size(18.dp))
         }
     } else {
-        Button(onClick = onClick, contentPadding = PaddingValues(horizontal = 18.dp)) {
+        Button(onClick = onClick, enabled = enabled, contentPadding = PaddingValues(horizontal = 18.dp)) {
             Text("Take")
         }
     }
@@ -637,12 +766,10 @@ private fun TakeButton(taken: Boolean, onClick: () -> Unit) {
 private fun EmptyView(tab: String, onBack: () -> Unit) {
     val cs = MaterialTheme.colorScheme
     val icon = when (tab) {
-        "Schedule" -> Icons.Outlined.DateRange
         "Medicine" -> Icons.Outlined.Medication
         else -> Icons.Outlined.Person
     }
     val copy = when (tab) {
-        "Schedule" -> "Your weekly medication plan will appear here."
         "Medicine" -> "Manage your prescriptions and refill dates."
         else -> "Review your health profile and reminder preferences."
     }
@@ -674,7 +801,6 @@ private fun EmptyView(tab: String, onBack: () -> Unit) {
 private fun BottomNav(current: String, onSelect: (String) -> Unit) {
     val items = listOf(
         "Today" to Icons.Outlined.Home,
-        "Schedule" to Icons.Outlined.CalendarMonth,
         "Medicine" to Icons.Outlined.Medication,
         "Profile" to Icons.Outlined.Person,
     )

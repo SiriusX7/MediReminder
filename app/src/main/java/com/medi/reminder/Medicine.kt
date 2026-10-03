@@ -44,6 +44,11 @@ data class Frequency(
     val unit: IntervalUnit = IntervalUnit.Days,
 )
 
+fun getIsoDateForCalendar(cal: Calendar): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return sdf.format(cal.time)
+}
+
 data class Medicine(
     val id: Int,
     val name: String,
@@ -57,8 +62,11 @@ data class Medicine(
     val refillAt: Int,
     val color: Color,
     val pale: Color,
-    val taken: Boolean,
-)
+    val takenDates: Set<String> = emptySet(),
+) {
+    fun isTakenOn(dateIso: String): Boolean = takenDates.contains(dateIso)
+    fun isTakenOn(cal: Calendar): Boolean = takenDates.contains(getIsoDateForCalendar(cal))
+}
 
 data class DayChip(val day: String, val date: Int)
 
@@ -208,7 +216,7 @@ fun emptyDraft(id: Int): Medicine {
         refillAt = 5,
         color = swatch.color,
         pale = swatch.pale,
-        taken = false,
+        takenDates = emptySet(),
     )
 }
 

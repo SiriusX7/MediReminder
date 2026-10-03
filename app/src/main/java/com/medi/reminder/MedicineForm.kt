@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -92,8 +95,17 @@ fun MedicineFormScreen(
 ) {
     val cs = MaterialTheme.colorScheme
     var form by remember(draft.id) { mutableStateOf(draft) }
+    var nameError by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
+
+    fun submitSave() {
+        if (form.name.isBlank()) {
+            nameError = true
+        } else {
+            onSave(form.copy(name = form.name.trim()))
+        }
+    }
 
     Dialog(
         onDismissRequest = onCancel,
@@ -120,23 +132,19 @@ fun MedicineFormScreen(
                                     )
                                 }
                             }
+                            Button(
+                                onClick = { submitSave() },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = cs.primary,
+                                    contentColor = cs.onPrimary,
+                                ),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                                modifier = Modifier.padding(end = 8.dp),
+                            ) {
+                                Text("Save", fontWeight = FontWeight.Bold)
+                            }
                         },
                     )
-                },
-                bottomBar = {
-                    Surface(shadowElevation = 8.dp, color = cs.surface) {
-                        Button(
-                            onClick = { onSave(form.copy(name = form.name.trim())) },
-                            enabled = form.name.isNotBlank(),
-                            shape = MaterialTheme.shapes.large,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 12.dp)
-                                .height(52.dp),
-                        ) {
-                            Text(if (isNew) "Save medicine" else "Save changes")
-                        }
-                    }
                 },
             ) { inner ->
                 Column(
@@ -149,8 +157,15 @@ fun MedicineFormScreen(
                 ) {
                     OutlinedTextField(
                         value = form.name,
-                        onValueChange = { form = form.copy(name = it) },
-                        label = { Text("Medicine name") },
+                        onValueChange = {
+                            form = form.copy(name = it)
+                            if (it.isNotBlank()) nameError = false
+                        },
+                        label = { Text("Medicine name *") },
+                        isError = nameError,
+                        supportingText = if (nameError) {
+                            { Text("Please enter a medicine name", color = cs.error) }
+                        } else null,
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -307,7 +322,27 @@ fun MedicineFormScreen(
                         color = if (form.stock <= form.refillAt) cs.error else cs.onSurfaceVariant,
                     )
 
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(12.dp))
+                    Button(
+                        onClick = { submitSave() },
+                        shape = MaterialTheme.shapes.large,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = cs.primary,
+                            contentColor = cs.onPrimary,
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                    ) {
+                        Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = if (isNew) "Save Medicine" else "Save Changes",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    Spacer(Modifier.height(32.dp))
                 }
             }
         }
