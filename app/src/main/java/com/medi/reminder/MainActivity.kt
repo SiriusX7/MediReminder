@@ -415,15 +415,6 @@ private fun TopBar(
             ) {
                 Icon(Icons.Outlined.LocalHospital, contentDescription = "Call Ambulance")
             }
-            FilledTonalIconButton(
-                onClick = onBell,
-                colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = cs.secondaryContainer,
-                    contentColor = cs.onSecondaryContainer,
-                ),
-            ) {
-                Icon(Icons.Outlined.Notifications, contentDescription = "Show reminder")
-            }
             Box(
                 Modifier
                     .size(44.dp)
@@ -480,14 +471,31 @@ private fun DateSection(
             )
             Text(subtitleText, style = MaterialTheme.typography.bodyMedium, color = cs.onSurfaceVariant)
         }
-        FilledTonalIconButton(
-            onClick = onOpenCalendar,
-            colors = IconButtonDefaults.filledTonalIconButtonColors(
-                containerColor = cs.surfaceContainerHighest,
-                contentColor = cs.onSurface,
-            ),
-        ) {
-            Icon(Icons.Outlined.CalendarMonth, contentDescription = "Open calendar")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (!isToday) {
+                FilledTonalButton(
+                    onClick = {
+                        onSelectDate(Calendar.getInstance())
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+                        containerColor = cs.secondaryContainer,
+                        contentColor = cs.onSecondaryContainer,
+                    )
+                ) {
+                    Text("Today", fontWeight = FontWeight.SemiBold)
+                }
+                Spacer(Modifier.width(8.dp))
+            }
+            
+            FilledTonalIconButton(
+                onClick = onOpenCalendar,
+                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                    containerColor = cs.surfaceContainerHighest,
+                    contentColor = cs.onSurface,
+                ),
+            ) {
+                Icon(Icons.Outlined.CalendarMonth, contentDescription = "Open calendar")
+            }
         }
     }
     Spacer(Modifier.height(14.dp))
@@ -611,17 +619,20 @@ private fun ScheduleSection(
     val monthDayStr = SimpleDateFormat("MMM d", Locale.getDefault()).format(selectedCalendar.time)
     val sectionTitle = if (isToday) "Today's schedule" else "$monthDayStr schedule"
 
+    val sortedMedicines = remember(medicines) {
+        medicines.sortedBy { it.time24 }
+    }
+
     Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(sectionTitle, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = cs.onSurface)
-        Text("See all", style = MaterialTheme.typography.labelLarge, color = cs.primary)
     }
     Spacer(Modifier.height(14.dp))
 
-    if (medicines.isEmpty()) {
+    if (sortedMedicines.isEmpty()) {
         Card(
             shape = MaterialTheme.shapes.large,
             colors = CardDefaults.cardColors(containerColor = cs.surfaceContainerLow),
@@ -656,7 +667,7 @@ private fun ScheduleSection(
             }
         }
     } else {
-        medicines.forEachIndexed { index, medicine ->
+        sortedMedicines.forEachIndexed { index, medicine ->
             val (time, period) = formatTime(medicine.time24)
             val isTakenToday = medicine.isTakenOn(selectedCalendar)
 
@@ -721,7 +732,10 @@ private fun ScheduleSection(
                                 Text(medicine.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = cs.onSurface)
                                 Text(medicineDetail(medicine), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                             }
-                            TakeButton(taken = isTakenToday, enabled = isToday) { onToggle(medicine.id) }
+                            val isPast = selectedCalendar.get(Calendar.YEAR) < todayCal.get(Calendar.YEAR) ||
+                                    (selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
+                                     selectedCalendar.get(Calendar.DAY_OF_YEAR) < todayCal.get(Calendar.DAY_OF_YEAR))
+                            TakeButton(taken = isTakenToday, enabled = isToday, isPast = isPast) { onToggle(medicine.id) }
                         }
                         if (medicine.stock <= medicine.refillAt) {
                             Spacer(Modifier.height(10.dp))
@@ -733,6 +747,24 @@ private fun ScheduleSection(
                                     labelColor = cs.onErrorContainer,
                                 ),
                             )
+                        } else {
+                            val estimatedInitial = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, 30)
+                            val initialStock = maxOf(estimatedInitial, medicine.quantity) 
+                            val ratio = (medicine.stock.toFloat() / initialStock.toFloat()).coerceIn(0f, 1f)
+                            val animatedRatio by animateFloatAsState(ratio, label = "stock_progress")
+                            val progressColor = if (ratio > 0.3f) cs.primary else cs.error
+                            
+                            Spacer(Modifier.height(14.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                LinearProgressIndicator(
+                                    progress = { animatedRatio },
+                                    modifier = Modifier.weight(1f).height(6.dp).clip(CircleShape),
+                                    color = progressColor,
+                                    trackColor = progressColor.copy(alpha = 0.2f)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("${medicine.stock} left", style = MaterialTheme.typography.labelSmall, color = cs.onSurfaceVariant)
+                            }
                         }
                     }
                 }
@@ -742,7 +774,8 @@ private fun ScheduleSection(
 }
 
 @Composable
-private fun TakeButton(taken: Boolean, enabled: Boolean, onClick: () -> Unit) {
+private fun TakeButton(taken: Boolean, enabled: Boolean, isPast: Boolean, onClick: () -> Unit) {
+    val cs = MaterialTheme.colorScheme
     if (taken) {
         FilledTonalButton(
             onClick = onClick,
@@ -754,6 +787,18 @@ private fun TakeButton(taken: Boolean, enabled: Boolean, onClick: () -> Unit) {
             contentPadding = PaddingValues(horizontal = 14.dp),
         ) {
             Icon(Icons.Filled.Check, contentDescription = "Taken", modifier = Modifier.size(18.dp))
+        }
+    } else if (isPast) {
+        FilledTonalButton(
+            onClick = onClick,
+            enabled = enabled,
+            colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+                containerColor = cs.errorContainer,
+                contentColor = cs.onErrorContainer,
+            ),
+            contentPadding = PaddingValues(horizontal = 14.dp),
+        ) {
+            Text("Missed", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
         }
     } else {
         Button(onClick = onClick, enabled = enabled, contentPadding = PaddingValues(horizontal = 18.dp)) {
