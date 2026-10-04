@@ -62,7 +62,7 @@ fun MedicineListScreen(medicines: List<Medicine>, onEdit: (Medicine) -> Unit) {
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Go to the 'Today' tab to add a new medicine reminder.",
+                        "Tap + below to add a new medicine reminder.",
                         style = MaterialTheme.typography.bodySmall,
                         color = cs.onSurfaceVariant,
                     )

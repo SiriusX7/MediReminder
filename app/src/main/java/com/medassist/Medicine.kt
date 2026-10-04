@@ -213,7 +213,7 @@ fun emptyDraft(id: Int): Medicine {
         time24 = getCurrentTime24(),
         quantity = 1,
         stock = 30,
-        refillAt = 5,
+        refillAt = 2,
         color = swatch.color,
         pale = swatch.pale,
         takenDates = emptySet(),

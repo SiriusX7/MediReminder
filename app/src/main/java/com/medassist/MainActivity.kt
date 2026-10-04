@@ -268,7 +268,7 @@ fun MedAssistApp(dataManager: DataManager) {
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = { BottomNav(tab) { tab = it } },
         floatingActionButton = {
-            if (tab == "Today") {
+            if (tab == "Today" || tab == "Medicine") {
                 FloatingActionButton(
                     onClick = {
                         editing = emptyDraft(nextId)
@@ -695,6 +695,9 @@ private fun ScheduleSection(
         sortedMedicines.forEachIndexed { index, medicine ->
             val (time, period) = formatTime(medicine.time24)
             val isTakenToday = medicine.isTakenOn(selectedCalendar)
+            val isPast = selectedCalendar.get(Calendar.YEAR) < todayCal.get(Calendar.YEAR) ||
+                    (selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
+                     selectedCalendar.get(Calendar.DAY_OF_YEAR) < todayCal.get(Calendar.DAY_OF_YEAR))
 
             Row(Modifier.fillMaxWidth()) {
                 Column(
@@ -709,16 +712,33 @@ private fun ScheduleSection(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Spacer(Modifier.height(2.dp))
+                    val timelineColor = when {
+                        isTakenToday -> medicine.color
+                        isPast -> cs.errorContainer
+                        else -> cs.surface
+                    }
+                    val timelineBorderColor = when {
+                        isTakenToday -> medicine.color
+                        isPast -> cs.error
+                        else -> medicine.color
+                    }
                     Box(
                         Modifier
                             .size(20.dp)
                             .clip(CircleShape)
-                            .background(if (isTakenToday) medicine.color else cs.surface)
-                            .border(2.dp, medicine.color, CircleShape),
+                            .background(timelineColor)
+                            .border(2.dp, timelineBorderColor, CircleShape),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isTakenToday) {
                             Icon(Icons.Filled.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
+                        } else if (isPast) {
+                            Box(
+                                Modifier
+                                    .size(6.dp)
+                                    .clip(CircleShape)
+                                    .background(cs.error),
+                            )
                         }
                     }
                     if (index < medicines.size - 1) {
@@ -822,11 +842,11 @@ private fun TakeButton(taken: Boolean, enabled: Boolean, isPast: Boolean, onClic
         }
     } else if (isPast) {
         FilledTonalButton(
-            onClick = onClick,
-            enabled = enabled,
+            onClick = {},
+            enabled = false,
             colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
-                containerColor = cs.errorContainer,
-                contentColor = cs.onErrorContainer,
+                disabledContainerColor = cs.errorContainer,
+                disabledContentColor = cs.onErrorContainer,
             ),
             contentPadding = PaddingValues(horizontal = 14.dp),
         ) {

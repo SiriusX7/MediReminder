@@ -95,15 +95,30 @@ fun MedicineFormScreen(
 ) {
     val cs = MaterialTheme.colorScheme
     var form by remember(draft.id) { mutableStateOf(draft) }
+    var quantityStr by remember(draft.id) { mutableStateOf(draft.quantity.toString()) }
+    var stockStr by remember(draft.id) { mutableStateOf(if (isNew && draft.name.isEmpty()) "" else draft.stock.toString()) }
+    var refillAtStr by remember(draft.id) { mutableStateOf(draft.refillAt.toString()) }
     var nameError by remember { mutableStateOf(false) }
+    var stockError by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
 
     fun submitSave() {
+        var hasError = false
         if (form.name.isBlank()) {
             nameError = true
-        } else {
-            onSave(form.copy(name = form.name.trim()))
+            hasError = true
+        }
+        if (stockStr.isBlank()) {
+            stockError = true
+            hasError = true
+        }
+
+        if (!hasError) {
+            val q = quantityStr.toIntOrNull()?.coerceAtLeast(1) ?: 1
+            val s = stockStr.toIntOrNull()?.coerceAtLeast(0) ?: 0
+            val r = refillAtStr.toIntOrNull()?.coerceAtLeast(0) ?: 2
+            onSave(form.copy(name = form.name.trim(), quantity = q, stock = s, refillAt = r))
         }
     }
 
@@ -131,17 +146,6 @@ fun MedicineFormScreen(
                                         tint = cs.error,
                                     )
                                 }
-                            }
-                            Button(
-                                onClick = { submitSave() },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = cs.primary,
-                                    contentColor = cs.onPrimary,
-                                ),
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-                                modifier = Modifier.padding(end = 8.dp),
-                            ) {
-                                Text("Save", fontWeight = FontWeight.Bold)
                             }
                         },
                     )
@@ -279,9 +283,13 @@ fun MedicineFormScreen(
                     }
 
                     OutlinedTextField(
-                        value = form.quantity.toString(),
+                        value = quantityStr,
                         onValueChange = { v ->
-                            form = form.copy(quantity = (v.filter { it.isDigit() }.toIntOrNull() ?: 1).coerceAtLeast(1))
+                            val digits = v.filter { it.isDigit() }
+                            quantityStr = digits
+                            if (digits.isNotEmpty()) {
+                                form = form.copy(quantity = (digits.toIntOrNull() ?: 1).coerceAtLeast(1))
+                            }
                         },
                         label = { Text("Quantity per dose") },
                         singleLine = true,
@@ -291,19 +299,32 @@ fun MedicineFormScreen(
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedTextField(
-                            value = form.stock.toString(),
+                            value = stockStr,
                             onValueChange = { v ->
-                                form = form.copy(stock = v.filter { it.isDigit() }.toIntOrNull() ?: 0)
+                                val digits = v.filter { it.isDigit() }
+                                stockStr = digits
+                                if (digits.isNotEmpty()) {
+                                    stockError = false
+                                    form = form.copy(stock = digits.toIntOrNull() ?: 0)
+                                }
                             },
-                            label = { Text("Amount left") },
+                            label = { Text("Amount left *") },
+                            isError = stockError,
+                            supportingText = if (stockError) {
+                                { Text("Please enter amount left", color = cs.error) }
+                            } else null,
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             modifier = Modifier.weight(1f),
                         )
                         OutlinedTextField(
-                            value = form.refillAt.toString(),
+                            value = refillAtStr,
                             onValueChange = { v ->
-                                form = form.copy(refillAt = v.filter { it.isDigit() }.toIntOrNull() ?: 0)
+                                val digits = v.filter { it.isDigit() }
+                                refillAtStr = digits
+                                if (digits.isNotEmpty()) {
+                                    form = form.copy(refillAt = digits.toIntOrNull() ?: 0)
+                                }
                             },
                             label = { Text("Refill at") },
                             singleLine = true,
