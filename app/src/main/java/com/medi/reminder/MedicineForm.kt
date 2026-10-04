@@ -175,7 +175,7 @@ fun MedicineFormScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        MedForm.values().forEach { mf ->
+                        MedForm.entries.forEach { mf ->
                             FilterChip(
                                 selected = form.form == mf,
                                 onClick = { form = form.copy(form = mf) },
@@ -195,7 +195,7 @@ fun MedicineFormScreen(
 
                     SectionLabel("Frequency")
                     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                        val types = FrequencyType.values()
+                        val types = FrequencyType.entries
                         types.forEachIndexed { index, t ->
                             SegmentedButton(
                                 selected = form.frequency.type == t,
@@ -247,7 +247,7 @@ fun MedicineFormScreen(
                                 modifier = Modifier.width(110.dp),
                             )
                             SingleChoiceSegmentedButtonRow(Modifier.weight(1f)) {
-                                val units = IntervalUnit.values()
+                                val units = IntervalUnit.entries
                                 units.forEachIndexed { index, u ->
                                     SegmentedButton(
                                         selected = form.frequency.unit == u,

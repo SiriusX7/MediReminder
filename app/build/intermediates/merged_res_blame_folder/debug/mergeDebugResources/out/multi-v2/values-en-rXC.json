@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medi.reminder.app-mergeDebugResources-40:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.medi.reminder.app-mergeDebugResources-34:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\04f9120a8c8be269786b65961f17b94f\\transformed\\material3-release\\res\\values-en-rXC\\values-en-rXC.xml",
@@ -21,6 +21,40 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\60f9eb1c231bc5ff6e619d59304a8370\\transformed\\core-1.19.1\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,251,456,657,858,1065,1270,1482",
+                        "endColumns": "195,204,200,200,206,204,211,203",
+                        "endOffsets": "246,451,652,853,1060,1265,1477,1681"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,82",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,301,506,707,908,1115,1320,16414",
+                        "endColumns": "195,204,200,200,206,204,211,203",
+                        "endOffsets": "296,501,702,903,1110,1315,1527,16613"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\167f64e741122a6f08f3c290d9cbc036\\transformed\\ui-release\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,296,481,678,880,1067,1252,1445,1633,1820,2001,2186,2352,2538,2716,2891,3062,3241,3408",
+                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,237",
+                        "endOffsets": "291,476,673,875,1062,1247,1440,1628,1815,1996,2181,2347,2533,2711,2886,3057,3236,3403,3641"
+                    },
+                    "to": {
+                        "startLines": "9,10,11,12,13,14,15,73,74,75,76,77,78,79,80,81,83,84,85",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1532,1723,1908,2105,2307,2494,2679,14797,14985,15172,15353,15538,15704,15890,16068,16243,16618,16797,16964",
+                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,237",
+                        "endOffsets": "1718,1903,2100,2302,2489,2674,2867,14980,15167,15348,15533,15699,15885,16063,16238,16409,16792,16959,17197"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\a941496a277905b8504cf623b7fe1d6e\\transformed\\foundation-release\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3",
@@ -30,45 +64,11 @@
                         "endOffsets": "238,425"
                     },
                     "to": {
-                        "startLines": "85,86",
+                        "startLines": "86,87",
                         "startColumns": "4,4",
-                        "startOffsets": "17016,17204",
+                        "startOffsets": "17202,17390",
                         "endColumns": "187,186",
-                        "endOffsets": "17199,17386"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\b4fc2b8c84d856ea5769cc8e01e30abf\\transformed\\core-1.13.1\\res\\values-en-rXC\\values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,251,456,657,858,1065,1270,1482",
-                        "endColumns": "195,204,200,200,206,204,211,203",
-                        "endOffsets": "246,451,652,853,1060,1265,1477,1681"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,81",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,301,506,707,908,1115,1320,16228",
-                        "endColumns": "195,204,200,200,206,204,211,203",
-                        "endOffsets": "296,501,702,903,1110,1315,1527,16427"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\5660f65f397cd8d363ba3de10928c702\\transformed\\ui-release\\res\\values-en-rXC\\values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,296,481,678,880,1067,1252,1445,1633,1820,2001,2186,2352,2530,2705,2876,3055,3222",
-                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,177,174,170,178,166,237",
-                        "endOffsets": "291,476,673,875,1062,1247,1440,1628,1815,1996,2181,2347,2525,2700,2871,3050,3217,3455"
-                    },
-                    "to": {
-                        "startLines": "9,10,11,12,13,14,15,73,74,75,76,77,78,79,80,82,83,84",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "1532,1723,1908,2105,2307,2494,2679,14797,14985,15172,15353,15538,15704,15882,16057,16432,16611,16778",
-                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,177,174,170,178,166,237",
-                        "endOffsets": "1718,1903,2100,2302,2489,2674,2867,14980,15167,15348,15533,15699,15877,16052,16223,16606,16773,17011"
+                        "endOffsets": "17385,17572"
                     }
                 }
             ]

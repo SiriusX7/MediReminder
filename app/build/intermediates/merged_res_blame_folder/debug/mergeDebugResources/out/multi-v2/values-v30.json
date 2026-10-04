@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medi.reminder.app-mergeDebugResources-40:/values-v30/values-v30.xml",
+            "outputFile": "com.medi.reminder.app-mergeDebugResources-34:/values-v30/values-v30.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\04f9120a8c8be269786b65961f17b94f\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",

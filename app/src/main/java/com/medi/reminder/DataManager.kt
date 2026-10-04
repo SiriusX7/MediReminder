@@ -46,9 +46,9 @@ fun Medicine.toDto(): MedicineDto = MedicineDto(
 )
 
 fun MedicineDto.toDomain(): Medicine {
-    val formEnum = MedForm.values().firstOrNull { it.name == formLabel } ?: MedForm.Pill
-    val freqTypeEnum = FrequencyType.values().firstOrNull { it.name == frequencyType } ?: FrequencyType.Everyday
-    val unitEnum = IntervalUnit.values().firstOrNull { it.name == unitLabel } ?: IntervalUnit.Days
+    val formEnum = MedForm.entries.firstOrNull { it.name == formLabel } ?: MedForm.Pill
+    val freqTypeEnum = FrequencyType.entries.firstOrNull { it.name == frequencyType } ?: FrequencyType.Everyday
+    val unitEnum = IntervalUnit.entries.firstOrNull { it.name == unitLabel } ?: IntervalUnit.Days
 
     val datesSet = takenDates.toMutableSet()
 
