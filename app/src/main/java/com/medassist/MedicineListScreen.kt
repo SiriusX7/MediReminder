@@ -33,7 +33,7 @@ fun MedicineListScreen(medicines: List<Medicine>, onEdit: (Medicine) -> Unit) {
     Column(Modifier.fillMaxSize()) {
         Text("My Medicines", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = cs.onSurface)
         Spacer(Modifier.height(16.dp))
-        
+
         if (medicines.isEmpty()) {
             Card(
                 shape = MaterialTheme.shapes.large,
