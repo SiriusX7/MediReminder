@@ -231,12 +231,15 @@ fun MedAssistApp(dataManager: DataManager) {
             val med = medicines[i]
             val dateIso = getIsoDateForCalendar(cal)
             val newTakenDates = med.takenDates.toMutableSet()
+            var newStock = med.stock
             if (newTakenDates.contains(dateIso)) {
                 newTakenDates.remove(dateIso)
+                newStock += med.quantity // Revert stock deduction when unticking
             } else {
                 newTakenDates.add(dateIso)
+                newStock = maxOf(0, med.stock - med.quantity) // Deduct stock when ticking
             }
-            medicines[i] = med.copy(takenDates = newTakenDates)
+            medicines[i] = med.copy(takenDates = newTakenDates, stock = newStock)
             persistMedicines()
             AlarmScheduler.scheduleNextAlarm(context, medicines[i])
         }
@@ -314,6 +317,7 @@ fun MedAssistApp(dataManager: DataManager) {
                 Spacer(Modifier.height(18.dp))
                 ProgressCard(completed, scheduledMedicines.size)
                 Spacer(Modifier.height(22.dp))
+                
                 ScheduleSection(
                     selectedCalendar = selectedCalendar,
                     medicines = scheduledMedicines,
@@ -511,12 +515,33 @@ private fun DateSection(
     ) {
         items(monthDaysForCal, key = { it.date }) { day ->
             val active = selectedDay == day.date
-            val isChipToday = isToday && day.date == todayCal.get(Calendar.DAY_OF_MONTH)
+            val isChipToday = day.date == todayCal.get(Calendar.DAY_OF_MONTH) && 
+                              selectedCalendar.get(Calendar.MONTH) == todayCal.get(Calendar.MONTH) &&
+                              selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR)
+                              
+            val backgroundColor = when {
+                active -> cs.primary
+                isChipToday -> cs.secondaryContainer
+                else -> cs.surfaceContainerLow
+            }
+
+            val textColor = when {
+                active -> cs.onPrimary
+                isChipToday -> cs.onSecondaryContainer
+                else -> cs.onSurface
+            }
+            
+            val labelColor = when {
+                active -> cs.onPrimary.copy(alpha = 0.85f)
+                isChipToday -> cs.onSecondaryContainer.copy(alpha = 0.85f)
+                else -> cs.onSurfaceVariant
+            }
+
             Column(
                 Modifier
                     .width(54.dp)
                     .clip(RoundedCornerShape(18.dp))
-                    .background(if (active) cs.primary else cs.surfaceContainerLow)
+                    .background(backgroundColor)
                     .clickable {
                         val newCal = selectedCalendar.clone() as Calendar
                         newCal.set(Calendar.DAY_OF_MONTH, day.date)
@@ -528,14 +553,14 @@ private fun DateSection(
                 Text(
                     day.day,
                     style = MaterialTheme.typography.labelSmall,
-                    color = if (active) cs.onPrimary.copy(alpha = 0.85f) else cs.onSurfaceVariant,
+                    color = labelColor,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     "${day.date}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = if (active) cs.onPrimary else cs.onSurface,
+                    color = textColor,
                 )
                 Spacer(Modifier.height(4.dp))
                 Box(
@@ -697,10 +722,15 @@ private fun ScheduleSection(
                         }
                     }
                     if (index < medicines.size - 1) {
+                        val cardHeight = if (isToday) {
+                            if (medicine.stock <= medicine.refillAt) 96.dp else 108.dp
+                        } else {
+                            74.dp
+                        }
                         Box(
                             Modifier
                                 .width(2.dp)
-                                .height(if (medicine.stock <= medicine.refillAt) 96.dp else 74.dp)
+                                .height(cardHeight)
                                 .background(cs.outlineVariant),
                         )
                     }
@@ -737,33 +767,35 @@ private fun ScheduleSection(
                                      selectedCalendar.get(Calendar.DAY_OF_YEAR) < todayCal.get(Calendar.DAY_OF_YEAR))
                             TakeButton(taken = isTakenToday, enabled = isToday, isPast = isPast) { onToggle(medicine.id) }
                         }
-                        if (medicine.stock <= medicine.refillAt) {
-                            Spacer(Modifier.height(10.dp))
-                            AssistChip(
-                                onClick = { },
-                                label = { Text("Refill soon · ${medicine.stock} left") },
-                                colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = cs.errorContainer,
-                                    labelColor = cs.onErrorContainer,
-                                ),
-                            )
-                        } else {
-                            val estimatedInitial = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, 30)
-                            val initialStock = maxOf(estimatedInitial, medicine.quantity) 
-                            val ratio = (medicine.stock.toFloat() / initialStock.toFloat()).coerceIn(0f, 1f)
-                            val animatedRatio by animateFloatAsState(ratio, label = "stock_progress")
-                            val progressColor = if (ratio > 0.3f) cs.primary else cs.error
-                            
-                            Spacer(Modifier.height(14.dp))
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                LinearProgressIndicator(
-                                    progress = { animatedRatio },
-                                    modifier = Modifier.weight(1f).height(6.dp).clip(CircleShape),
-                                    color = progressColor,
-                                    trackColor = progressColor.copy(alpha = 0.2f)
+                        if (isToday) {
+                            if (medicine.stock <= medicine.refillAt) {
+                                Spacer(Modifier.height(10.dp))
+                                AssistChip(
+                                    onClick = { },
+                                    label = { Text("Refill soon · ${medicine.stock} left") },
+                                    colors = AssistChipDefaults.assistChipColors(
+                                        containerColor = cs.errorContainer,
+                                        labelColor = cs.onErrorContainer,
+                                    ),
                                 )
-                                Spacer(Modifier.width(8.dp))
-                                Text("${medicine.stock} left", style = MaterialTheme.typography.labelSmall, color = cs.onSurfaceVariant)
+                            } else {
+                                val estimatedInitial = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, 30)
+                                val initialStock = maxOf(estimatedInitial, medicine.quantity) 
+                                val ratio = (medicine.stock.toFloat() / initialStock.toFloat()).coerceIn(0f, 1f)
+                                val animatedRatio by animateFloatAsState(ratio, label = "stock_progress")
+                                val progressColor = if (ratio > 0.3f) cs.primary else cs.error
+                                
+                                Spacer(Modifier.height(14.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    LinearProgressIndicator(
+                                        progress = { animatedRatio },
+                                        modifier = Modifier.weight(1f).height(6.dp).clip(CircleShape),
+                                        color = progressColor,
+                                        trackColor = progressColor.copy(alpha = 0.2f)
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text("${medicine.stock} left", style = MaterialTheme.typography.labelSmall, color = cs.onSurfaceVariant)
+                                }
                             }
                         }
                     }
