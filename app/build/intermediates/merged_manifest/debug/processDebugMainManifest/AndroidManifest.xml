@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.medi.reminder"
+    package="com.medassist"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -23,10 +23,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
-        android:name="com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:allowBackup="true"
@@ -38,11 +38,11 @@
         android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
         android:testOnly="true"
-        android:theme="@style/Theme.MediReminder" >
+        android:theme="@style/Theme.MedAssist" >
         <activity
-            android:name="com.medi.reminder.MainActivity"
+            android:name="com.medassist.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MediReminder" >
+            android:theme="@style/Theme.MedAssist" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,15 +50,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.medi.reminder.AlarmActivity"
+            android:name="com.medassist.AlarmActivity"
             android:exported="false"
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
-            android:theme="@style/Theme.MediReminder"
+            android:theme="@style/Theme.MedAssist"
             android:turnScreenOn="true" />
 
         <receiver
-            android:name="com.medi.reminder.AlarmReceiver"
+            android:name="com.medassist.AlarmReceiver"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -67,7 +67,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.medi.reminder.androidx-startup"
+            android:authorities="com.medassist.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"

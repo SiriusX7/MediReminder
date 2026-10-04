@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.medi.reminder"
+3    package="com.medassist"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -47,12 +47,12 @@
 24
 25    <permission
 25-->[androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:22:5-24:47
-26        android:name="com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+26        android:name="com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 26-->[androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:23:9-81
 27        android:protectionLevel="signature" />
 27-->[androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:24:9-44
 28
-29    <uses-permission android:name="com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+29    <uses-permission android:name="com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 29-->[androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:5-97
 29-->[androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:22-94
 30
@@ -74,16 +74,16 @@
 39        android:supportsRtl="true"
 39-->F:\New folder\android\app\src\main\AndroidManifest.xml:23:9-35
 40        android:testOnly="true"
-41        android:theme="@style/Theme.MediReminder" >
-41-->F:\New folder\android\app\src\main\AndroidManifest.xml:24:9-50
+41        android:theme="@style/Theme.MedAssist" >
+41-->F:\New folder\android\app\src\main\AndroidManifest.xml:24:9-47
 42        <activity
 42-->F:\New folder\android\app\src\main\AndroidManifest.xml:26:9-34:20
-43            android:name="com.medi.reminder.MainActivity"
+43            android:name="com.medassist.MainActivity"
 43-->F:\New folder\android\app\src\main\AndroidManifest.xml:27:13-41
 44            android:exported="true"
 44-->F:\New folder\android\app\src\main\AndroidManifest.xml:28:13-36
-45            android:theme="@style/Theme.MediReminder" >
-45-->F:\New folder\android\app\src\main\AndroidManifest.xml:29:13-54
+45            android:theme="@style/Theme.MedAssist" >
+45-->F:\New folder\android\app\src\main\AndroidManifest.xml:29:13-51
 46            <intent-filter>
 46-->F:\New folder\android\app\src\main\AndroidManifest.xml:30:13-33:29
 47                <action android:name="android.intent.action.MAIN" />
@@ -97,7 +97,7 @@
 51        </activity>
 52        <activity
 52-->F:\New folder\android\app\src\main\AndroidManifest.xml:36:9-42:40
-53            android:name="com.medi.reminder.AlarmActivity"
+53            android:name="com.medassist.AlarmActivity"
 53-->F:\New folder\android\app\src\main\AndroidManifest.xml:37:13-42
 54            android:exported="false"
 54-->F:\New folder\android\app\src\main\AndroidManifest.xml:42:13-37
@@ -105,14 +105,14 @@
 55-->F:\New folder\android\app\src\main\AndroidManifest.xml:38:13-44
 56            android:showWhenLocked="true"
 56-->F:\New folder\android\app\src\main\AndroidManifest.xml:39:13-42
-57            android:theme="@style/Theme.MediReminder"
-57-->F:\New folder\android\app\src\main\AndroidManifest.xml:41:13-54
+57            android:theme="@style/Theme.MedAssist"
+57-->F:\New folder\android\app\src\main\AndroidManifest.xml:41:13-51
 58            android:turnScreenOn="true" />
 58-->F:\New folder\android\app\src\main\AndroidManifest.xml:40:13-40
 59
 60        <receiver
 60-->F:\New folder\android\app\src\main\AndroidManifest.xml:44:9-50:20
-61            android:name="com.medi.reminder.AlarmReceiver"
+61            android:name="com.medassist.AlarmReceiver"
 61-->F:\New folder\android\app\src\main\AndroidManifest.xml:45:13-42
 62            android:exported="true" >
 62-->F:\New folder\android\app\src\main\AndroidManifest.xml:46:13-36
@@ -128,7 +128,7 @@
 68-->[androidx.emoji2:emoji2:1.4.0] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\bd854c0923c4ab6ae566ad8ecb520311\transformed\emoji2-1.4.0\AndroidManifest.xml:24:9-32:20
 69            android:name="androidx.startup.InitializationProvider"
 69-->[androidx.emoji2:emoji2:1.4.0] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\bd854c0923c4ab6ae566ad8ecb520311\transformed\emoji2-1.4.0\AndroidManifest.xml:25:13-67
-70            android:authorities="com.medi.reminder.androidx-startup"
+70            android:authorities="com.medassist.androidx-startup"
 70-->[androidx.emoji2:emoji2:1.4.0] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\bd854c0923c4ab6ae566ad8ecb520311\transformed\emoji2-1.4.0\AndroidManifest.xml:26:13-68
 71            android:exported="false" >
 71-->[androidx.emoji2:emoji2:1.4.0] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\bd854c0923c4ab6ae566ad8ecb520311\transformed\emoji2-1.4.0\AndroidManifest.xml:27:13-37

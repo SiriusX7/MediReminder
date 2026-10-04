@@ -21,12 +21,12 @@
         android:roundIcon="@drawable/ic_logo"
         android:label="MediAssist"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MediReminder">
+        android:theme="@style/Theme.MedAssist">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MediReminder">
+            android:theme="@style/Theme.MedAssist">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -38,7 +38,7 @@
             android:showOnLockScreen="true"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
-            android:theme="@style/Theme.MediReminder"
+            android:theme="@style/Theme.MedAssist"
             android:exported="false" />
 
         <receiver

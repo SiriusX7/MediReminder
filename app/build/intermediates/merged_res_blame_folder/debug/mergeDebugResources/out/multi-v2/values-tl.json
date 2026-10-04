@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medi.reminder.app-mergeDebugResources-34:/values-tl/values-tl.xml",
+            "outputFile": "com.medassist.app-mergeDebugResources-34:/values-tl/values-tl.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\04f9120a8c8be269786b65961f17b94f\\transformed\\material3-release\\res\\values-tl\\values-tl.xml",

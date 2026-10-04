@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.medi.reminder"
+    namespace = "com.medassist"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.medi.reminder"
+        applicationId = "com.medassist"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

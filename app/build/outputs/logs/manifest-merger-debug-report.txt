@@ -129,13 +129,13 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\De
 	android:allowBackup
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:19:9-35
 	android:theme
-		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:24:9-50
-activity#com.medi.reminder.MainActivity
+		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:24:9-47
+activity#com.medassist.MainActivity
 ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:26:9-34:20
 	android:exported
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:28:13-36
 	android:theme
-		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:29:13-54
+		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:29:13-51
 	android:name
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:27:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
@@ -148,7 +148,7 @@ category#android.intent.category.LAUNCHER
 ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:32:17-77
 	android:name
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:32:27-74
-activity#com.medi.reminder.AlarmActivity
+activity#com.medassist.AlarmActivity
 ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:36:9-42:40
 	android:turnScreenOn
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:40:13-40
@@ -159,10 +159,10 @@ ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:36:9-42:40
 	android:showOnLockScreen
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:38:13-44
 	android:theme
-		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:41:13-54
+		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:41:13-51
 	android:name
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:37:13-42
-receiver#com.medi.reminder.AlarmReceiver
+receiver#com.medassist.AlarmReceiver
 ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:44:9-50:20
 	android:exported
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:46:13-36
@@ -304,7 +304,7 @@ ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\tran
 		ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:24:9-44
 	android:name
 		ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:23:9-81
-permission#com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+permission#com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:22:5-24:47
 	android:protectionLevel
 		ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:24:9-44
@@ -314,7 +314,7 @@ uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:22-94
-uses-permission#com.medi.reminder.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission#com.medassist.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
 ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:5-97
 	android:name
 		ADDED from [androidx.core:core:1.19.1] C:\Users\Deepak\.gradle\caches\9.8.0\transforms\60f9eb1c231bc5ff6e619d59304a8370\transformed\core-1.19.1\AndroidManifest.xml:26:22-94

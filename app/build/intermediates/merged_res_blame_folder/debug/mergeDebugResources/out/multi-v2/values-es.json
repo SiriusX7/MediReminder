@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medi.reminder.app-mergeDebugResources-34:/values-es/values-es.xml",
+            "outputFile": "com.medassist.app-mergeDebugResources-34:/values-es/values-es.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Deepak\\.gradle\\caches\\9.8.0\\transforms\\a941496a277905b8504cf623b7fe1d6e\\transformed\\foundation-release\\res\\values-es\\values-es.xml",

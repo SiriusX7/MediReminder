@@ -266,7 +266,7 @@ int style TextAppearance_Compat_Notification_Info 0x7f090005
 int style TextAppearance_Compat_Notification_Line2 0x7f090006
 int style TextAppearance_Compat_Notification_Time 0x7f090007
 int style TextAppearance_Compat_Notification_Title 0x7f090008
-int style Theme_MediReminder 0x7f090009
+int style Theme_MedAssist 0x7f090009
 int style Widget_Compat_NotificationActionContainer 0x7f09000a
 int style Widget_Compat_NotificationActionText 0x7f09000b
 int[] styleable Capability { 0x7f01000f, 0x7f010010 }

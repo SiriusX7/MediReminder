@@ -1,6 +1,6 @@
 [
     {
-        "merged": "com.medi.reminder.app-debug-36:/drawable_ic_logo.xml.flat",
-        "source": "com.medi.reminder.app-main-38:/drawable/ic_logo.xml"
+        "merged": "com.medassist.app-debug-36:/drawable_ic_logo.xml.flat",
+        "source": "com.medassist.app-main-38:/drawable/ic_logo.xml"
     }
 ]
