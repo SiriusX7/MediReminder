@@ -1,0 +1,16 @@
+﻿# Gradle
+.gradle/
+build/
+*.gradle.lock
+
+# Android Studio
+.idea/
+*.iml
+*.apk
+*.ap_
+*.dex
+local.properties
+
+# Build outputs
+app/build/
+.DS_Store
