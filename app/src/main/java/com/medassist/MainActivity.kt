@@ -802,7 +802,7 @@ private fun ScheduleSection(
                                 val initialStock = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, medicine.quantity) 
                                 val ratio = (medicine.stock.toFloat() / initialStock.toFloat()).coerceIn(0f, 1f)
                                 val animatedRatio by animateFloatAsState(ratio, label = "stock_progress")
-                                val progressColor = if (ratio > 0.3f) cs.primary else cs.error
+                                val progressColor = if (ratio <= 0.15f) cs.error else cs.primary
                                 
                                 Spacer(Modifier.height(14.dp))
                                 Row(verticalAlignment = Alignment.CenterVertically) {
