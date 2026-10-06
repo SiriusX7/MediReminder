@@ -799,8 +799,7 @@ private fun ScheduleSection(
                                     ),
                                 )
                             } else {
-                                val estimatedInitial = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, 30)
-                                val initialStock = maxOf(estimatedInitial, medicine.quantity) 
+                                val initialStock = maxOf(medicine.stock + medicine.takenDates.size * medicine.quantity, medicine.quantity) 
                                 val ratio = (medicine.stock.toFloat() / initialStock.toFloat()).coerceIn(0f, 1f)
                                 val animatedRatio by animateFloatAsState(ratio, label = "stock_progress")
                                 val progressColor = if (ratio > 0.3f) cs.primary else cs.error
