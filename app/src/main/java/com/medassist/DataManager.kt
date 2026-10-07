@@ -24,6 +24,7 @@ data class MedicineDto(
     val colorArgb: Int,
     val paleArgb: Int,
     val takenDates: List<String> = emptyList(),
+    val skippedDates: List<String> = emptyList(),
 )
 
 fun Medicine.toDto(): MedicineDto = MedicineDto(
@@ -43,6 +44,7 @@ fun Medicine.toDto(): MedicineDto = MedicineDto(
     colorArgb = color.toArgb(),
     paleArgb = pale.toArgb(),
     takenDates = takenDates.toList(),
+    skippedDates = skippedDates.toList(),
 )
 
 fun MedicineDto.toDomain(): Medicine {
@@ -71,6 +73,7 @@ fun MedicineDto.toDomain(): Medicine {
         color = Color(colorArgb),
         pale = Color(paleArgb),
         takenDates = datesSet,
+        skippedDates = skippedDates.toMutableSet(),
     )
 }
 

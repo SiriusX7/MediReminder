@@ -19,7 +19,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:roundIcon="@drawable/ic_logo"
-        android:label="MediAssist"
+        android:label="MedAssist"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedAssist">
 

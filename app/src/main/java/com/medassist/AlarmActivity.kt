@@ -85,6 +85,12 @@ class AlarmActivity : ComponentActivity() {
                         stopAlarmSound()
                         cancelNotification(medicineId)
                         finish()
+                    },
+                    onSkip = {
+                        markAsSkipped(dataManager, medicine)
+                        stopAlarmSound()
+                        cancelNotification(medicineId)
+                        finish()
                     }
                 )
             }
@@ -166,14 +172,33 @@ class AlarmActivity : ComponentActivity() {
             AlarmScheduler.scheduleNextAlarm(this, medicines[index])
         }
     }
+
+    private fun markAsSkipped(dataManager: DataManager, medicine: Medicine) {
+        val medicines = dataManager.loadMedicines().toMutableList()
+        val index = medicines.indexOfFirst { it.id == medicine.id }
+        if (index >= 0) {
+            val med = medicines[index]
+            val todayIso = getIsoDateForCalendar(Calendar.getInstance())
+            
+            val newSkippedDates = med.skippedDates.toMutableSet()
+            newSkippedDates.add(todayIso)
+            
+            medicines[index] = med.copy(skippedDates = newSkippedDates)
+            dataManager.saveMedicines(medicines)
+            
+            // Schedule the NEXT alarm (even if skipped today, it should trigger on the next valid cycle)
+            AlarmScheduler.scheduleNextAlarm(this, medicines[index])
+        }
+    }
 }
 
-@Composable
-fun AlarmScreen(
-    medicine: Medicine,
-    onTaken: () -> Unit,
-    onSnooze: (Int) -> Unit
-) {
+    @Composable
+    fun AlarmScreen(
+        medicine: Medicine,
+        onTaken: () -> Unit,
+        onSnooze: (Int) -> Unit,
+        onSkip: () -> Unit
+    ) {
     val cs = MaterialTheme.colorScheme
     var showSnoozeOptions by remember { mutableStateOf(false) }
 
@@ -260,6 +285,22 @@ fun AlarmScreen(
                 Icon(Icons.Filled.Snooze, contentDescription = null)
                 Spacer(Modifier.width(12.dp))
                 Text("Snooze", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onSkip,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = cs.error,
+                    contentColor = cs.onError
+                )
+            ) {
+                Text("Skip today", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             }
         }
     }

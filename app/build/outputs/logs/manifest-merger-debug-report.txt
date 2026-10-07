@@ -121,7 +121,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\De
 	android:supportsRtl
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:23:9-35
 	android:label
-		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:22:9-35
+		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:22:9-34
 	android:roundIcon
 		ADDED from F:\New folder\android\app\src\main\AndroidManifest.xml:21:9-46
 	android:icon

@@ -67,8 +67,8 @@
 35-->INJECTED
 36        android:icon="@drawable/ic_logo"
 36-->F:\New folder\android\app\src\main\AndroidManifest.xml:20:9-41
-37        android:label="MediAssist"
-37-->F:\New folder\android\app\src\main\AndroidManifest.xml:22:9-35
+37        android:label="MedAssist"
+37-->F:\New folder\android\app\src\main\AndroidManifest.xml:22:9-34
 38        android:roundIcon="@drawable/ic_logo"
 38-->F:\New folder\android\app\src\main\AndroidManifest.xml:21:9-46
 39        android:supportsRtl="true"

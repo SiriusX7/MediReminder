@@ -174,7 +174,7 @@ private fun MedAssistSplashScreen() {
                 }
                 Spacer(Modifier.height(24.dp))
                 Text(
-                    text = "MediAssist",
+                    text = "MedAssist",
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Bold,
                 )
@@ -695,6 +695,7 @@ private fun ScheduleSection(
         sortedMedicines.forEachIndexed { index, medicine ->
             val (time, period) = formatTime(medicine.time24)
             val isTakenToday = medicine.isTakenOn(selectedCalendar)
+            val isSkippedToday = medicine.isSkippedOn(selectedCalendar)
             val isPast = selectedCalendar.get(Calendar.YEAR) < todayCal.get(Calendar.YEAR) ||
                     (selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
                      selectedCalendar.get(Calendar.DAY_OF_YEAR) < todayCal.get(Calendar.DAY_OF_YEAR))
@@ -714,11 +715,13 @@ private fun ScheduleSection(
                     Spacer(Modifier.height(2.dp))
                     val timelineColor = when {
                         isTakenToday -> medicine.color
+                        isSkippedToday -> cs.errorContainer
                         isPast -> cs.errorContainer
                         else -> cs.surface
                     }
                     val timelineBorderColor = when {
                         isTakenToday -> medicine.color
+                        isSkippedToday -> cs.error
                         isPast -> cs.error
                         else -> medicine.color
                     }
@@ -732,7 +735,7 @@ private fun ScheduleSection(
                     ) {
                         if (isTakenToday) {
                             Icon(Icons.Filled.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(12.dp))
-                        } else if (isPast) {
+                        } else if (isSkippedToday || isPast) {
                             Box(
                                 Modifier
                                     .size(6.dp)
@@ -782,10 +785,12 @@ private fun ScheduleSection(
                                 Text(medicine.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = cs.onSurface)
                                 Text(medicineDetail(medicine), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                             }
-                            val isPast = selectedCalendar.get(Calendar.YEAR) < todayCal.get(Calendar.YEAR) ||
-                                    (selectedCalendar.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
-                                     selectedCalendar.get(Calendar.DAY_OF_YEAR) < todayCal.get(Calendar.DAY_OF_YEAR))
-                            TakeButton(taken = isTakenToday, enabled = isToday, isPast = isPast) { onToggle(medicine.id) }
+                            TakeButton(
+                                taken = isTakenToday,
+                                skipped = isSkippedToday,
+                                enabled = isToday,
+                                isPast = isPast
+                            ) { onToggle(medicine.id) }
                         }
                         if (isToday) {
                             if (medicine.stock <= medicine.refillAt) {
@@ -825,7 +830,7 @@ private fun ScheduleSection(
 }
 
 @Composable
-private fun TakeButton(taken: Boolean, enabled: Boolean, isPast: Boolean, onClick: () -> Unit) {
+private fun TakeButton(taken: Boolean, skipped: Boolean, enabled: Boolean, isPast: Boolean, onClick: () -> Unit) {
     val cs = MaterialTheme.colorScheme
     if (taken) {
         FilledTonalButton(
@@ -838,6 +843,18 @@ private fun TakeButton(taken: Boolean, enabled: Boolean, isPast: Boolean, onClic
             contentPadding = PaddingValues(horizontal = 14.dp),
         ) {
             Icon(Icons.Filled.Check, contentDescription = "Taken", modifier = Modifier.size(18.dp))
+        }
+    } else if (skipped) {
+        FilledTonalButton(
+            onClick = {},
+            enabled = false,
+            colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+                disabledContainerColor = cs.errorContainer,
+                disabledContentColor = cs.onErrorContainer,
+            ),
+            contentPadding = PaddingValues(horizontal = 14.dp),
+        ) {
+            Text("Skipped", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
         }
     } else if (isPast) {
         FilledTonalButton(

@@ -63,9 +63,11 @@ data class Medicine(
     val color: Color,
     val pale: Color,
     val takenDates: Set<String> = emptySet(),
+    val skippedDates: Set<String> = emptySet(),
 ) {
     fun isTakenOn(dateIso: String): Boolean = takenDates.contains(dateIso)
     fun isTakenOn(cal: Calendar): Boolean = takenDates.contains(getIsoDateForCalendar(cal))
+    fun isSkippedOn(cal: Calendar): Boolean = skippedDates.contains(getIsoDateForCalendar(cal))
 }
 
 data class DayChip(val day: String, val date: Int)
@@ -217,6 +219,7 @@ fun emptyDraft(id: Int): Medicine {
         color = swatch.color,
         pale = swatch.pale,
         takenDates = emptySet(),
+        skippedDates = emptySet(),
     )
 }
 

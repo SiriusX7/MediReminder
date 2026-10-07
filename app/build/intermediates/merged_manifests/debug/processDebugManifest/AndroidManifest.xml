@@ -34,7 +34,7 @@
         android:debuggable="true"
         android:extractNativeLibs="false"
         android:icon="@drawable/ic_logo"
-        android:label="MediAssist"
+        android:label="MedAssist"
         android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
         android:testOnly="true"
