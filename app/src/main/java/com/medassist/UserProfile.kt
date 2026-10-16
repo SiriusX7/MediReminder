@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -32,6 +33,7 @@ import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,37 +48,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-
-data class UserProfile(
-    val firstName: String = "Maya",
-    val lastName: String = "Baker",
-    val age: Int = 28,
-    val gender: String = "Female",
-    val bloodGroup: String = "O+",
-    val medicalConditions: String = "Vitamin D Deficiency",
-    val emergencyContact: String = "+1 (555) 019-2834",
-) {
-    val name: String
-        get() = "$firstName $lastName".trim()
-
-    val initials: String
-        get() {
-            val f = firstName.trim().take(1).uppercase()
-            val l = lastName.trim().take(1).uppercase()
-            return when {
-                f.isNotEmpty() && l.isNotEmpty() -> "$f$l"
-                f.isNotEmpty() -> f
-                l.isNotEmpty() -> l
-                else -> "U"
-            }
-        }
-}
+import com.medassist.data.local.UserProfile
 
 @Composable
 fun ProfileScreen(
     profile: UserProfile,
     onSaveProfile: (UserProfile) -> Unit,
     onBack: () -> Unit,
+    onSignOut: () -> Unit
 ) {
     val cs = MaterialTheme.colorScheme
     var firstName by remember(profile) { mutableStateOf(profile.firstName) }
@@ -191,6 +170,17 @@ fun ProfileScreen(
                 Spacer(Modifier.width(8.dp))
                 Text("Edit Profile Details")
             }
+
+            OutlinedButton(
+                onClick = onSignOut,
+                shape = MaterialTheme.shapes.large,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = cs.error)
+            ) {
+                Text("Sign Out")
+            }
         } else {
             Card(
                 shape = MaterialTheme.shapes.large,
@@ -262,7 +252,7 @@ fun ProfileScreen(
                     Button(
                         onClick = {
                             val parsedAge = ageStr.toIntOrNull() ?: profile.age
-                            val updated = UserProfile(
+                            val updated = profile.copy(
                                 firstName = firstName.trim().ifEmpty { profile.firstName },
                                 lastName = lastName.trim().ifEmpty { profile.lastName },
                                 age = parsedAge,

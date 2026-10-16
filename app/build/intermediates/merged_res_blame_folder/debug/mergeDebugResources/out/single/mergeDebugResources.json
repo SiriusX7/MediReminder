@@ -1,6 +1,10 @@
 [
     {
-        "merged": "com.medassist.app-debug-36:/drawable_ic_logo.xml.flat",
-        "source": "com.medassist.app-main-38:/drawable/ic_logo.xml"
+        "merged": "com.medassist.app-debug-64:/xml_file_paths.xml.flat",
+        "source": "com.medassist.app-main-66:/xml/file_paths.xml"
+    },
+    {
+        "merged": "com.medassist.app-debug-64:/drawable_ic_logo.xml.flat",
+        "source": "com.medassist.app-main-66:/drawable/ic_logo.xml"
     }
 ]

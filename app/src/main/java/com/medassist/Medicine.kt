@@ -1,6 +1,8 @@
 package com.medassist
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import com.medassist.data.local.Medication
 import com.medassist.ui.theme.PillBlue
 import com.medassist.ui.theme.PillBluePale
 import com.medassist.ui.theme.PillOrange
@@ -64,10 +66,61 @@ data class Medicine(
     val pale: Color,
     val takenDates: Set<String> = emptySet(),
     val skippedDates: Set<String> = emptySet(),
+    val userId: String = "local_user"
 ) {
     fun isTakenOn(dateIso: String): Boolean = takenDates.contains(dateIso)
     fun isTakenOn(cal: Calendar): Boolean = takenDates.contains(getIsoDateForCalendar(cal))
     fun isSkippedOn(cal: Calendar): Boolean = skippedDates.contains(getIsoDateForCalendar(cal))
+}
+
+fun Medicine.toMedication(): Medication = Medication(
+    id = if (id >= 100) id else 0, // Assuming 0 is for auto-gen, and our manual IDs start at 100
+    userId = userId,
+    name = name,
+    formLabel = form.name,
+    reason = reason,
+    frequencyType = frequency.type.name,
+    daysOfWeek = frequency.daysOfWeek,
+    interval = frequency.interval,
+    unitLabel = frequency.unit.name,
+    startDate = startDate,
+    time24 = time24,
+    quantity = quantity,
+    stock = stock,
+    refillAt = refillAt,
+    colorArgb = color.toArgb(),
+    paleArgb = pale.toArgb(),
+    takenDates = takenDates.toList(),
+    skippedDates = skippedDates.toList()
+)
+
+fun Medication.toDomain(): Medicine {
+    val formEnum = MedForm.entries.find { it.name == formLabel } ?: MedForm.Pill
+    val freqTypeEnum = FrequencyType.entries.find { it.name == frequencyType } ?: FrequencyType.Everyday
+    val unitEnum = IntervalUnit.entries.find { it.name == unitLabel } ?: IntervalUnit.Days
+
+    return Medicine(
+        id = id,
+        userId = userId,
+        name = name,
+        form = formEnum,
+        reason = reason,
+        frequency = Frequency(
+            type = freqTypeEnum,
+            daysOfWeek = daysOfWeek,
+            interval = interval,
+            unit = unitEnum
+        ),
+        startDate = startDate,
+        time24 = time24,
+        quantity = quantity,
+        stock = stock,
+        refillAt = refillAt,
+        color = Color(colorArgb),
+        pale = Color(paleArgb),
+        takenDates = takenDates.toSet(),
+        skippedDates = skippedDates.toSet()
+    )
 }
 
 data class DayChip(val day: String, val date: Int)
@@ -203,10 +256,11 @@ fun frequencyLabel(f: Frequency): String = when (f.type) {
     FrequencyType.Interval -> "Every ${f.interval} ${f.unit.label}"
 }
 
-fun emptyDraft(id: Int): Medicine {
+fun emptyDraft(id: Int, userId: String = "local_user"): Medicine {
     val swatch = palette[id % palette.size]
     return Medicine(
         id = id,
+        userId = userId,
         name = "",
         form = MedForm.Pill,
         reason = "",

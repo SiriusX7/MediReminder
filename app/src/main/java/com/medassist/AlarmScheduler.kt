@@ -6,51 +6,33 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.medassist.data.local.Medication
+import com.medassist.data.local.MedicationDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 object AlarmScheduler {
-    fun scheduleNextAlarm(context: Context, medicine: Medicine) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
-            action = "com.medassist.ALARM_TRIGGER"
-            putExtra("MEDICINE_ID", medicine.id)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            medicine.id,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
 
-        val nextTime = getNextAlarmTime(medicine)
+    fun scheduleNextAlarm(context: Context, medication: Medication) {
+        val nextTime = getNextAlarmTime(medication)
         if (nextTime != null) {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    if (alarmManager.canScheduleExactAlarms()) {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent)
-                    } else {
-                        // Fallback or request permission
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent)
-                    }
-                } else {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent)
-                }
-                Log.d("AlarmScheduler", "Scheduled alarm for Med ${medicine.id} at $nextTime")
-            } catch (e: SecurityException) {
-                e.printStackTrace()
-            }
+            schedule(context, medication.id, medication.userId, nextTime)
         }
     }
 
-    fun snoozeAlarm(context: Context, medicineId: Int, minutes: Int) {
+    private fun schedule(context: Context, medicineId: Int, userId: String, nextTime: Long, isSnooze: Boolean = false) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = "com.medassist.ALARM_TRIGGER"
             putExtra("MEDICINE_ID", medicineId)
-            putExtra("IS_SNOOZE", true)
+            putExtra("USER_ID", userId)
+            if (isSnooze) {
+                putExtra("IS_SNOOZE", true)
+            }
         }
-        // Use a different request code for snooze or just override the main one.
-        // Overriding the main one is fine since it temporarily replaces the next schedule.
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             medicineId,
@@ -58,7 +40,6 @@ object AlarmScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val nextTime = System.currentTimeMillis() + (minutes * 60 * 1000L)
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (alarmManager.canScheduleExactAlarms()) {
@@ -69,9 +50,9 @@ object AlarmScheduler {
             } else {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextTime, pendingIntent)
             }
-            Log.d("AlarmScheduler", "Snoozed alarm for Med $medicineId to $nextTime")
+            Log.d("AlarmScheduler", "Scheduled alarm for Med $medicineId at $nextTime")
         } catch (e: SecurityException) {
-            e.printStackTrace()
+            Log.e("AlarmScheduler", "SecurityException scheduling alarm", e)
         }
     }
 
@@ -84,47 +65,56 @@ object AlarmScheduler {
             context,
             medicineId,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
         )
-        alarmManager.cancel(pendingIntent)
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+            Log.d("AlarmScheduler", "Cancelled alarm for Med $medicineId")
+        }
     }
 
-    private fun getNextAlarmTime(medicine: Medicine): Long? {
-        val parts = medicine.time24.split(":")
-        val hour = parts.getOrNull(0)?.toIntOrNull() ?: return null
-        val minute = parts.getOrNull(1)?.toIntOrNull() ?: return null
+    private fun getNextAlarmTime(medication: Medication): Long? {
+        val timeStr = medication.time24.ifEmpty { null } ?: return null
+        val parts = timeStr.split(":")
+        val hour = parts.getOrNull(0)?.trim()?.toIntOrNull() ?: return null
+        val minute = parts.getOrNull(1)?.trim()?.toIntOrNull() ?: return null
 
         val now = Calendar.getInstance()
-        
-        // Look ahead up to 1 year
-        for (dayOffset in 0..365) {
-            val targetCal = Calendar.getInstance()
-            targetCal.add(Calendar.DAY_OF_YEAR, dayOffset)
-            targetCal.set(Calendar.HOUR_OF_DAY, hour)
-            targetCal.set(Calendar.MINUTE, minute)
-            targetCal.set(Calendar.SECOND, 0)
-            targetCal.set(Calendar.MILLISECOND, 0)
-
-            if (targetCal.before(now)) {
-                // If the time today has already passed, skip today
-                continue
-            }
-
-            // Check if this date is scheduled AND not yet taken on this date
-            if (isMedicineScheduledOnDate(medicine, targetCal)) {
-                if (!medicine.isTakenOn(targetCal)) {
-                    return targetCal.timeInMillis
-                }
-            }
+        val targetCal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
-        return null
+
+        if (targetCal.before(now)) {
+            targetCal.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        return targetCal.timeInMillis
     }
 
-    fun scheduleAll(context: Context) {
-        val dm = DataManager(context)
-        val medicines = dm.loadMedicines()
-        for (m in medicines) {
-            scheduleNextAlarm(context, m)
+    fun snoozeAlarm(context: Context, medicineId: Int, userId: String, minutes: Int) {
+        val nextTime = System.currentTimeMillis() + (minutes * 60 * 1000L)
+        schedule(context, medicineId, userId, nextTime, isSnooze = true)
+    }
+
+    fun scheduleAll(context: Context, userId: String = "local_user") {
+        val app = context.applicationContext as MediReminderApp
+        val medicationDao = app.database.medicationDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            val medications = medicationDao.getAllMedications(userId).first()
+            for (med in medications) {
+                scheduleNextAlarm(context, med)
+            }
+        }
+    }
+
+    suspend fun scheduleAllFromDb(context: Context, medicationDao: MedicationDao, userId: String) {
+        val medications = medicationDao.getAllMedications(userId).first()
+        for (med in medications) {
+            scheduleNextAlarm(context, med)
         }
     }
 }

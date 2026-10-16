@@ -12,6 +12,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -60,5 +62,33 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.code.gson:gson:2.14.0")
+    
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+
+    // ML Kit
     implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.1")
+
+    // Google Play Services for Auth
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    
+    // Credential Manager
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+
+    // Room
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 }

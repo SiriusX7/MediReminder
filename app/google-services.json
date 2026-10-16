@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "867199273366",
+    "project_id": "mediassist-b769a",
+    "storage_bucket": "mediassist-b769a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867199273366:android:c811bdc39c7fdbf3df75b7",
+        "android_client_info": {
+          "package_name": "com.medassist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867199273366-131d3f48rt99tsp45t79otvvgdudvsr4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.medassist",
+            "certificate_hash": "bac22e97b626ae008603c79d001ae49c79a72071"
+          }
+        },
+        {
+          "client_id": "867199273366-phcr33buige0hmml8pj1vphfb99poil4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQbxMqUgT9R82dsLmQg27aRTpgnQ3V8vM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "867199273366-phcr33buige0hmml8pj1vphfb99poil4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

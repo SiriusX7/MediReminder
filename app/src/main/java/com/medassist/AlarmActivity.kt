@@ -4,7 +4,6 @@ import android.app.KeyguardManager
 import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
@@ -28,12 +27,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.medassist.data.local.IntakeLog
+import com.medassist.data.local.Medication
 import com.medassist.ui.theme.MedAssistTheme
-import java.util.Calendar
+import kotlinx.coroutines.launch
 
 class AlarmActivity : ComponentActivity() {
 
@@ -60,41 +61,92 @@ class AlarmActivity : ComponentActivity() {
         }
 
         val medicineId = intent.getIntExtra("MEDICINE_ID", -1)
-        val dataManager = DataManager(this)
-        val medicine = dataManager.loadMedicines().find { it.id == medicineId }
+        val userId = intent.getStringExtra("USER_ID") ?: ""
+        val app = application as MediReminderApp
+        val medicationDao = app.database.medicationDao()
+        val intakeLogDao = app.database.intakeLogDao()
 
-        if (medicine == null) {
-            finish()
-            return
-        }
+        lifecycleScope.launch {
+            val medication = medicationDao.getMedicationById(medicineId, userId)
 
-        playAlarmSound()
+            if (medication == null) {
+                finish()
+                return@launch
+            }
 
-        setContent {
-            MedAssistTheme {
-                AlarmScreen(
-                    medicine = medicine,
-                    onTaken = {
-                        markAsTaken(dataManager, medicine)
-                        stopAlarmSound()
-                        cancelNotification(medicineId)
-                        finish()
-                    },
-                    onSnooze = { minutes ->
-                        AlarmScheduler.snoozeAlarm(this, medicineId, minutes)
-                        stopAlarmSound()
-                        cancelNotification(medicineId)
-                        finish()
-                    },
-                    onSkip = {
-                        markAsSkipped(dataManager, medicine)
-                        stopAlarmSound()
-                        cancelNotification(medicineId)
-                        finish()
-                    }
-                )
+            playAlarmSound()
+
+            setContent {
+                MedAssistTheme {
+                    AlarmScreen(
+                        medication = medication,
+                        onTaken = {
+                            lifecycleScope.launch {
+                                markAsTaken(medicationDao, intakeLogDao, medication)
+                                stopAlarmSound()
+                                cancelNotification(medicineId)
+                                finish()
+                            }
+                        },
+                        onSnooze = { minutes ->
+                            AlarmScheduler.snoozeAlarm(this@AlarmActivity, medicineId, userId, minutes)
+                            stopAlarmSound()
+                            cancelNotification(medicineId)
+                            finish()
+                        },
+                        onSkip = {
+                            lifecycleScope.launch {
+                                markAsSkipped(intakeLogDao, medication)
+                                stopAlarmSound()
+                                cancelNotification(medicineId)
+                                finish()
+                            }
+                        }
+                    )
+                }
             }
         }
+    }
+
+    private suspend fun markAsTaken(
+        medicationDao: com.medassist.data.local.MedicationDao,
+        intakeLogDao: com.medassist.data.local.IntakeLogDao,
+        medication: Medication
+    ) {
+        val newStock = (medication.stock - 1).coerceAtLeast(0)
+        val updatedMed = medication.copy(stock = newStock, syncStatus = "PENDING")
+        medicationDao.update(updatedMed)
+        
+        intakeLogDao.insert(
+            IntakeLog(
+                userId = medication.userId,
+                medicationId = medication.id,
+                timestamp = System.currentTimeMillis(),
+                status = "TAKEN",
+                syncStatus = "PENDING"
+            )
+        )
+        
+        // Schedule the NEXT alarm
+        AlarmScheduler.scheduleNextAlarm(this, updatedMed)
+    }
+
+    private suspend fun markAsSkipped(
+        intakeLogDao: com.medassist.data.local.IntakeLogDao,
+        medication: Medication
+    ) {
+        intakeLogDao.insert(
+            IntakeLog(
+                userId = medication.userId,
+                medicationId = medication.id,
+                timestamp = System.currentTimeMillis(),
+                status = "SKIPPED",
+                syncStatus = "PENDING"
+            )
+        )
+        
+        // Schedule the NEXT alarm
+        AlarmScheduler.scheduleNextAlarm(this, medication)
     }
 
     private fun playAlarmSound() {
@@ -152,53 +204,15 @@ class AlarmActivity : ComponentActivity() {
         val nm = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nm.cancel(id)
     }
-
-    private fun markAsTaken(dataManager: DataManager, medicine: Medicine) {
-        val medicines = dataManager.loadMedicines().toMutableList()
-        val index = medicines.indexOfFirst { it.id == medicine.id }
-        if (index >= 0) {
-            val med = medicines[index]
-            val todayIso = getIsoDateForCalendar(Calendar.getInstance())
-            val newTakenDates = med.takenDates.toMutableSet()
-            newTakenDates.add(todayIso)
-            
-            // Adjust stock
-            val newStock = (med.stock - med.quantity).coerceAtLeast(0)
-            
-            medicines[index] = med.copy(takenDates = newTakenDates, stock = newStock)
-            dataManager.saveMedicines(medicines)
-            
-            // Schedule the NEXT alarm
-            AlarmScheduler.scheduleNextAlarm(this, medicines[index])
-        }
-    }
-
-    private fun markAsSkipped(dataManager: DataManager, medicine: Medicine) {
-        val medicines = dataManager.loadMedicines().toMutableList()
-        val index = medicines.indexOfFirst { it.id == medicine.id }
-        if (index >= 0) {
-            val med = medicines[index]
-            val todayIso = getIsoDateForCalendar(Calendar.getInstance())
-            
-            val newSkippedDates = med.skippedDates.toMutableSet()
-            newSkippedDates.add(todayIso)
-            
-            medicines[index] = med.copy(skippedDates = newSkippedDates)
-            dataManager.saveMedicines(medicines)
-            
-            // Schedule the NEXT alarm (even if skipped today, it should trigger on the next valid cycle)
-            AlarmScheduler.scheduleNextAlarm(this, medicines[index])
-        }
-    }
 }
 
-    @Composable
-    fun AlarmScreen(
-        medicine: Medicine,
-        onTaken: () -> Unit,
-        onSnooze: (Int) -> Unit,
-        onSkip: () -> Unit
-    ) {
+@Composable
+fun AlarmScreen(
+    medication: Medication,
+    onTaken: () -> Unit,
+    onSnooze: (Int) -> Unit,
+    onSkip: () -> Unit
+) {
     val cs = MaterialTheme.colorScheme
     var showSnoozeOptions by remember { mutableStateOf(false) }
 
@@ -217,13 +231,13 @@ class AlarmActivity : ComponentActivity() {
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
-                    .background(medicine.pale),
+                    .background(cs.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Filled.Alarm,
                     contentDescription = null,
-                    tint = medicine.color,
+                    tint = cs.primary,
                     modifier = Modifier.size(64.dp)
                 )
             }
@@ -239,7 +253,7 @@ class AlarmActivity : ComponentActivity() {
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = medicine.name,
+                text = medication.name,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
                 color = cs.onSurface,
@@ -249,7 +263,7 @@ class AlarmActivity : ComponentActivity() {
             Spacer(modifier = Modifier.height(16.dp))
             
             Text(
-                text = medicineDetail(medicine),
+                text = medicineDetail(medication.toDomain()),
                 style = MaterialTheme.typography.bodyLarge,
                 color = cs.onSurfaceVariant,
                 textAlign = TextAlign.Center

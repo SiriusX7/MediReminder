@@ -1,33 +1,29 @@
 package com.medassist
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.Signature
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -40,44 +36,9 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.LocalHospital
-import androidx.compose.material.icons.outlined.Medication
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Shield
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -86,60 +47,154 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.medassist.data.local.MedicationDao
+import com.medassist.data.local.UserProfile
+import com.medassist.data.local.UserProfileDao
+import com.medassist.data.repository.AuthRepository
+import com.medassist.ui.auth.AuthViewModel
+import com.medassist.ui.auth.ForgotPasswordScreen
+import com.medassist.ui.auth.LoginScreen
+import com.medassist.ui.auth.SignUpScreen
 import com.medassist.ui.theme.MedAssistTheme
 import com.medassist.ui.theme.Success
 import com.medassist.ui.theme.SuccessContainer
 import kotlinx.coroutines.delay
-
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission is granted
-        } else {
-            // Explain to the user that the feature is unavailable
-        }
-    }
-
-    private fun askNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                // Granted
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val dataManager = DataManager(applicationContext)
+        val app = application as MediReminderApp
+        val medicationDao = app.database.medicationDao()
+        val userProfileDao = app.database.userProfileDao()
+        val authRepository = AuthRepository()
         
+        printAppFingerprints() // Retrieve SHA-1 and SHA-256 for Firebase
         askNotificationPermission()
-        AlarmScheduler.scheduleAll(applicationContext)
+        
+        val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: "local_user"
+        AlarmScheduler.scheduleAll(applicationContext, currentUid)
 
         setContent {
             MedAssistTheme {
+                val navController = rememberNavController()
+                val authViewModel = remember { AuthViewModel(authRepository, userProfileDao) }
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                val startDestination = if (currentUser == null) "login" else "main"
+
                 var showSplash by remember { mutableStateOf(true) }
                 LaunchedEffect(Unit) {
                     delay(1_400)
                     showSplash = false
                 }
+
                 if (showSplash) {
                     MedAssistSplashScreen()
                 } else {
-                    MedAssistApp(dataManager)
+                    NavHost(navController = navController, startDestination = startDestination) {
+                        composable("login") {
+                            LoginScreen(
+                                viewModel = authViewModel,
+                                onNavigateToSignUp = { navController.navigate("signup") },
+                                onNavigateToForgotPassword = { navController.navigate("forgot_password") },
+                                onLoginSuccess = {
+                                    navController.navigate("main") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable("signup") {
+                            SignUpScreen(
+                                viewModel = authViewModel,
+                                onNavigateToLogin = { navController.popBackStack() },
+                                onSignUpSuccess = {
+                                    navController.navigate("main") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable("forgot_password") {
+                            ForgotPasswordScreen(
+                                viewModel = authViewModel,
+                                onBackToLogin = { navController.popBackStack() }
+                            )
+                        }
+                        composable("main") {
+                            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "local_user"
+                            val context = LocalContext.current
+                            MedAssistApp(
+                                userId = uid,
+                                medicationDao = medicationDao,
+                                userProfileDao = userProfileDao,
+                                onSignOut = {
+                                    authRepository.signOut()
+                                    val db = app.database
+                                    (context as? ComponentActivity)?.lifecycleScope?.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                        db.clearAllTables()
+                                    }
+                                    navController.navigate("login") {
+                                        popUpTo("main") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                    }
                 }
+            }
+        }
+    }
+
+    private fun printAppFingerprints() {
+        try {
+            val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            }
+            
+            val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo.signingInfo?.apkContentsSigners
+            } else {
+                @Suppress("DEPRECATION")
+                packageInfo.signatures
+            }
+
+            signatures?.forEach { signature ->
+                val sha1 = getFingerprint(signature, "SHA-1")
+                val sha256 = getFingerprint(signature, "SHA-256")
+                Log.d("Fingerprints", "SHA-1: $sha1")
+                Log.d("Fingerprints", "SHA-256: $sha256")
+            }
+        } catch (e: Exception) {
+            Log.e("Fingerprints", "Error getting fingerprints", e)
+        }
+    }
+
+    private fun getFingerprint(signature: Signature, algorithm: String): String {
+        val md = MessageDigest.getInstance(algorithm)
+        val digest = md.digest(signature.toByteArray())
+        return digest.joinToString(":") { "%02X".format(it) }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean -> }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
@@ -201,9 +256,23 @@ private val TODAY: Int get() = getTodayDayOfMonth()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedAssistApp(dataManager: DataManager) {
+fun MedAssistApp(
+    userId: String,
+    medicationDao: MedicationDao,
+    userProfileDao: UserProfileDao,
+    onSignOut: () -> Unit
+) {
     val context = LocalContext.current
-    var userProfile by remember { mutableStateOf(dataManager.loadUserProfile()) }
+    val scope = rememberCoroutineScope()
+    
+    var userProfile by remember(userId) { mutableStateOf(UserProfile(uid = userId)) }
+    LaunchedEffect(userId) {
+        val profile = userProfileDao.getUserProfile(userId)
+        if (profile != null) {
+            userProfile = profile
+        }
+    }
+    
     var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
     var tab by remember { mutableStateOf("Today") }
 
@@ -211,9 +280,17 @@ fun MedAssistApp(dataManager: DataManager) {
         tab = "Today"
     }
 
-    var nextId by remember { mutableStateOf(dataManager.loadNextId()) }
-    val savedMedicines = remember { dataManager.loadMedicines() }
-    val medicines = remember { mutableStateListOf(*savedMedicines.toTypedArray()) }
+    val medicationsFlow = remember(userId) { medicationDao.getAllMedications(userId) }
+    val medications by medicationsFlow.collectAsState(initial = emptyList())
+    val medicines = medications.map { it.toDomain() }
+    
+    var nextId by remember { mutableStateOf(100) }
+    LaunchedEffect(medicines) {
+        if (medicines.isNotEmpty()) {
+            nextId = (medicines.maxOf { it.id } + 1).coerceAtLeast(100)
+        }
+    }
+    
     var editing by remember { mutableStateOf<Medicine?>(null) }
     var reminder by remember { mutableStateOf<Medicine?>(null) }
     var showCalendar by remember { mutableStateOf(false) }
@@ -221,57 +298,68 @@ fun MedAssistApp(dataManager: DataManager) {
     val scheduledMedicines = medicines.filter { isMedicineScheduledOnDate(it, selectedCalendar) }
     val completed = scheduledMedicines.count { it.isTakenOn(selectedCalendar) }
 
-    fun persistMedicines() {
-        dataManager.saveMedicines(medicines)
-    }
-
     fun toggle(id: Int, cal: Calendar) {
-        val i = medicines.indexOfFirst { it.id == id }
-        if (i >= 0) {
-            val med = medicines[i]
+        val med = medicines.find { it.id == id }
+        if (med != null) {
             val dateIso = getIsoDateForCalendar(cal)
             val newTakenDates = med.takenDates.toMutableSet()
             var newStock = med.stock
             if (newTakenDates.contains(dateIso)) {
                 newTakenDates.remove(dateIso)
-                newStock += med.quantity // Revert stock deduction when unticking
+                newStock += med.quantity
             } else {
                 newTakenDates.add(dateIso)
-                newStock = maxOf(0, med.stock - med.quantity) // Deduct stock when ticking
+                newStock = maxOf(0, med.stock - med.quantity)
             }
-            medicines[i] = med.copy(takenDates = newTakenDates, stock = newStock)
-            persistMedicines()
-            AlarmScheduler.scheduleNextAlarm(context, medicines[i])
+            val updatedMed = med.copy(takenDates = newTakenDates, stock = newStock)
+            scope.launch {
+                medicationDao.update(updatedMed.toMedication())
+                AlarmScheduler.scheduleNextAlarm(context, updatedMed.toMedication())
+            }
         }
     }
 
     fun save(med: Medicine) {
-        val i = medicines.indexOfFirst { it.id == med.id }
-        if (i >= 0) medicines[i] = med else medicines.add(med)
-        persistMedicines()
-        dataManager.saveNextId(nextId)
-        AlarmScheduler.scheduleNextAlarm(context, med)
+        scope.launch {
+            val medWithUser = if (med.userId == "local_user" && userId != "local_user") {
+                med.copy(userId = userId)
+            } else {
+                med
+            }
+            medicationDao.insert(medWithUser.toMedication())
+            AlarmScheduler.scheduleNextAlarm(context, medWithUser.toMedication())
+        }
     }
 
     fun saveMultiple(list: List<Medicine>) {
-        list.forEach { med ->
-            val i = medicines.indexOfFirst { it.id == med.id }
-            if (i >= 0) medicines[i] = med else medicines.add(med)
-            AlarmScheduler.scheduleNextAlarm(context, med)
+        scope.launch {
+            list.forEach { med ->
+                val medWithUser = if (med.userId == "local_user" && userId != "local_user") {
+                    med.copy(userId = userId)
+                } else {
+                    med
+                }
+                medicationDao.insert(medWithUser.toMedication())
+                AlarmScheduler.scheduleNextAlarm(context, medWithUser.toMedication())
+            }
         }
-        persistMedicines()
-        dataManager.saveNextId(nextId)
     }
 
     fun delete(id: Int) {
-        medicines.removeAll { it.id == id }
-        persistMedicines()
-        AlarmScheduler.cancelAlarm(context, id)
+        val med = medicines.find { it.id == id }
+        if (med != null) {
+            scope.launch {
+                medicationDao.delete(med.toMedication())
+                AlarmScheduler.cancelAlarm(context, id)
+            }
+        }
     }
 
     fun updateProfile(newProfile: UserProfile) {
         userProfile = newProfile
-        dataManager.saveUserProfile(newProfile)
+        scope.launch {
+            userProfileDao.insert(newProfile)
+        }
     }
 
     Scaffold(
@@ -281,7 +369,7 @@ fun MedAssistApp(dataManager: DataManager) {
             if (tab == "Today" || tab == "Medicine") {
                 FloatingActionButton(
                     onClick = {
-                        editing = emptyDraft(nextId)
+                        editing = emptyDraft(nextId, userId)
                         nextId += 1
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -311,7 +399,6 @@ fun MedAssistApp(dataManager: DataManager) {
                     try {
                         context.startActivity(intent)
                     } catch (e: Exception) {
-                        // In case dialer not found
                     }
                 },
                 onAvatarClick = { tab = "Profile" },
@@ -343,6 +430,7 @@ fun MedAssistApp(dataManager: DataManager) {
                     profile = userProfile,
                     onSaveProfile = { updateProfile(it) },
                     onBack = { tab = "Today" },
+                    onSignOut = onSignOut
                 )
             } else {
                 EmptyView(tab) { tab = "Today" }
@@ -497,7 +585,7 @@ private fun DateSection(
                     onClick = {
                         onSelectDate(Calendar.getInstance())
                     },
-                    colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+                    colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = cs.secondaryContainer,
                         contentColor = cs.onSecondaryContainer,
                     )
@@ -852,7 +940,7 @@ private fun TakeButton(taken: Boolean, skipped: Boolean, enabled: Boolean, isPas
         FilledTonalButton(
             onClick = onClick,
             enabled = enabled,
-            colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+            colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = SuccessContainer,
                 contentColor = Success,
             ),
@@ -864,7 +952,7 @@ private fun TakeButton(taken: Boolean, skipped: Boolean, enabled: Boolean, isPas
         FilledTonalButton(
             onClick = {},
             enabled = false,
-            colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+            colors = ButtonDefaults.filledTonalButtonColors(
                 disabledContainerColor = cs.errorContainer,
                 disabledContentColor = cs.onErrorContainer,
             ),
@@ -876,7 +964,7 @@ private fun TakeButton(taken: Boolean, skipped: Boolean, enabled: Boolean, isPas
         FilledTonalButton(
             onClick = {},
             enabled = false,
-            colors = androidx.compose.material3.ButtonDefaults.filledTonalButtonColors(
+            colors = ButtonDefaults.filledTonalButtonColors(
                 disabledContainerColor = cs.errorContainer,
                 disabledContentColor = cs.onErrorContainer,
             ),
