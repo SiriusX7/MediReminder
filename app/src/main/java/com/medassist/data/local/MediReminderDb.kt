@@ -98,7 +98,10 @@ data class UserProfile(
 @Dao
 interface MedicationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(medication: Medication): Long
+    suspend fun insert(medication: Medication)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(medications: List<Medication>)
 
     @Update
     suspend fun update(medication: Medication)
@@ -114,6 +117,9 @@ interface MedicationDao {
 
     @Query("SELECT * FROM medications WHERE syncStatus = 'PENDING' AND userId = :uid")
     suspend fun getPendingSyncMedications(uid: String): List<Medication>
+
+    @Query("SELECT COUNT(*) FROM medications WHERE syncStatus = 'PENDING' AND userId = :uid")
+    suspend fun getUnsyncedCount(uid: String): Int
 
     @Query("DELETE FROM medications WHERE userId = :uid")
     suspend fun clearAllForUser(uid: String)

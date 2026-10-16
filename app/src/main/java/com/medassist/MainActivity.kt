@@ -14,6 +14,7 @@ import java.util.Calendar
 import java.util.Locale
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.work.*
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -47,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,8 +65,11 @@ import com.medassist.ui.auth.SignUpScreen
 import com.medassist.ui.theme.MedAssistTheme
 import com.medassist.ui.theme.Success
 import com.medassist.ui.theme.SuccessContainer
+import com.medassist.sync.SyncWorker
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,6 +109,10 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToSignUp = { navController.navigate("signup") },
                                 onNavigateToForgotPassword = { navController.navigate("forgot_password") },
                                 onLoginSuccess = {
+                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                    if (uid != null) {
+                                        triggerSync(uid)
+                                    }
                                     navController.navigate("main") {
                                         popUpTo("login") { inclusive = true }
                                     }
@@ -115,6 +124,10 @@ class MainActivity : ComponentActivity() {
                                 viewModel = authViewModel,
                                 onNavigateToLogin = { navController.popBackStack() },
                                 onSignUpSuccess = {
+                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                    if (uid != null) {
+                                        triggerSync(uid)
+                                    }
                                     navController.navigate("main") {
                                         popUpTo("login") { inclusive = true }
                                     }
@@ -130,18 +143,46 @@ class MainActivity : ComponentActivity() {
                         composable("main") {
                             val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "local_user"
                             val context = LocalContext.current
+                            val scope = rememberCoroutineScope()
+                            val workInfo by WorkManager.getInstance(context)
+                                .getWorkInfosByTagFlow("sync_worker")
+                                .collectAsState(initial = emptyList())
+                            
+                            val isSyncing = workInfo.any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED }
+
                             MedAssistApp(
                                 userId = uid,
                                 medicationDao = medicationDao,
                                 userProfileDao = userProfileDao,
+                                isSyncing = isSyncing,
                                 onSignOut = {
+                                    scope.launch {
+                                        val unsyncedCount = withContext(Dispatchers.IO) {
+                                            medicationDao.getUnsyncedCount(uid)
+                                        }
+                                        if (unsyncedCount > 0) {
+                                            // Handled inside MedAssistApp via a state if we want a dialog
+                                            // But for now, let's assume MedAssistApp will call onSignOut 
+                                            // and we just need to provide the logic.
+                                            // Actually, let's move the unsynced check into MedAssistApp
+                                        } else {
+                                            authRepository.signOut()
+                                            withContext(Dispatchers.IO) {
+                                                app.database.clearAllTables()
+                                            }
+                                            navController.navigate("login") {
+                                                popUpTo("main") { inclusive = true }
+                                            }
+                                        }
+                                    }
+                                },
+                                onForceSignOut = {
                                     authRepository.signOut()
-                                    val db = app.database
-                                    (context as? ComponentActivity)?.lifecycleScope?.launch(kotlinx.coroutines.Dispatchers.IO) {
-                                        db.clearAllTables()
+                                    scope.launch(Dispatchers.IO) {
+                                        app.database.clearAllTables()
                                     }
                                     navController.navigate("login") {
-                                        popUpTo("main") { inclusive = true }
+                                        popUpTo("login") { inclusive = true }
                                     }
                                 }
                             )
@@ -150,6 +191,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun triggerSync(userId: String) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .setInputData(workDataOf("userId" to userId))
+            .addTag("sync_worker")
+            .build()
+        WorkManager.getInstance(this).enqueueUniqueWork(
+            "sync_data_$userId",
+            ExistingWorkPolicy.REPLACE,
+            syncRequest
+        )
     }
 
     private fun printAppFingerprints() {
@@ -260,7 +317,9 @@ fun MedAssistApp(
     userId: String,
     medicationDao: MedicationDao,
     userProfileDao: UserProfileDao,
-    onSignOut: () -> Unit
+    isSyncing: Boolean = false,
+    onSignOut: () -> Unit,
+    onForceSignOut: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -275,6 +334,8 @@ fun MedAssistApp(
     
     var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
     var tab by remember { mutableStateOf("Today") }
+
+    var showLogoutWarning by remember { mutableStateOf(false) }
 
     BackHandler(enabled = tab != "Today") {
         tab = "Today"
@@ -406,6 +467,23 @@ fun MedAssistApp(
             Spacer(Modifier.height(20.dp))
 
             if (tab == "Today") {
+                if (isSyncing) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .clip(CircleShape),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.primaryContainer
+                    )
+                    Text(
+                        "Syncing your data...",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
                 DateSection(
                     selectedCalendar = selectedCalendar,
                     onSelectDate = { selectedCalendar = it },
@@ -430,7 +508,18 @@ fun MedAssistApp(
                     profile = userProfile,
                     onSaveProfile = { updateProfile(it) },
                     onBack = { tab = "Today" },
-                    onSignOut = onSignOut
+                    onSignOut = {
+                        scope.launch {
+                            val unsyncedCount = withContext(Dispatchers.IO) {
+                                medicationDao.getUnsyncedCount(userId)
+                            }
+                            if (unsyncedCount > 0) {
+                                showLogoutWarning = true
+                            } else {
+                                onSignOut()
+                            }
+                        }
+                    }
                 )
             } else {
                 EmptyView(tab) { tab = "Today" }
@@ -481,6 +570,30 @@ fun MedAssistApp(
                 toggle(med.id, Calendar.getInstance())
                 reminder = null
             },
+        )
+    }
+
+    if (showLogoutWarning) {
+        AlertDialog(
+            onDismissRequest = { showLogoutWarning = false },
+            title = { Text("Unsynced Changes") },
+            text = { Text("You have unsynced medications. If you sign out now, these changes may be lost. Do you want to sign out anyway?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutWarning = false
+                        onForceSignOut()
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text("Sign Out Anyway")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutWarning = false }) {
+                    Text("Cancel")
+                }
+            }
         )
     }
 }
