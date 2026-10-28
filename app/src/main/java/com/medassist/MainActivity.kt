@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocalHospital
 import androidx.compose.material.icons.outlined.Medication
@@ -299,8 +300,10 @@ fun MedAssistApp(dataManager: DataManager) {
                 .fillMaxSize()
                 .padding(inner)
         ) {
-            if (tab == "AI Chat") {
+            if (tab == "Med Info" || tab == "AI Chat") {
                 MedicineChatScreen(activeMedicines = medicines)
+            } else if (tab == "History") {
+                HistoryScreen(medicines = medicines)
             } else if (tab == "Settings") {
                 SettingsScreen(dataManager = dataManager)
             } else {
@@ -329,7 +332,7 @@ fun MedAssistApp(dataManager: DataManager) {
                     )
                     Spacer(Modifier.height(20.dp))
 
-                    if (tab == "Today") {
+                    if (tab == "Home" || tab == "Today") {
                         DateSection(
                             selectedCalendar = selectedCalendar,
                             onSelectDate = { selectedCalendar = it },
@@ -344,7 +347,7 @@ fun MedAssistApp(dataManager: DataManager) {
                             medicines = scheduledMedicines,
                             onToggle = { toggle(it, selectedCalendar) }
                         )
-                    } else if (tab == "Medicine") {
+                    } else if (tab == "Medicines" || tab == "Medicine") {
                         MedicineListScreen(
                             medicines = medicines,
                             onEdit = { editing = it }
@@ -353,10 +356,10 @@ fun MedAssistApp(dataManager: DataManager) {
                         ProfileScreen(
                             profile = userProfile,
                             onSaveProfile = { updateProfile(it) },
-                            onBack = { tab = "Today" },
+                            onBack = { tab = "Home" },
                         )
                     } else {
-                        EmptyView(tab) { tab = "Today" }
+                        EmptyView(tab) { tab = "Home" }
                     }
                     Spacer(Modifier.height(40.dp))
                 }
@@ -942,11 +945,11 @@ private fun EmptyView(tab: String, onBack: () -> Unit) {
 @Composable
 private fun BottomNav(current: String, onSelect: (String) -> Unit) {
     val items = listOf(
-        "Today" to Icons.Outlined.Home,
-        "Medicine" to Icons.Outlined.Medication,
-        "AI Chat" to Icons.Outlined.SmartToy,
+        "Home" to Icons.Outlined.Home,
+        "Medicines" to Icons.Outlined.Medication,
+        "Med Info" to Icons.Outlined.LocalHospital,
+        "History" to Icons.Outlined.History,
         "Settings" to Icons.Outlined.Settings,
-        "Profile" to Icons.Outlined.Person,
     )
     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
         items.forEach { (label, icon) ->

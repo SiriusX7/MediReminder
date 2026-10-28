@@ -17,10 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.SmartToy
+import androidx.compose.material.icons.filled.MedicalServices
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Medication
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,11 +31,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,9 +44,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun MedicineChatScreen(
@@ -58,7 +64,7 @@ fun MedicineChatScreen(
     val messages = remember {
         mutableStateListOf(
             ChatMessage(
-                text = "Hello! I am your AI Health Assistant. You can ask me questions about your prescribed medicines, side effects, meal instructions, or precautions.",
+                text = "Hello! I am your MedAssist Clinical Pharmacotherapy Assistant. I can explain medication uses, mechanisms, common side effects, and clinical precautions for your prescribed medications.\n\nTap any medication button above or type your question below. (Note: Being prescribed a medication does not confirm a personal diagnosis. Never alter or discontinue medications without doctor consultation.)",
                 isFromUser = false,
             )
         )
@@ -88,54 +94,34 @@ fun MedicineChatScreen(
     Scaffold(
         containerColor = cs.background,
         bottomBar = {
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(cs.surface)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Quick-ask medication chips
-                if (activeMedicines.isNotEmpty()) {
-                    Text(
-                        "Quick Questions:",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = cs.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 6.dp)
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(bottom = 8.dp)
-                    ) {
-                        items(activeMedicines) { med ->
-                            FilterChip(
-                                selected = false,
-                                onClick = { sendMessage("Can you explain dosage and precautions for ${med.name}?") },
-                                label = { Text(med.name) },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.AutoAwesome,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                OutlinedTextField(
+                    value = inputText,
+                    onValueChange = { inputText = it },
+                    placeholder = { Text("Ask about a medicine (e.g. side effects of Amoxicillin)...") },
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = cs.primary,
+                        unfocusedBorderColor = cs.outlineVariant
+                    ),
+                    modifier = Modifier.weight(1f),
+                    enabled = !isThinking
+                )
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(if (inputText.isNotBlank() && !isThinking) cs.primaryContainer else cs.surfaceVariant),
+                    contentAlignment = Alignment.Center
                 ) {
-                    OutlinedTextField(
-                        value = inputText,
-                        onValueChange = { inputText = it },
-                        placeholder = { Text("Ask about side effects, meal timing...") },
-                        singleLine = true,
-                        modifier = Modifier.weight(1f),
-                        enabled = !isThinking
-                    )
                     IconButton(
                         onClick = { sendMessage(inputText) },
                         enabled = inputText.isNotBlank() && !isThinking
@@ -143,7 +129,7 @@ fun MedicineChatScreen(
                         Icon(
                             Icons.AutoMirrored.Filled.Send,
                             contentDescription = "Send question",
-                            tint = if (inputText.isNotBlank() && !isThinking) cs.primary else cs.onSurfaceVariant
+                            tint = if (inputText.isNotBlank() && !isThinking) cs.onPrimaryContainer else cs.onSurfaceVariant
                         )
                     }
                 }
@@ -157,32 +143,93 @@ fun MedicineChatScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Spacer(Modifier.height(12.dp))
+
+            // 1. Header
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(42.dp)
-                        .background(cs.primaryContainer, shape = MaterialTheme.shapes.medium),
+                        .size(44.dp)
+                        .background(cs.primary, shape = MaterialTheme.shapes.medium),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Outlined.SmartToy,
+                        Icons.Default.MedicalServices,
                         contentDescription = null,
-                        tint = cs.onPrimaryContainer,
+                        tint = cs.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
                 Column {
                     Text(
-                        "AI Health Assistant",
-                        style = MaterialTheme.typography.titleMedium,
+                        "Medicine Information",
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = cs.onSurface
                     )
                     Text(
-                        "Ask about side effects, precautions & dosage",
+                        "Clinical guidance on uses, side effects, and precautions powered by Gemini AI",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = cs.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(14.dp))
+
+            // 2. Active Medications Quick Chips at VERY TOP
+            if (activeMedicines.isNotEmpty()) {
+                Text(
+                    "Ask about your active medications:",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = cs.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 6.dp)
+                )
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = 12.dp)
+                ) {
+                    items(activeMedicines) { med ->
+                        FilterChip(
+                            selected = false,
+                            onClick = { sendMessage("Can you explain clinical uses, side effects, and precautions for ${med.name}?") },
+                            label = { Text("${med.name} ${med.reason.ifBlank { "" }}".trim()) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Medication,
+                                    contentDescription = null,
+                                    tint = cs.primary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            // 3. Informational Disclaimer Banner
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = cs.surfaceVariant),
+                shape = MaterialTheme.shapes.medium,
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Icon(
+                        Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = cs.primary,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Text(
+                        "Informational guidance only. Not a medical diagnosis or substitute for healthcare consultation.",
                         style = MaterialTheme.typography.bodySmall,
                         color = cs.onSurfaceVariant
                     )
@@ -191,6 +238,7 @@ fun MedicineChatScreen(
 
             Spacer(Modifier.height(16.dp))
 
+            // 4. Chat Messages List
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
@@ -226,6 +274,9 @@ fun MedicineChatScreen(
 private fun ChatBubble(message: ChatMessage) {
     val cs = MaterialTheme.colorScheme
     val isUser = message.isFromUser
+    val timeStr = remember(message.timestamp) {
+        SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(message.timestamp))
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -238,13 +289,20 @@ private fun ChatBubble(message: ChatMessage) {
             } else {
                 MaterialTheme.shapes.large.copy(bottomStart = androidx.compose.foundation.shape.CornerSize(2.dp))
             },
-            modifier = Modifier.fillMaxWidth(0.85f)
+            modifier = Modifier.fillMaxWidth(0.92f)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
                 Text(
                     text = message.text,
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isUser) cs.onPrimaryContainer else cs.onSurfaceVariant
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = timeStr,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = (if (isUser) cs.onPrimaryContainer else cs.onSurfaceVariant).copy(alpha = 0.6f),
+                    modifier = Modifier.align(Alignment.End)
                 )
             }
         }
