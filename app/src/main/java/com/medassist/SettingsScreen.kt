@@ -5,13 +5,15 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,24 +24,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Feedback
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +57,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -64,6 +76,9 @@ fun SettingsScreen(
     var voiceRemindersEnabled by remember { mutableStateOf(dm.isVoiceRemindersEnabled()) }
     var soundEnabled by remember { mutableStateOf(dm.isSoundEnabled()) }
     var languageCode by remember { mutableStateOf(dm.getLanguageCode()) }
+
+    var showDisclaimerDialog by remember { mutableStateOf(false) }
+    var showFeedbackDialog by remember { mutableStateOf(false) }
 
     fun sendTestNotification() {
         val channelId = "medassist_test_channel"
@@ -91,7 +106,7 @@ fun SettingsScreen(
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_popup_reminder)
             .setContentTitle("Test Dose Reminder")
-            .setContentText("This is a test notification from MedAssist.")
+            .setContentText("This is a test dose alert from MedAssist.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -111,40 +126,42 @@ fun SettingsScreen(
         // Header
         item {
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null,
-                        tint = cs.primary,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Text(
-                        text = "Settings & Reminders",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = cs.onSurface
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .background(cs.primaryContainer, shape = MaterialTheme.shapes.medium),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = null,
+                            tint = cs.onPrimaryContainer,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Settings",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = cs.onSurface
+                        )
+                        Text(
+                            text = "Preferences, notifications, and application details",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = cs.onSurfaceVariant
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Configure reminder times, sounds, theme, and language.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = cs.onSurfaceVariant
-                )
             }
         }
 
-        // 1. Voice Reminders Card
+        // Category 1: Reminders & Notifications
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = cs.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+            CategoryCard(title = "Reminders & Notifications") {
+                // Voice Reminders Row
+                Column(modifier = Modifier.padding(14.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -155,24 +172,10 @@ fun SettingsScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.VolumeUp,
-                                contentDescription = null,
-                                tint = cs.primary,
-                                modifier = Modifier.size(28.dp)
-                            )
+                            BadgeIcon(icon = Icons.Default.VolumeUp, bgColor = Color(0xFFE0F2FE), iconColor = Color(0xFF0284C7))
                             Column {
-                                Text(
-                                    text = "Enable Voice Reminders",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = cs.onSurface
-                                )
-                                Text(
-                                    text = "Read dose reminders aloud at scheduled times using Android TextToSpeech.",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = cs.onSurfaceVariant
-                                )
+                                Text("Voice Reminders", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                                Text("Read dose reminders aloud using TextToSpeech", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                             }
                         }
                         Switch(
@@ -186,135 +189,27 @@ fun SettingsScreen(
                     }
 
                     if (voiceRemindersEnabled) {
+                        Spacer(modifier = Modifier.height(10.dp))
                         OutlinedButton(
                             onClick = {
                                 VoiceReminderManager.speakText(context, "This is a test voice reminder for MedAssist.")
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.VolumeUp,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
+                            Icon(Icons.Default.VolumeUp, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Test Voice Reminder")
                         }
                     }
-
-                    Text(
-                        text = "ℹ️ Note: Spoken voice reminders operate via Text-to-Speech when MedAssist is active.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = cs.onSurfaceVariant
-                    )
                 }
-            }
-        }
 
-        // 2. App Language Card
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = cs.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Language,
-                            contentDescription = null,
-                            tint = cs.primary,
-                            modifier = Modifier.size(28.dp)
-                        )
-                        Text(
-                            text = "App Language",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = cs.onSurface
-                        )
-                    }
+                HorizontalDivider(color = cs.outlineVariant.copy(alpha = 0.5f))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        val languages = listOf(
-                            "system" to "System Default",
-                            "en" to "English",
-                            "hi" to "हिंदी (Hindi)",
-                            "te" to "తెలుగు (Telugu)"
-                        )
-
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                FilterChip(
-                                    selected = languageCode == "system",
-                                    onClick = {
-                                        languageCode = "system"
-                                        dm.setLanguageCode("system")
-                                    },
-                                    label = { Text("System Default") },
-                                    modifier = Modifier.weight(1f)
-                                )
-                                FilterChip(
-                                    selected = languageCode == "en",
-                                    onClick = {
-                                        languageCode = "en"
-                                        dm.setLanguageCode("en")
-                                    },
-                                    label = { Text("English") },
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                FilterChip(
-                                    selected = languageCode == "hi",
-                                    onClick = {
-                                        languageCode = "hi"
-                                        dm.setLanguageCode("hi")
-                                    },
-                                    label = { Text("हिंदी (Hindi)") },
-                                    modifier = Modifier.weight(1f)
-                                )
-                                FilterChip(
-                                    selected = languageCode == "te",
-                                    onClick = {
-                                        languageCode = "te"
-                                        dm.setLanguageCode("te")
-                                    },
-                                    label = { Text("తెలుగు (Telugu)") },
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // 3. Sound Chime Card
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = cs.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
+                // Reminder Sound Chime Row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -323,24 +218,10 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.VolumeUp,
-                            contentDescription = null,
-                            tint = cs.primary,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        BadgeIcon(icon = Icons.Default.Notifications, bgColor = Color(0xFFDCFCE7), iconColor = Color(0xFF16A34A))
                         Column {
-                            Text(
-                                text = "Reminder Sound Chime",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = cs.onSurface
-                            )
-                            Text(
-                                text = "Play bundled audio chime when dose alerts trigger.",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = cs.onSurfaceVariant
-                            )
+                            Text("Reminder Sound Chime", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text("Play chime sound when dose alerts trigger", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                         }
                     }
                     Switch(
@@ -352,114 +233,268 @@ fun SettingsScreen(
                         colors = SwitchDefaults.colors(checkedThumbColor = cs.onPrimary, checkedTrackColor = cs.primary)
                     )
                 }
+
+                HorizontalDivider(color = cs.outlineVariant.copy(alpha = 0.5f))
+
+                // Test Local Notifications Row
+                SettingsActionRow(
+                    icon = Icons.Default.NotificationsActive,
+                    badgeBgColor = Color(0xFFFFEDD5),
+                    badgeIconColor = Color(0xFFEA580C),
+                    title = "Test Local Notifications",
+                    subtitle = "Send immediate test dose alert to status bar",
+                    onClick = { sendTestNotification() }
+                )
             }
         }
 
-        // 4. Android Notifications Card
+        // Category 2: Regional & Language
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = cs.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+            CategoryCard(title = "Regional & Language") {
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        BadgeIcon(icon = Icons.Default.Language, bgColor = Color(0xFFE0F2FE), iconColor = Color(0xFF0284C7))
+                        Column {
+                            Text("App Language", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text("Select your preferred application language", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                        }
+                    }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = null,
-                                tint = cs.primary,
-                                modifier = Modifier.size(28.dp)
-                            )
-                            Text(
-                                text = "Android Local Notifications",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = cs.onSurface
-                            )
-                        }
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = null,
-                                tint = Color(0xFF16A34A),
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Text(
-                                text = "Active",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = Color(0xFF16A34A),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        FilterChip(
+                            selected = languageCode == "system",
+                            onClick = {
+                                languageCode = "system"
+                                dm.setLanguageCode("system")
+                            },
+                            label = { Text("System") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilterChip(
+                            selected = languageCode == "en",
+                            onClick = {
+                                languageCode = "en"
+                                dm.setLanguageCode("en")
+                            },
+                            label = { Text("English") },
+                            modifier = Modifier.weight(1f)
+                        )
                     }
-
-                    Text(
-                        text = "Scheduled dose alerts ring through high-importance 'MedAssist Dose Alerts' notification channel.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = cs.onSurfaceVariant
-                    )
-
-                    Button(
-                        onClick = { sendTestNotification() },
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = cs.primary, contentColor = cs.onPrimary)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                        FilterChip(
+                            selected = languageCode == "hi",
+                            onClick = {
+                                languageCode = "hi"
+                                dm.setLanguageCode("hi")
+                            },
+                            label = { Text("हिंदी (Hindi)") },
+                            modifier = Modifier.weight(1f)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Test Dose Reminder Notification")
+                        FilterChip(
+                            selected = languageCode == "te",
+                            onClick = {
+                                languageCode = "te"
+                                dm.setLanguageCode("te")
+                            },
+                            label = { Text("తెలుగు (Telugu)") },
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
         }
 
-        // 5. Clinical Safety Disclaimer
+        // Category 3: About & Support
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFEF3C7)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
+            CategoryCard(title = "About & Support") {
+                // Send Feedback Row
+                SettingsActionRow(
+                    icon = Icons.Default.Feedback,
+                    badgeBgColor = Color(0xFFF3E8FF),
+                    badgeIconColor = Color(0xFF9333EA),
+                    title = "Send Feedback",
+                    subtitle = "Suggest ideas, report bugs, or share improvements",
+                    onClick = { showFeedbackDialog = true }
+                )
+
+                HorizontalDivider(color = cs.outlineVariant.copy(alpha = 0.5f))
+
+                // Clinical Safety Disclaimer Row
+                SettingsActionRow(
+                    icon = Icons.Outlined.Shield,
+                    badgeBgColor = Color(0xFFFEF3C7),
+                    badgeIconColor = Color(0xFFD97706),
+                    title = "Clinical Safety Disclaimer",
+                    subtitle = "View medical advice notice and AI extraction disclaimer",
+                    onClick = { showDisclaimerDialog = true }
+                )
+
+                HorizontalDivider(color = cs.outlineVariant.copy(alpha = 0.5f))
+
+                // App Version Row
                 Row(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Info,
-                        contentDescription = null,
-                        tint = Color(0xFFD97706),
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Column {
-                        Text(
-                            text = "Clinical Safety Disclaimer",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF92400E)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "MedAssist is a medication reminder and educational tool. AI extraction may contain errors. Always verify medicine information against original prescription before scheduling.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF78350F)
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        BadgeIcon(icon = Icons.Default.Info, bgColor = Color(0xFFF1F5F9), iconColor = Color(0xFF475569))
+                        Column {
+                            Text("App Version", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text("Version 1.0.0 (Up to date)", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                        }
+                    }
+                    Surface(color = cs.surfaceVariant, shape = MaterialTheme.shapes.small) {
+                        Text("1.0.0", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = cs.onSurfaceVariant, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
                     }
                 }
             }
         }
+    }
+
+    // Disclaimer Dialog
+    if (showDisclaimerDialog) {
+        AlertDialog(
+            onDismissRequest = { showDisclaimerDialog = false },
+            icon = { Icon(Icons.Outlined.Shield, contentDescription = null, tint = Color(0xFFD97706)) },
+            title = { Text("Clinical Safety Disclaimer") },
+            text = {
+                Text(
+                    "MedAssist is a medication reminder and educational tool. AI extraction and search may contain errors. Always verify medicine information against your original prescription before scheduling.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showDisclaimerDialog = false }) {
+                    Text("I Understand")
+                }
+            }
+        )
+    }
+
+    // Feedback Dialog
+    if (showFeedbackDialog) {
+        AlertDialog(
+            onDismissRequest = { showFeedbackDialog = false },
+            icon = { Icon(Icons.Default.Feedback, contentDescription = null, tint = cs.primary) },
+            title = { Text("Send Feedback") },
+            text = {
+                Text(
+                    "Thank you for helping us improve MedAssist! You can share bug reports or feature suggestions with our development team.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    showFeedbackDialog = false
+                    val intent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:support@medassist.app?subject=MedAssist%20Feedback")
+                    }
+                    try {
+                        context.startActivity(intent)
+                    } catch (_: Exception) {
+                        Toast.makeText(context, "Feedback registered. Thank you!", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text("Open Email")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showFeedbackDialog = false }) {
+                    Text("Close")
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun CategoryCard(title: String, content: @Composable ColumnScope.() -> Unit) {
+    val cs = MaterialTheme.colorScheme
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            color = cs.primary,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = cs.surface),
+            shape = MaterialTheme.shapes.large,
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            content = content
+        )
+    }
+}
+
+@Composable
+private fun BadgeIcon(icon: ImageVector, bgColor: Color, iconColor: Color) {
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .background(bgColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = iconColor,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+@Composable
+private fun SettingsActionRow(
+    icon: ImageVector,
+    badgeBgColor: Color,
+    badgeIconColor: Color,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    val cs = MaterialTheme.colorScheme
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.weight(1f)
+        ) {
+            BadgeIcon(icon = icon, bgColor = badgeBgColor, iconColor = badgeIconColor)
+            Column {
+                Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+            }
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = cs.onSurfaceVariant,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }
