@@ -39,6 +39,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DateRange
@@ -55,6 +56,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -218,6 +220,7 @@ fun MedAssistApp(dataManager: DataManager) {
     val savedMedicines = remember { dataManager.loadMedicines() }
     val medicines = remember { mutableStateListOf(*savedMedicines.toTypedArray()) }
     var editing by remember { mutableStateOf<Medicine?>(null) }
+    var autoOpenScan by remember { mutableStateOf(false) }
     var reminder by remember { mutableStateOf<Medicine?>(null) }
     var showCalendar by remember { mutableStateOf(false) }
 
@@ -340,6 +343,16 @@ fun MedAssistApp(dataManager: DataManager) {
                         )
                         Spacer(Modifier.height(18.dp))
                         ProgressCard(completed, scheduledMedicines.size)
+                        Spacer(Modifier.height(18.dp))
+
+                        ScanPrescriptionCard(
+                            onScanClick = {
+                                editing = emptyDraft(nextId)
+                                nextId += 1
+                                autoOpenScan = true
+                            }
+                        )
+
                         Spacer(Modifier.height(22.dp))
 
                         ScheduleSection(
@@ -384,20 +397,27 @@ fun MedAssistApp(dataManager: DataManager) {
             draft = draft,
             isNew = isNew,
             nextId = nextId,
+            autoOpenScan = autoOpenScan,
             onSave = {
                 save(it)
+                autoOpenScan = false
                 editing = null
             },
             onSaveMultiple = { list ->
                 saveMultiple(list)
                 nextId += list.size
+                autoOpenScan = false
                 editing = null
             },
             onDelete = {
                 delete(it)
+                autoOpenScan = false
                 editing = null
             },
-            onCancel = { editing = null },
+            onCancel = {
+                autoOpenScan = false
+                editing = null
+            },
         )
     }
 
@@ -966,6 +986,78 @@ private fun BottomNav(current: String, onSelect: (String) -> Unit) {
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
             )
+        }
+    }
+}
+
+@Composable
+private fun ScanPrescriptionCard(onScanClick: () -> Unit) {
+    val cs = MaterialTheme.colorScheme
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = cs.primary),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = "Scan New Prescription",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = cs.onPrimary
+                )
+                Text(
+                    text = "Use Gemini AI to scan prescription images, extract medications, and build your schedule.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = cs.onPrimary.copy(alpha = 0.85f)
+                )
+                Spacer(Modifier.height(6.dp))
+                Button(
+                    onClick = onScanClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = cs.surface,
+                        contentColor = cs.primary
+                    ),
+                    shape = MaterialTheme.shapes.medium,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AddAPhoto,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "Scan Prescription",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            Spacer(Modifier.width(12.dp))
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(cs.onPrimary.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddAPhoto,
+                    contentDescription = null,
+                    tint = cs.onPrimary,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
         }
     }
 }

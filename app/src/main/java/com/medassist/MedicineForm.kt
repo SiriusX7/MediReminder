@@ -122,6 +122,7 @@ fun MedicineFormScreen(
     draft: Medicine,
     isNew: Boolean,
     nextId: Int = 100,
+    autoOpenScan: Boolean = false,
     onSave: (Medicine) -> Unit,
     onSaveMultiple: ((List<Medicine>) -> Unit)? = null,
     onDelete: (Int) -> Unit,
@@ -141,7 +142,7 @@ fun MedicineFormScreen(
     var stockError by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var showScanOptionDialog by remember { mutableStateOf(false) }
+    var showScanOptionDialog by remember { mutableStateOf(autoOpenScan) }
     var showScanWarningDialog by remember { mutableStateOf(false) }
     var showCandidateSelectionDialog by remember { mutableStateOf(false) }
     var scannedCandidates by remember { mutableStateOf<List<ScannedMedicineCandidate>>(emptyList()) }
