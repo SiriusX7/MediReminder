@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -164,13 +165,13 @@ fun MedicineChatScreen(
                 }
                 Column {
                     Text(
-                        "Medicine Information",
+                        stringResource(R.string.info_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = cs.onSurface
                     )
                     Text(
-                        "Clinical guidance on uses, side effects, and precautions powered by Gemini AI",
+                        stringResource(R.string.info_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = cs.onSurfaceVariant
                     )
@@ -182,7 +183,7 @@ fun MedicineChatScreen(
             // 2. Active Medications Quick Chips at VERY TOP
             if (activeMedicines.isNotEmpty()) {
                 Text(
-                    "Ask about your active medications:",
+                    stringResource(R.string.quick_ask_label),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = cs.onSurfaceVariant,
@@ -229,7 +230,7 @@ fun MedicineChatScreen(
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
-                        "Informational guidance only. Not a medical diagnosis or substitute for healthcare consultation.",
+                        stringResource(R.string.info_disclaimer),
                         style = MaterialTheme.typography.bodySmall,
                         color = cs.onSurfaceVariant
                     )

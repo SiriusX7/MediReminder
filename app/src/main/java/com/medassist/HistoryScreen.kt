@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
@@ -118,7 +119,7 @@ fun HistoryScreen(
                         modifier = Modifier.size(32.dp)
                     )
                     Text(
-                        text = "7-Day Adherence & History",
+                        text = stringResource(R.string.history_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = cs.onSurface
@@ -126,7 +127,7 @@ fun HistoryScreen(
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Track medication adherence across the current day and past 6 calendar days.",
+                    text = stringResource(R.string.history_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = cs.onSurfaceVariant
                 )
@@ -151,7 +152,7 @@ fun HistoryScreen(
                     ) {
                         Column {
                             Text(
-                                text = "7-Day Adherence Score",
+                                text = stringResource(R.string.adherence_score_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = cs.onSurface
@@ -225,7 +226,7 @@ fun HistoryScreen(
         // 3. Daily Adherence List Header
         item {
             Text(
-                text = "Daily Adherence (Past 7 Days)",
+                text = stringResource(R.string.daily_adherence_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = cs.onSurface
@@ -310,9 +311,9 @@ fun HistoryScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         StatPill("Total", summary.totalScheduled.toString(), cs.surfaceVariant, cs.onSurfaceVariant, modifier = Modifier.weight(1f))
-                        StatPill("Taken", summary.takenCount.toString(), Color(0xFFDCFCE7), Color(0xFF16A34A), modifier = Modifier.weight(1f))
-                        StatPill("Skipped", summary.skippedCount.toString(), Color(0xFFFFEDD5), Color(0xFFEA580C), modifier = Modifier.weight(1f))
-                        StatPill("Pending", summary.pendingCount.toString(), Color(0xFFE0F2FE), Color(0xFF0284C7), modifier = Modifier.weight(1f))
+                        StatPill(stringResource(R.string.stat_taken), summary.takenCount.toString(), Color(0xFFDCFCE7), Color(0xFF16A34A), modifier = Modifier.weight(1f))
+                        StatPill(stringResource(R.string.stat_skipped), summary.skippedCount.toString(), Color(0xFFFFEDD5), Color(0xFFEA580C), modifier = Modifier.weight(1f))
+                        StatPill(stringResource(R.string.stat_pending), summary.pendingCount.toString(), Color(0xFFE0F2FE), Color(0xFF0284C7), modifier = Modifier.weight(1f))
                     }
                 }
             }

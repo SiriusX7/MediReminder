@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">MedAssist</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_medicines">Medicines</string>
+    <string name="nav_info">Med Info</string>
+    <string name="nav_history">History</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home Screen -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Good night</string>
+    <string name="dose_summary_title">Today\'s Dose Summary</string>
+    <string name="stat_scheduled">Scheduled</string>
+    <string name="stat_taken">Taken</string>
+    <string name="stat_pending">Pending</string>
+    <string name="stat_skipped">Skipped</string>
+
+    <string name="scan_hero_title">Scan New Prescription</string>
+    <string name="scan_hero_desc">Use Gemini AI to scan prescription images, extract medications, and build your schedule.</string>
+    <string name="scan_hero_button">Scan Prescription</string>
+
+    <string name="section_today_schedule">Today\'s Schedule</string>
+    <string name="section_morning">Morning Medicines (08:00 AM)</string>
+    <string name="section_afternoon">Afternoon Medicines (01:00 PM)</string>
+    <string name="section_night">Night Medicines (08:00 PM)</string>
+
+    <string name="btn_take_dose">Take</string>
+    <string name="btn_skip">Skip</string>
+    <string name="btn_undo">Undo</string>
+    <string name="status_taken">Taken</string>
+
+    <!-- Medicines Screen -->
+    <string name="medicines_title">My Prescriptions</string>
+    <string name="search_hint">Search medicines...</string>
+    <string name="refill_alert">Refill at %d</string>
+
+    <!-- Med Info Chat -->
+    <string name="info_title">Medicine Information</string>
+    <string name="info_subtitle">Clinical guidance on uses, side effects, and precautions powered by Gemini AI</string>
+    <string name="quick_ask_label">Ask about your active medications:</string>
+    <string name="chat_hint">Ask about a medicine (e.g. side effects of Amoxicillin)...</string>
+    <string name="info_disclaimer">Informational guidance only. Not a medical diagnosis or substitute for healthcare consultation.</string>
+
+    <!-- History Screen -->
+    <string name="history_title">7-Day Adherence &amp; History</string>
+    <string name="history_subtitle">Track medication adherence across the current day and past 6 calendar days.</string>
+    <string name="adherence_score_title">7-Day Adherence Score</string>
+    <string name="daily_adherence_title">Daily Adherence (Past 7 Days)</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Preferences, notifications, and application details</string>
+    <string name="category_reminders">Reminders &amp; Notifications</string>
+    <string name="setting_voice_reminders">Voice Reminders</string>
+    <string name="setting_voice_desc">Read dose reminders aloud using TextToSpeech</string>
+    <string name="btn_test_voice">Test Voice Reminder</string>
+    <string name="setting_sound">Reminder Sound Chime</string>
+    <string name="setting_sound_desc">Play chime sound when dose alerts trigger</string>
+    <string name="setting_local_notifications">Test Local Notifications</string>
+    <string name="setting_local_desc">Send immediate test dose alert to status bar</string>
+
+    <string name="category_regional">Regional &amp; Language</string>
+    <string name="setting_language">App Language</string>
+    <string name="setting_language_desc">Select your preferred application language</string>
+
+    <string name="category_about">About &amp; Support</string>
+    <string name="setting_feedback">Send Feedback</string>
+    <string name="setting_feedback_desc">Suggest ideas, report bugs, or share improvements</string>
+    <string name="setting_disclaimer">Clinical Safety Disclaimer</string>
+    <string name="setting_disclaimer_desc">View medical advice notice and AI extraction disclaimer</string>
+    <string name="setting_version">App Version</string>
+    <string name="version_text">Version 1.0.0 (Up to date)</string>
+</resources>

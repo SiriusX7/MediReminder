@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">MedAssist</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">ਹੋਮ</string>
+    <string name="nav_medicines">ਦਵਾਈਆਂ</string>
+    <string name="nav_info">ਦਵਾਈ ਜਾਣਕਾਰੀ</string>
+    <string name="nav_history">ਇਤਿਹਾਸ</string>
+    <string name="nav_settings">ਸੈਟਿੰਗਾਂ</string>
+
+    <!-- Home Screen -->
+    <string name="greeting_morning">ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ / ਸੁਭ ਸਵੇਰ</string>
+    <string name="greeting_afternoon">ਸ਼ੁਭ ਦੁਪਹਿਰ</string>
+    <string name="greeting_evening">ਸ਼ੁਭ ਸ਼ਾਮ</string>
+    <string name="greeting_night">ਸ਼ੁਭ ਰਾਤ</string>
+    <string name="dose_summary_title">ਅੱਜ ਦੀ ਖੁਰਾਕ ਦਾ ਸਾਰ</string>
+    <string name="stat_scheduled">ਨਿਰਧਾਰਤ</string>
+    <string name="stat_taken">ਲਈ ਗਈ</string>
+    <string name="stat_pending">ਬਾਕੀ</string>
+    <string name="stat_skipped">ਛੱਡੀ ਗਈ</string>
+
+    <string name="scan_hero_title">ਨਵਾਂ ਨੁਸਖਾ ਸਕੈਨ ਕਰੋ</string>
+    <string name="scan_hero_desc">ਨੁਸਖੇ ਦੀ ਫੋਟੋ ਸਕੈਨ ਕਰਨ ਅਤੇ ਸਮਾਂ ਸਾਰਣੀ ਬਣਾਉਣ ਲਈ Gemini AI ਦੀ ਵਰਤੋਂ ਕਰੋ।</string>
+    <string name="scan_hero_button">ਨੁਸਖਾ ਸਕੈਨ ਕਰੋ</string>
+
+    <string name="section_today_schedule">ਅੱਜ ਦਾ ਸ਼ੈਡਿਊਲ</string>
+    <string name="section_morning">ਸਵੇਰ ਦੀਆਂ ਦਵਾਈਆਂ (08:00 AM)</string>
+    <string name="section_afternoon">ਦੁਪਹਿਰ ਦੀਆਂ ਦਵਾਈਆਂ (01:00 PM)</string>
+    <string name="section_night">ਰਾਤ ਦੀਆਂ ਦਵਾਈਆਂ (08:00 PM)</string>
+
+    <string name="btn_take_dose">ਲਈ ਗਈ</string>
+    <string name="btn_skip">ਛੱਡੋ</string>
+    <string name="btn_undo">ਵਾਪਸ ਕਰੋ</string>
+    <string name="status_taken">ਲਈ ਗਈ</string>
+
+    <!-- Medicines Screen -->
+    <string name="medicines_title">ਮੇਰੀਆਂ ਦਵਾਈਆਂ</string>
+    <string name="search_hint">ਦਵਾਈਆਂ ਖੋਜੋ...</string>
+    <string name="refill_alert">%d \'ਤੇ ਰੀਫਿਲ ਕਰੋ</string>
+
+    <!-- Med Info Chat -->
+    <string name="info_title">ਦਵਾਈ ਜਾਣਕਾਰੀ</string>
+    <string name="info_subtitle">Gemini AI ਦੁਆਰਾ ਦਵਾਈਆਂ ਦੇ ਉਪਯੋਗ, ਮਾੜੇ ਪ੍ਰਭਾਵਾਂ ਅਤੇ ਸਾਵਧਾਨੀਆਂ ਬਾਰੇ ਜਾਣਕਾਰੀ</string>
+    <string name="quick_ask_label">ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਬਾਰੇ ਪੁੱਛੋ:</string>
+    <string name="chat_hint">ਦਵਾਈ ਬਾਰੇ ਪੁੱਛੋ (ਜਿਵੇਂ Amoxicillin ਦੇ ਮਾੜੇ ਪ੍ਰਭਾਵ)...</string>
+    <string name="info_disclaimer">ਸਿਰਫ ਜਾਣਕਾਰੀ ਦੇ ਮਾਰਗਦਰਸ਼ਨ ਲਈ। ਇਹ ਡਾਕਟਰੀ ਸਲਾਹ ਦਾ ਵਿਕਲਪ ਨਹੀਂ ਹੈ।</string>
+
+    <!-- History Screen -->
+    <string name="history_title">7-ਦਿਨਾਂ ਇਤਿਹਾਸ ਅਤੇ ਰਿਪੋਰਟ</string>
+    <string name="history_subtitle">ਮੌਜੂਦਾ ਦਿਨ ਅਤੇ ਪਿਛਲੇ 6 ਦਿਨਾਂ ਵਿੱਚ ਦਵਾਈਆਂ ਦੀ ਵਰਤੋਂ ਦਾ ਰਿਕਾਰਡ ਦੇਖੋ।</string>
+    <string name="adherence_score_title">7-ਦਿਨਾਂ ਪਾਲਣਾ ਸਕੋਰ</string>
+    <string name="daily_adherence_title">ਰੋਜ਼ਾਨਾ ਪਾਲਣਾ (ਪਿਛਲੇ 7 ਦਿਨ)</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">ਸੈਟਿੰਗਾਂ</string>
+    <string name="settings_subtitle">ਰਿਮਾਈਂਡਰ ਸਮਾਂ, ਆਵਾਜ਼ਾਂ, ਥੀਮ ਅਤੇ ਭਾਸ਼ਾ ਨੂੰ ਬਦਲੋ</string>
+    <string name="category_reminders">ਰਿਮਾਈਂਡਰ ਅਤੇ ਨੋਟੀਫਿਕੇਸ਼ਨ</string>
+    <string name="setting_voice_reminders">ਵੌਇਸ ਰਿਮਾਈਂਡਰ</string>
+    <string name="setting_voice_desc">TextToSpeech ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਖੁਰਾਕ ਰਿਮਾਈਂਡਰ ਉੱਚੀ ਸੁਣੋ</string>
+    <string name="btn_test_voice">ਵੌਇਸ ਰਿਮਾਈਂਡਰ ਦਾ ਟੈਸਟ ਕਰੋ</string>
+    <string name="setting_sound">ਰਿਮਾਈਂਡਰ ਸਾਊਂਡ ਚਾਈਮ</string>
+    <string name="setting_sound_desc">ਦਵਾਈ ਦੇ ਸਮੇਂ ਵਿਸ਼ੇਸ਼ ਆਵਾਜ਼ ਚਲਾਓ</string>
+    <string name="setting_local_notifications">ਲੋਕਲ ਨੋਟੀਫਿਕੇਸ਼ਨ ਟੈਸਟ ਕਰੋ</string>
+    <string name="setting_local_desc">ਸਟੇਟਸ ਬਾਰ ਵਿੱਚ ਤੁਰੰਤ ਟੈਸਟ ਚੇਤਾਵਨੀ ਭੇਜੋ</string>
+
+    <string name="category_regional">ਖੇਤਰੀ ਅਤੇ ਭਾਸ਼ਾ</string>
+    <string name="setting_language">ਐਪ ਦੀ ਭਾਸ਼ਾ</string>
+    <string name="setting_language_desc">ਆਪਣੀ ਪਸੰਦੀਦਾ ਐਪ ਭਾਸ਼ਾ ਚੁਣੋ</string>
+
+    <string name="category_about">ਬਾਰੇ ਅਤੇ ਸਹਾਇਤਾ</string>
+    <string name="setting_feedback">ਫੀਡਬੈਕ ਭੇਜੋ</string>
+    <string name="setting_feedback_desc">ਸੁਝਾਅ ਦਿਓ, ਬੱਗ ਰਿਪੋਰਟ ਕਰੋ</string>
+    <string name="setting_disclaimer">ਡਾਕਟਰੀ ਸੁਰੱਖਿਆ ਬੇਦਾਅਵਾ</string>
+    <string name="setting_disclaimer_desc">ਡਾਕਟਰੀ ਸਲਾਹ ਨੋਟਿਸ ਅਤੇ AI ਬੇਦਾਅਵਾ ਦੇਖੋ</string>
+    <string name="setting_version">ਐਪ ਵਰਜਨ</string>
+    <string name="version_text">ਵਰਜਨ 1.0.0 (ਅੱਪ ਡੇਟ)</string>
+</resources>

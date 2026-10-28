@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">MedAssist</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">హోమ్</string>
+    <string name="nav_medicines">మందులు</string>
+    <string name="nav_info">మందుల సమాచారం</string>
+    <string name="nav_history">చరిత్ర</string>
+    <string name="nav_settings">సెట్టింగులు</string>
+
+    <!-- Home Screen -->
+    <string name="greeting_morning">శుభోదయం</string>
+    <string name="greeting_afternoon">శుభ మధ్యాహ్నం</string>
+    <string name="greeting_evening">శుభ సాయంత్రం</string>
+    <string name="greeting_night">శుభ రాత్రి</string>
+    <string name="dose_summary_title">ఈనాటి మోతాదు సారాంశం</string>
+    <string name="stat_scheduled">షెడ్యూల్ చేయబడింది</string>
+    <string name="stat_taken">తీసుకున్నారు</string>
+    <string name="stat_pending">మిగిలి ఉంది</string>
+    <string name="stat_skipped">వదిలేశారు</string>
+
+    <string name="scan_hero_title">కొత్త ప్రిస్క్రిప్షన్ స్కాన్ చేయండి</string>
+    <string name="scan_hero_desc">ప్రిస్క్రిప్షన్ చిత్రాలను స్కాన్ చేయడానికి మరియు మీ షెడ్యూల్‌ను రూపొందించడానికి Gemini AIని ఉపయోగించండి.</string>
+    <string name="scan_hero_button">ప్రిస్క్రిప్షన్ స్కాన్ చేయండి</string>
+
+    <string name="section_today_schedule">ఈనాటి షెడ్యూల్</string>
+    <string name="section_morning">ఉదయం మందులు (08:00 AM)</string>
+    <string name="section_afternoon">మధ్యాహ్నం మందులు (01:00 PM)</string>
+    <string name="section_night">రాత్రి మందులు (08:00 PM)</string>
+
+    <string name="btn_take_dose">తీసుకున్నాను</string>
+    <string name="btn_skip">వదిలేయి</string>
+    <string name="btn_undo">రద్దు చేయి</string>
+    <string name="status_taken">తీసుకున్నారు</string>
+
+    <!-- Medicines Screen -->
+    <string name="medicines_title">నా ప్రిస్క్రిప్షన్లు</string>
+    <string name="search_hint">మందుల కోసం వెతకండి...</string>
+    <string name="refill_alert">%d వద్ద రీఫిల్ చేయండి</string>
+
+    <!-- Med Info Chat -->
+    <string name="info_title">మందుల సమాచారం</string>
+    <string name="info_subtitle">Gemini AI ద్వారా మందుల ఉపయోగాలు, దుష్ప్రభావాలు మరియు జాగ్రత్తలపై వైద్య సమాచారం</string>
+    <string name="quick_ask_label">మీ క్రియాశీల మందుల గురించి అడగండి:</string>
+    <string name="chat_hint">మందుల గురించి అడగండి ( ఉదా: Amoxicillin దుష్ప్రభావాలు)...</string>
+    <string name="info_disclaimer">సమాచార మార్గదర్శకత్వం మాత్రమే. ఇది వైద్య నిర్ధారణ లేదా డాక్టర్ సలహాకు ప్రత్యామ్నాయం కాదు.</string>
+
+    <!-- History Screen -->
+    <string name="history_title">7-రోజుల చరిత్ర మరియు నివేదిక</string>
+    <string name="history_subtitle">ప్రస్తుత రోజు మరియు గత 6 రోజులలో మందుల వాడకాన్ని ట్రాక్ చేయండి.</string>
+    <string name="adherence_score_title">7-రోజుల నివేదిక స్కోరు</string>
+    <string name="daily_adherence_title">దినచర్య నివేదిక (గత 7 రోజులు)</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">సెట్టింగులు</string>
+    <string name="settings_subtitle">రిమైండర్ సమయాలు, శబ్దాలు, థీమ్ మరియు భాషను కాన్ఫిగర్ చేయండి</string>
+    <string name="category_reminders">రిమైండర్లు &amp; నోటిఫికేషన్లు</string>
+    <string name="setting_voice_reminders">వాయిస్ రిమైండర్లు</string>
+    <string name="setting_voice_desc">TextToSpeech ఉపయోగించి మోతాదు రిమైండర్లను బిగ్గరగా వినండి</string>
+    <string name="btn_test_voice">వాయిస్ రిమైండర్‌ను పరీక్షించండి</string>
+    <string name="setting_sound">రిమైండర్ సౌండ్ చైమ్</string>
+    <string name="setting_sound_desc">మోతాదు హెచ్చరికలు వచ్చినప్పుడు శబ్దం చేయండి</string>
+    <string name="setting_local_notifications">స్థానిక నోటిఫికేషన్‌లను పరీక్షించండి</string>
+    <string name="setting_local_desc">స్టేటస్ బార్‌కి తక్షణ పరీక్ష హెచ్చరికను పంపండి</string>
+
+    <string name="category_regional">ప్రాంతీయ &amp; భాష</string>
+    <string name="setting_language">యాప్ భాష</string>
+    <string name="setting_language_desc">మీకు కావలసిన యాప్ భాషను ఎంచుకోండి</string>
+
+    <string name="category_about">గురించి &amp; మద్దతు</string>
+    <string name="setting_feedback">అభిప్రాయాన్ని పంపండి</string>
+    <string name="setting_feedback_desc">ఆలోచనలను సూచించండి, బగ్ నివేదికలను పంపండి</string>
+    <string name="setting_disclaimer">వైద్య భద్రతా నిరాకరణ</string>
+    <string name="setting_disclaimer_desc">వైద్య సలహా నోటీసు మరియు AI నిరాకరణను చూడండి</string>
+    <string name="setting_version">యాప్ వెర్షన్</string>
+    <string name="version_text">వెర్షన్ 1.0.0 (నవీకరించబడింది)</string>
+</resources>

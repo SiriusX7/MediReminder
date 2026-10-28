@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">MedAssist</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">होम</string>
+    <string name="nav_medicines">दवाइयाँ</string>
+    <string name="nav_info">दवा जानकारी</string>
+    <string name="nav_history">इतिहास</string>
+    <string name="nav_settings">सेटिंग्स</string>
+
+    <!-- Home Screen -->
+    <string name="greeting_morning">शुभ प्रभात</string>
+    <string name="greeting_afternoon">शुभ दोपहर</string>
+    <string name="greeting_evening">शुभ संध्या</string>
+    <string name="greeting_night">शुभ रात्रि</string>
+    <string name="dose_summary_title">आज की खुराक का सारांश</string>
+    <string name="stat_scheduled">निर्धारित</string>
+    <string name="stat_taken">ली गई</string>
+    <string name="stat_pending">बाकी</string>
+    <string name="stat_skipped">छोड़ी गई</string>
+
+    <string name="scan_hero_title">नया पर्चा स्कैन करें</string>
+    <string name="scan_hero_desc">पर्चे की फोटो स्कैन करने और समय सारिणी बनाने के लिए Gemini AI का उपयोग करें।</string>
+    <string name="scan_hero_button">पर्चा स्कैन करें</string>
+
+    <string name="section_today_schedule">आज का समय-निर्धारण</string>
+    <string name="section_morning">सुबह की दवाइयाँ (08:00 AM)</string>
+    <string name="section_afternoon">दोपहर की दवाइयाँ (01:00 PM)</string>
+    <string name="section_night">रात की दवाइयाँ (08:00 PM)</string>
+
+    <string name="btn_take_dose">ली गई</string>
+    <string name="btn_skip">छोड़ें</string>
+    <string name="btn_undo">पूर्ववत करें</string>
+    <string name="status_taken">ली गई</string>
+
+    <!-- Medicines Screen -->
+    <string name="medicines_title">मेरी दवाइयाँ</string>
+    <string name="search_hint">दवाइयाँ खोजें...</string>
+    <string name="refill_alert">%d पर रीफिल करें</string>
+
+    <!-- Med Info Chat -->
+    <string name="info_title">दवा जानकारी</string>
+    <string name="info_subtitle">Gemini AI द्वारा दवा के उपयोग, दुष्प्रभाव और सावधानियों की नैदानिक जानकारी</string>
+    <string name="quick_ask_label">अपनी सक्रिय दवाओं के बारे में पूछें:</string>
+    <string name="chat_hint">दवा के बारे में पूछें (जैसे Amoxicillin के दुष्प्रभाव)...</string>
+    <string name="info_disclaimer">केवल सूचनात्मक मार्गदर्शन। यह कोई चिकित्सीय निदान या डॉक्टर के परामर्श का विकल्प नहीं है।</string>
+
+    <!-- History Screen -->
+    <string name="history_title">7-दिवसीय अनुपालन और इतिहास</string>
+    <string name="history_subtitle">वर्तमान दिन और पिछले 6 दिनों में दवा अनुपालन ट्रैक करें।</string>
+    <string name="adherence_score_title">7-दिवसीय अनुपालन स्कोर</string>
+    <string name="daily_adherence_title">दैनिक अनुपालन (पिछले 7 दिन)</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_subtitle">प्राथमिकताएं, सूचनाएं और आवेदन विवरण</string>
+    <string name="category_reminders">अनुस्मारक और सूचनाएं</string>
+    <string name="setting_voice_reminders">वॉयस रिमाइंडर</string>
+    <string name="setting_voice_desc">TextToSpeech का उपयोग करके खुराक अनुस्मारक बोलकर सुनें</string>
+    <string name="btn_test_voice">वॉयस रिमाइंडर का परीक्षण करें</string>
+    <string name="setting_sound">अनुस्मारक ध्वनि</string>
+    <string name="setting_sound_desc">दवा के समय विशेष ध्वनि बजाएं</string>
+    <string name="setting_local_notifications">स्थानीय सूचनाओं का परीक्षण करें</string>
+    <string name="setting_local_desc">स्टेटस बार में तत्काल परीक्षण चेतावनी भेजें</string>
+
+    <string name="category_regional">क्षेत्रीय और भाषा</string>
+    <string name="setting_language">ऐप की भाषा</string>
+    <string name="setting_language_desc">अपनी पसंदीदा ऐप भाषा चुनें</string>
+
+    <string name="category_about">के बारे में और सहायता</string>
+    <string name="setting_feedback">प्रतिक्रिया भेजें</string>
+    <string name="setting_feedback_desc">विचार सुझाएं, बग रिपोर्ट करें या सुधार साझा करें</string>
+    <string name="setting_disclaimer">चिकित्सीय सुरक्षा अस्वीकरण</string>
+    <string name="setting_disclaimer_desc">चिकित्सीय सलाह नोटिस और AI निष्कर्षण अस्वीकरण देखें</string>
+    <string name="setting_version">ऐप संस्करण</string>
+    <string name="version_text">संस्करण 1.0.0 (अद्यतित)</string>
+</resources>

@@ -91,6 +91,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -664,7 +665,7 @@ private fun TodayDoseSummaryCard(scheduled: Int, taken: Int, pending: Int) {
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text(
-                text = "Today's Dose Summary",
+                text = stringResource(R.string.dose_summary_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = cs.onSurface
@@ -678,7 +679,7 @@ private fun TodayDoseSummaryCard(scheduled: Int, taken: Int, pending: Int) {
                 DoseStatBox(
                     icon = Icons.Outlined.DateRange,
                     count = scheduled,
-                    label = "Scheduled",
+                    label = stringResource(R.string.stat_scheduled),
                     bgColor = Color(0xFFE0F2FE),
                     contentColor = Color(0xFF0284C7),
                     modifier = Modifier.weight(1f)
@@ -688,7 +689,7 @@ private fun TodayDoseSummaryCard(scheduled: Int, taken: Int, pending: Int) {
                 DoseStatBox(
                     icon = Icons.Default.CheckCircle,
                     count = taken,
-                    label = "Taken",
+                    label = stringResource(R.string.stat_taken),
                     bgColor = Color(0xFFDCFCE7),
                     contentColor = Color(0xFF16A34A),
                     modifier = Modifier.weight(1f)
@@ -698,7 +699,7 @@ private fun TodayDoseSummaryCard(scheduled: Int, taken: Int, pending: Int) {
                 DoseStatBox(
                     icon = Icons.Outlined.AccessTime,
                     count = pending,
-                    label = "Pending",
+                    label = stringResource(R.string.stat_pending),
                     bgColor = Color(0xFFE0F2FE),
                     contentColor = Color(0xFF0284C7),
                     modifier = Modifier.weight(1f)
@@ -987,7 +988,7 @@ private fun TakeButton(taken: Boolean, skipped: Boolean, enabled: Boolean, isPas
         }
     } else {
         Button(onClick = onClick, enabled = enabled, contentPadding = PaddingValues(horizontal = 18.dp)) {
-            Text("Take")
+            Text(stringResource(R.string.btn_take_dose))
         }
     }
 }
@@ -1030,19 +1031,19 @@ private fun EmptyView(tab: String, onBack: () -> Unit) {
 @Composable
 private fun BottomNav(current: String, onSelect: (String) -> Unit) {
     val items = listOf(
-        "Home" to Icons.Outlined.Home,
-        "Medicines" to Icons.Outlined.Medication,
-        "Med Info" to Icons.Outlined.LocalHospital,
-        "History" to Icons.Outlined.History,
-        "Settings" to Icons.Outlined.Settings,
+        Triple("Home", stringResource(R.string.nav_home), Icons.Outlined.Home),
+        Triple("Medicines", stringResource(R.string.nav_medicines), Icons.Outlined.Medication),
+        Triple("Med Info", stringResource(R.string.nav_info), Icons.Outlined.LocalHospital),
+        Triple("History", stringResource(R.string.nav_history), Icons.Outlined.History),
+        Triple("Settings", stringResource(R.string.nav_settings), Icons.Outlined.Settings),
     )
     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
-        items.forEach { (label, icon) ->
+        items.forEach { (tabKey, displayLabel, icon) ->
             NavigationBarItem(
-                selected = current == label,
-                onClick = { onSelect(label) },
-                icon = { Icon(icon, contentDescription = label) },
-                label = { Text(label) },
+                selected = current == tabKey,
+                onClick = { onSelect(tabKey) },
+                icon = { Icon(icon, contentDescription = displayLabel) },
+                label = { Text(displayLabel) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -1076,13 +1077,13 @@ private fun ScanPrescriptionCard(onScanClick: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Scan New Prescription",
+                    text = stringResource(R.string.scan_hero_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = cs.onPrimary
                 )
                 Text(
-                    text = "Use Gemini AI to scan prescription images, extract medications, and build your schedule.",
+                    text = stringResource(R.string.scan_hero_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = cs.onPrimary.copy(alpha = 0.85f)
                 )
@@ -1103,7 +1104,7 @@ private fun ScanPrescriptionCard(onScanClick: () -> Unit) {
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "Scan Prescription",
+                        text = stringResource(R.string.scan_hero_button),
                         fontWeight = FontWeight.Bold
                     )
                 }

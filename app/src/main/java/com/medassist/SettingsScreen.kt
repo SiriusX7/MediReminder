@@ -61,6 +61,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationCompat
@@ -142,13 +143,13 @@ fun SettingsScreen(
                     }
                     Column {
                         Text(
-                            text = "Settings",
+                            text = stringResource(R.string.settings_title),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = cs.onSurface
                         )
                         Text(
-                            text = "Preferences, notifications, and application details",
+                            text = stringResource(R.string.settings_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = cs.onSurfaceVariant
                         )
@@ -159,7 +160,7 @@ fun SettingsScreen(
 
         // Category 1: Reminders & Notifications
         item {
-            CategoryCard(title = "Reminders & Notifications") {
+            CategoryCard(title = stringResource(R.string.category_reminders)) {
                 // Voice Reminders Row
                 Column(modifier = Modifier.padding(14.dp)) {
                     Row(
@@ -174,8 +175,8 @@ fun SettingsScreen(
                         ) {
                             BadgeIcon(icon = Icons.Default.VolumeUp, bgColor = Color(0xFFE0F2FE), iconColor = Color(0xFF0284C7))
                             Column {
-                                Text("Voice Reminders", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                                Text("Read dose reminders aloud using TextToSpeech", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                                Text(stringResource(R.string.setting_voice_reminders), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                                Text(stringResource(R.string.setting_voice_desc), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                             }
                         }
                         Switch(
@@ -198,7 +199,7 @@ fun SettingsScreen(
                         ) {
                             Icon(Icons.Default.VolumeUp, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Test Voice Reminder")
+                            Text(stringResource(R.string.btn_test_voice))
                         }
                     }
                 }
@@ -220,8 +221,8 @@ fun SettingsScreen(
                     ) {
                         BadgeIcon(icon = Icons.Default.Notifications, bgColor = Color(0xFFDCFCE7), iconColor = Color(0xFF16A34A))
                         Column {
-                            Text("Reminder Sound Chime", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                            Text("Play chime sound when dose alerts trigger", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                            Text(stringResource(R.string.setting_sound), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.setting_sound_desc), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                         }
                     }
                     Switch(
@@ -241,8 +242,8 @@ fun SettingsScreen(
                     icon = Icons.Default.NotificationsActive,
                     badgeBgColor = Color(0xFFFFEDD5),
                     badgeIconColor = Color(0xFFEA580C),
-                    title = "Test Local Notifications",
-                    subtitle = "Send immediate test dose alert to status bar",
+                    title = stringResource(R.string.setting_local_notifications),
+                    subtitle = stringResource(R.string.setting_local_desc),
                     onClick = { sendTestNotification() }
                 )
             }
@@ -250,7 +251,7 @@ fun SettingsScreen(
 
         // Category 2: Regional & Language
         item {
-            CategoryCard(title = "Regional & Language") {
+            CategoryCard(title = stringResource(R.string.category_regional)) {
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -258,8 +259,8 @@ fun SettingsScreen(
                     ) {
                         BadgeIcon(icon = Icons.Default.Language, bgColor = Color(0xFFE0F2FE), iconColor = Color(0xFF0284C7))
                         Column {
-                            Text("App Language", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                            Text("Select your preferred application language", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                            Text(stringResource(R.string.setting_language), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.setting_language_desc), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                         }
                     }
 
@@ -329,14 +330,14 @@ fun SettingsScreen(
 
         // Category 3: About & Support
         item {
-            CategoryCard(title = "About & Support") {
+            CategoryCard(title = stringResource(R.string.category_about)) {
                 // Send Feedback Row
                 SettingsActionRow(
                     icon = Icons.Default.Feedback,
                     badgeBgColor = Color(0xFFF3E8FF),
                     badgeIconColor = Color(0xFF9333EA),
-                    title = "Send Feedback",
-                    subtitle = "Suggest ideas, report bugs, or share improvements",
+                    title = stringResource(R.string.setting_feedback),
+                    subtitle = stringResource(R.string.setting_feedback_desc),
                     onClick = { showFeedbackDialog = true }
                 )
 
@@ -347,8 +348,8 @@ fun SettingsScreen(
                     icon = Icons.Outlined.Shield,
                     badgeBgColor = Color(0xFFFEF3C7),
                     badgeIconColor = Color(0xFFD97706),
-                    title = "Clinical Safety Disclaimer",
-                    subtitle = "View medical advice notice and AI extraction disclaimer",
+                    title = stringResource(R.string.setting_disclaimer),
+                    subtitle = stringResource(R.string.setting_disclaimer_desc),
                     onClick = { showDisclaimerDialog = true }
                 )
 
@@ -368,8 +369,8 @@ fun SettingsScreen(
                     ) {
                         BadgeIcon(icon = Icons.Default.Info, bgColor = Color(0xFFF1F5F9), iconColor = Color(0xFF475569))
                         Column {
-                            Text("App Version", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                            Text("Version 1.0.0 (Up to date)", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                            Text(stringResource(R.string.setting_version), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text(stringResource(R.string.version_text), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
                         }
                     }
                     Surface(color = cs.surfaceVariant, shape = MaterialTheme.shapes.small) {
