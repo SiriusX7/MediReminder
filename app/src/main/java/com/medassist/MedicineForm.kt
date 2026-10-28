@@ -309,13 +309,9 @@ fun MedicineFormScreen(
         }
     }
 
-    Dialog(
-        onDismissRequest = onCancel,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Surface(modifier = Modifier.fillMaxSize(), color = cs.surface) {
-            Scaffold(
-                containerColor = cs.surface,
+    Surface(modifier = Modifier.fillMaxSize(), color = cs.surface) {
+        Scaffold(
+            containerColor = cs.surface,
                 topBar = {
                     TopAppBar(
                         title = { Text(if (isNew) "Add medicine" else "Edit medicine") },
@@ -571,7 +567,6 @@ fun MedicineFormScreen(
                 }
             }
         }
-    }
 
     if (showTimePicker) {
         val parts = form.time24.split(":")
