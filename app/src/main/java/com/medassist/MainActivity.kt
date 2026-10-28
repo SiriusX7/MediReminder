@@ -41,6 +41,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.History
@@ -87,6 +89,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -342,7 +345,17 @@ fun MedAssistApp(dataManager: DataManager) {
                             onOpenCalendar = { showCalendar = true },
                         )
                         Spacer(Modifier.height(18.dp))
-                        ProgressCard(completed, scheduledMedicines.size)
+
+                        val scheduledCount = scheduledMedicines.size
+                        val takenCount = completed
+                        val pendingCount = (scheduledCount - takenCount).coerceAtLeast(0)
+
+                        TodayDoseSummaryCard(
+                            scheduled = scheduledCount,
+                            taken = takenCount,
+                            pending = pendingCount
+                        )
+
                         Spacer(Modifier.height(18.dp))
 
                         ScanPrescriptionCard(
@@ -633,52 +646,99 @@ private fun DateSection(
 }
 
 @Composable
-private fun ProgressCard(completed: Int, total: Int) {
+private fun TodayDoseSummaryCard(scheduled: Int, taken: Int, pending: Int) {
     val cs = MaterialTheme.colorScheme
-    val ratio = if (total == 0) 0f else completed.toFloat() / total
-    val animated by animateFloatAsState(ratio, label = "progress")
     Card(
-        shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(
-            containerColor = cs.inverseSurface,
-            contentColor = cs.inverseOnSurface,
-        ),
         modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = cs.surface),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            Modifier.padding(18.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = Modifier.padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Box(
-                Modifier
-                    .size(46.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(cs.inverseOnSurface.copy(alpha = 0.14f)),
-                contentAlignment = Alignment.Center,
+            Text(
+                text = "Today's Dose Summary",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = cs.onSurface
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(Icons.Outlined.Shield, contentDescription = null, modifier = Modifier.size(24.dp))
-            }
-            Spacer(Modifier.width(14.dp))
-            Column(Modifier.weight(1f)) {
-                Text("You're on track", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(
-                    "$completed of $total taken",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = cs.inverseOnSurface.copy(alpha = 0.7f),
+                // 1. Scheduled
+                DoseStatBox(
+                    icon = Icons.Outlined.DateRange,
+                    count = scheduled,
+                    label = "Scheduled",
+                    bgColor = Color(0xFFE0F2FE),
+                    contentColor = Color(0xFF0284C7),
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(Modifier.height(10.dp))
-                LinearProgressIndicator(
-                    progress = { animated },
-                    color = SuccessContainer,
-                    trackColor = cs.inverseOnSurface.copy(alpha = 0.2f),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(CircleShape),
+
+                // 2. Taken
+                DoseStatBox(
+                    icon = Icons.Default.CheckCircle,
+                    count = taken,
+                    label = "Taken",
+                    bgColor = Color(0xFFDCFCE7),
+                    contentColor = Color(0xFF16A34A),
+                    modifier = Modifier.weight(1f)
+                )
+
+                // 3. Pending
+                DoseStatBox(
+                    icon = Icons.Outlined.AccessTime,
+                    count = pending,
+                    label = "Pending",
+                    bgColor = Color(0xFFE0F2FE),
+                    contentColor = Color(0xFF0284C7),
+                    modifier = Modifier.weight(1f)
                 )
             }
-            Spacer(Modifier.width(12.dp))
-            Text("${(ratio * 100).toInt()}%", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+private fun DoseStatBox(
+    icon: ImageVector,
+    count: Int,
+    label: String,
+    bgColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        color = bgColor,
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 14.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = contentColor,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = count.toString(),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF0F172A)
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF475569)
+            )
         }
     }
 }
