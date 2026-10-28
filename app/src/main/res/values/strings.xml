@@ -20,7 +20,7 @@
     <string name="stat_skipped">Skipped</string>
 
     <string name="scan_hero_title">Scan New Prescription</string>
-    <string name="scan_hero_desc">Use Gemini AI Vision to scan prescription images, extract medications, and build your schedule.</string>
+    <string name="scan_hero_desc">Use Gemini AI to scan prescription images, extract medications, and build your schedule.</string>
     <string name="scan_hero_button">Scan Prescription</string>
 
     <string name="section_today_schedule">Today\'s Schedule</string>
