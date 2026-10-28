@@ -38,6 +38,17 @@ object VoiceReminderManager {
         }
     }
 
+    fun setLanguage(locale: Locale) {
+        try {
+            val result = tts?.setLanguage(locale)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("VoiceReminder", "Language ${locale.language} not supported by TTS engine")
+            }
+        } catch (e: Exception) {
+            Log.e("VoiceReminder", "Error setting language: ${e.localizedMessage}")
+        }
+    }
+
     fun speakReminder(context: Context, medicineName: String, instructions: String = "", quantity: Int = 1) {
         val dm = DataManager(context)
         if (!dm.isVoiceRemindersEnabled()) return

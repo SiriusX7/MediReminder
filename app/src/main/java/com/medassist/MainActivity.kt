@@ -133,6 +133,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val dataManager = DataManager(applicationContext)
         
+        val langCode = dataManager.getLanguageCode()
+        LocaleHelper.getLocale(langCode).let { locale ->
+            VoiceReminderManager.setLanguage(locale)
+        }
+
         askNotificationPermission()
         AlarmScheduler.scheduleAll(applicationContext)
 

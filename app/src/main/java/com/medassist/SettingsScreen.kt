@@ -272,6 +272,7 @@ fun SettingsScreen(
                             onClick = {
                                 languageCode = "system"
                                 dm.setLanguageCode("system")
+                                LocaleHelper.applyLanguage(context, "system")
                             },
                             label = { Text("System") },
                             modifier = Modifier.weight(1f)
@@ -281,6 +282,7 @@ fun SettingsScreen(
                             onClick = {
                                 languageCode = "en"
                                 dm.setLanguageCode("en")
+                                LocaleHelper.applyLanguage(context, "en")
                             },
                             label = { Text("English") },
                             modifier = Modifier.weight(1f)
@@ -288,15 +290,16 @@ fun SettingsScreen(
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         FilterChip(
                             selected = languageCode == "hi",
                             onClick = {
                                 languageCode = "hi"
                                 dm.setLanguageCode("hi")
+                                LocaleHelper.applyLanguage(context, "hi")
                             },
-                            label = { Text("हिंदी (Hindi)") },
+                            label = { Text("हिंदी") },
                             modifier = Modifier.weight(1f)
                         )
                         FilterChip(
@@ -304,8 +307,19 @@ fun SettingsScreen(
                             onClick = {
                                 languageCode = "te"
                                 dm.setLanguageCode("te")
+                                LocaleHelper.applyLanguage(context, "te")
                             },
-                            label = { Text("తెలుగు (Telugu)") },
+                            label = { Text("తెలుగు") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilterChip(
+                            selected = languageCode == "pa",
+                            onClick = {
+                                languageCode = "pa"
+                                dm.setLanguageCode("pa")
+                                LocaleHelper.applyLanguage(context, "pa")
+                            },
+                            label = { Text("ਪੰਜਾਬੀ") },
                             modifier = Modifier.weight(1f)
                         )
                     }
