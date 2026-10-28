@@ -119,4 +119,13 @@ class DataManager(context: Context) {
     fun saveNextId(id: Int) {
         prefs.edit().putInt("next_id", id).apply()
     }
+
+    fun isVoiceRemindersEnabled(): Boolean = prefs.getBoolean("voice_reminders_enabled", true)
+    fun setVoiceRemindersEnabled(enabled: Boolean) = prefs.edit().putBoolean("voice_reminders_enabled", enabled).apply()
+
+    fun isSoundEnabled(): Boolean = prefs.getBoolean("sound_enabled", true)
+    fun setSoundEnabled(enabled: Boolean) = prefs.edit().putBoolean("sound_enabled", enabled).apply()
+
+    fun getLanguageCode(): String = prefs.getString("language_code", "system") ?: "system"
+    fun setLanguageCode(code: String) = prefs.edit().putString("language_code", code).apply()
 }

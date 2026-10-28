@@ -39,6 +39,9 @@ object VoiceReminderManager {
     }
 
     fun speakReminder(context: Context, medicineName: String, instructions: String = "", quantity: Int = 1) {
+        val dm = DataManager(context)
+        if (!dm.isVoiceRemindersEnabled()) return
+
         val speechText = if (instructions.isNotBlank()) {
             "Time to take $quantity dose of $medicineName. $instructions."
         } else {

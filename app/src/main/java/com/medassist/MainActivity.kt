@@ -47,6 +47,7 @@ import androidx.compose.material.icons.outlined.LocalHospital
 import androidx.compose.material.icons.outlined.Medication
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.SmartToy
 import androidx.compose.material3.AlertDialog
@@ -293,64 +294,73 @@ fun MedAssistApp(dataManager: DataManager) {
             }
         },
     ) { inner ->
-        Column(
-            Modifier
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(inner)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp),
         ) {
-            Spacer(Modifier.height(12.dp))
-            TopBar(
-                userProfile = userProfile,
-                onBell = {
-                    reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
-                },
-                onAmbulanceClick = {
-                    val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
-                    val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: Exception) {
-                        // In case dialer not found
-                    }
-                },
-                onAvatarClick = { tab = "Profile" },
-            )
-            Spacer(Modifier.height(20.dp))
-
-            if (tab == "Today") {
-                DateSection(
-                    selectedCalendar = selectedCalendar,
-                    onSelectDate = { selectedCalendar = it },
-                    onOpenCalendar = { showCalendar = true },
-                )
-                Spacer(Modifier.height(18.dp))
-                ProgressCard(completed, scheduledMedicines.size)
-                Spacer(Modifier.height(22.dp))
-                
-                ScheduleSection(
-                    selectedCalendar = selectedCalendar,
-                    medicines = scheduledMedicines,
-                    onToggle = { toggle(it, selectedCalendar) }
-                )
-            } else if (tab == "Medicine") {
-                MedicineListScreen(
-                    medicines = medicines,
-                    onEdit = { editing = it }
-                )
-            } else if (tab == "AI Chat") {
+            if (tab == "AI Chat") {
                 MedicineChatScreen(activeMedicines = medicines)
-            } else if (tab == "Profile") {
-                ProfileScreen(
-                    profile = userProfile,
-                    onSaveProfile = { updateProfile(it) },
-                    onBack = { tab = "Today" },
-                )
+            } else if (tab == "Settings") {
+                SettingsScreen(dataManager = dataManager)
             } else {
-                EmptyView(tab) { tab = "Today" }
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 20.dp),
+                ) {
+                    Spacer(Modifier.height(12.dp))
+                    TopBar(
+                        userProfile = userProfile,
+                        onBell = {
+                            reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
+                        },
+                        onAmbulanceClick = {
+                            val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
+                            val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
+                            try {
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                // In case dialer not found
+                            }
+                        },
+                        onAvatarClick = { tab = "Profile" },
+                    )
+                    Spacer(Modifier.height(20.dp))
+
+                    if (tab == "Today") {
+                        DateSection(
+                            selectedCalendar = selectedCalendar,
+                            onSelectDate = { selectedCalendar = it },
+                            onOpenCalendar = { showCalendar = true },
+                        )
+                        Spacer(Modifier.height(18.dp))
+                        ProgressCard(completed, scheduledMedicines.size)
+                        Spacer(Modifier.height(22.dp))
+
+                        ScheduleSection(
+                            selectedCalendar = selectedCalendar,
+                            medicines = scheduledMedicines,
+                            onToggle = { toggle(it, selectedCalendar) }
+                        )
+                    } else if (tab == "Medicine") {
+                        MedicineListScreen(
+                            medicines = medicines,
+                            onEdit = { editing = it }
+                        )
+                    } else if (tab == "Profile") {
+                        ProfileScreen(
+                            profile = userProfile,
+                            onSaveProfile = { updateProfile(it) },
+                            onBack = { tab = "Today" },
+                        )
+                    } else {
+                        EmptyView(tab) { tab = "Today" }
+                    }
+                    Spacer(Modifier.height(40.dp))
+                }
             }
-            Spacer(Modifier.height(40.dp))
         }
     }
 
@@ -935,6 +945,7 @@ private fun BottomNav(current: String, onSelect: (String) -> Unit) {
         "Today" to Icons.Outlined.Home,
         "Medicine" to Icons.Outlined.Medication,
         "AI Chat" to Icons.Outlined.SmartToy,
+        "Settings" to Icons.Outlined.Settings,
         "Profile" to Icons.Outlined.Person,
     )
     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
