@@ -296,165 +296,172 @@ fun MedAssistApp(dataManager: DataManager) {
         dataManager.saveUserProfile(newProfile)
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { BottomNav(tab) { tab = it } },
-        floatingActionButton = {
-            if (tab == "Today" || tab == "Medicine") {
-                FloatingActionButton(
-                    onClick = {
-                        editing = emptyDraft(nextId)
-                        nextId += 1
-                    },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add medicine reminder")
-                }
-            }
-        },
-    ) { inner ->
+    if (editing != null) {
+        val draft = editing!!
+        val isNew = medicines.none { it.id == draft.id }
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(inner)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
-            if (tab == "Med Info" || tab == "AI Chat") {
-                MedicineChatScreen(activeMedicines = medicines)
-            } else if (tab == "History") {
-                HistoryScreen(medicines = medicines)
-            } else if (tab == "Settings") {
-                SettingsScreen(dataManager = dataManager, onLanguageChange = { appLanguage = it })
-            } else {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 20.dp),
-                ) {
-                    Spacer(Modifier.height(12.dp))
-                    TopBar(
-                        userProfile = userProfile,
-                        onBell = {
-                            reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
+            MedicineFormScreen(
+                draft = draft,
+                isNew = isNew,
+                nextId = nextId,
+                autoOpenScan = autoOpenScan,
+                onSave = {
+                    save(it)
+                    autoOpenScan = false
+                    editing = null
+                },
+                onSaveMultiple = { list ->
+                    saveMultiple(list)
+                    nextId += list.size
+                    autoOpenScan = false
+                    editing = null
+                },
+                onDelete = {
+                    delete(it)
+                    autoOpenScan = false
+                    editing = null
+                },
+                onCancel = {
+                    autoOpenScan = false
+                    editing = null
+                },
+            )
+        }
+    } else {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+            bottomBar = { BottomNav(tab) { tab = it } },
+            floatingActionButton = {
+                if (tab == "Home" || tab == "Today" || tab == "Medicines" || tab == "Medicine") {
+                    FloatingActionButton(
+                        onClick = {
+                            editing = emptyDraft(nextId)
+                            nextId += 1
                         },
-                        onAmbulanceClick = {
-                            val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
-                            val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
-                            try {
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                // In case dialer not found
-                            }
-                        },
-                        onAvatarClick = { tab = "Profile" },
-                    )
-                    Spacer(Modifier.height(20.dp))
-
-                    if (tab == "Home" || tab == "Today") {
-                        DateSection(
-                            selectedCalendar = selectedCalendar,
-                            onSelectDate = { selectedCalendar = it },
-                            onOpenCalendar = { showCalendar = true },
-                        )
-                        Spacer(Modifier.height(18.dp))
-
-                        val scheduledCount = scheduledMedicines.size
-                        val takenCount = completed
-                        val pendingCount = (scheduledCount - takenCount).coerceAtLeast(0)
-
-                        TodayDoseSummaryCard(
-                            scheduled = scheduledCount,
-                            taken = takenCount,
-                            pending = pendingCount
-                        )
-
-                        Spacer(Modifier.height(18.dp))
-
-                        ScanPrescriptionCard(
-                            onScanClick = {
-                                editing = emptyDraft(nextId)
-                                nextId += 1
-                                autoOpenScan = true
-                            }
-                        )
-
-                        Spacer(Modifier.height(22.dp))
-
-                        ScheduleSection(
-                            selectedCalendar = selectedCalendar,
-                            medicines = scheduledMedicines,
-                            onToggle = { toggle(it, selectedCalendar) }
-                        )
-                    } else if (tab == "Medicines" || tab == "Medicine") {
-                        MedicineListScreen(
-                            medicines = medicines,
-                            onEdit = { editing = it },
-                            onUpdateStock = { id, stock, refillAt ->
-                                val i = medicines.indexOfFirst { m -> m.id == id }
-                                if (i >= 0) {
-                                    medicines[i] = medicines[i].copy(stock = stock, refillAt = refillAt)
-                                    persistMedicines()
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add medicine reminder")
+                    }
+                }
+            },
+        ) { inner ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(inner)
+            ) {
+                if (tab == "Med Info" || tab == "AI Chat") {
+                    MedicineChatScreen(activeMedicines = medicines)
+                } else if (tab == "History") {
+                    HistoryScreen(medicines = medicines)
+                } else if (tab == "Settings") {
+                    SettingsScreen(dataManager = dataManager, onLanguageChange = { appLanguage = it })
+                } else {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 20.dp),
+                    ) {
+                        Spacer(Modifier.height(12.dp))
+                        TopBar(
+                            userProfile = userProfile,
+                            onBell = {
+                                reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
+                            },
+                            onAmbulanceClick = {
+                                val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
+                                val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    // In case dialer not found
                                 }
                             },
-                            onDelete = { id ->
-                                delete(id)
-                            }
+                            onAvatarClick = { tab = "Profile" },
                         )
-                    } else if (tab == "Profile") {
-                        ProfileScreen(
-                            profile = userProfile,
-                            onSaveProfile = { updateProfile(it) },
-                            onBack = { tab = "Home" },
-                        )
-                    } else {
-                        EmptyView(tab) { tab = "Home" }
+                        Spacer(Modifier.height(20.dp))
+
+                        if (tab == "Home" || tab == "Today") {
+                            DateSection(
+                                selectedCalendar = selectedCalendar,
+                                onSelectDate = { selectedCalendar = it },
+                                onOpenCalendar = { showCalendar = true },
+                            )
+                            Spacer(Modifier.height(18.dp))
+
+                            val scheduledCount = scheduledMedicines.size
+                            val takenCount = completed
+                            val pendingCount = (scheduledCount - takenCount).coerceAtLeast(0)
+
+                            TodayDoseSummaryCard(
+                                scheduled = scheduledCount,
+                                taken = takenCount,
+                                pending = pendingCount
+                            )
+
+                            Spacer(Modifier.height(18.dp))
+
+                            ScanPrescriptionCard(
+                                onScanClick = {
+                                    editing = emptyDraft(nextId)
+                                    nextId += 1
+                                    autoOpenScan = true
+                                }
+                            )
+
+                            Spacer(Modifier.height(22.dp))
+
+                            ScheduleSection(
+                                selectedCalendar = selectedCalendar,
+                                medicines = scheduledMedicines,
+                                onToggle = { toggle(it, selectedCalendar) }
+                            )
+                        } else if (tab == "Medicines" || tab == "Medicine") {
+                            MedicineListScreen(
+                                medicines = medicines,
+                                onEdit = { editing = it },
+                                onUpdateStock = { id, stock, refillAt ->
+                                    val i = medicines.indexOfFirst { m -> m.id == id }
+                                    if (i >= 0) {
+                                        medicines[i] = medicines[i].copy(stock = stock, refillAt = refillAt)
+                                        persistMedicines()
+                                    }
+                                },
+                                onDelete = { id ->
+                                    delete(id)
+                                }
+                            )
+                        } else if (tab == "Profile") {
+                            ProfileScreen(
+                                profile = userProfile,
+                                onSaveProfile = { updateProfile(it) },
+                                onBack = { tab = "Home" },
+                            )
+                        } else {
+                            EmptyView(tab) { tab = "Home" }
+                        }
+                        Spacer(Modifier.height(40.dp))
                     }
-                    Spacer(Modifier.height(40.dp))
                 }
             }
+
+            if (showCalendar) {
+                CalendarDialog(
+                    selectedCalendar = selectedCalendar,
+                    onSelectDate = {
+                        selectedCalendar = it
+                        showCalendar = false
+                    },
+                    onDismiss = { showCalendar = false },
+                )
+            }
         }
-    }
-
-    if (showCalendar) {
-        CalendarDialog(
-            selectedCalendar = selectedCalendar,
-            onSelectDate = {
-                selectedCalendar = it
-                showCalendar = false
-            },
-            onDismiss = { showCalendar = false },
-        )
-    }
-
-    editing?.let { draft ->
-        val isNew = medicines.none { it.id == draft.id }
-        MedicineFormScreen(
-            draft = draft,
-            isNew = isNew,
-            nextId = nextId,
-            autoOpenScan = autoOpenScan,
-            onSave = {
-                save(it)
-                autoOpenScan = false
-                editing = null
-            },
-            onSaveMultiple = { list ->
-                saveMultiple(list)
-                nextId += list.size
-                autoOpenScan = false
-                editing = null
-            },
-            onDelete = {
-                delete(it)
-                autoOpenScan = false
-                editing = null
-            },
-            onCancel = {
-                autoOpenScan = false
-                editing = null
-            },
-        )
     }
 
     reminder?.let { med ->
