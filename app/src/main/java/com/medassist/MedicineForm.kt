@@ -58,11 +58,13 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import kotlinx.coroutines.delay
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -142,7 +144,14 @@ fun MedicineFormScreen(
     var stockError by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var showScanOptionDialog by remember { mutableStateOf(autoOpenScan) }
+    var showScanOptionDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(autoOpenScan) {
+        if (autoOpenScan) {
+            delay(150)
+            showScanOptionDialog = true
+        }
+    }
     var showScanWarningDialog by remember { mutableStateOf(false) }
     var showCandidateSelectionDialog by remember { mutableStateOf(false) }
     var scannedCandidates by remember { mutableStateOf<List<ScannedMedicineCandidate>>(emptyList()) }
