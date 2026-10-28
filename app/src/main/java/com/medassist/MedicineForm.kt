@@ -460,18 +460,18 @@ fun MedicineFormScreen(
                     }
 
                     SectionLabel("Frequency")
-                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                        val types = FrequencyType.entries
-                        types.forEachIndexed { index, t ->
-                            SegmentedButton(
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        FrequencyType.entries.forEach { t ->
+                            FilterChip(
                                 selected = form.frequency.type == t,
                                 onClick = {
                                     form = form.copy(frequency = form.frequency.copy(type = t))
                                 },
-                                shape = SegmentedButtonDefaults.itemShape(index = index, count = types.size),
-                            ) {
-                                Text(t.short)
-                            }
+                                label = { Text(t.short) }
+                            )
                         }
                     }
 
