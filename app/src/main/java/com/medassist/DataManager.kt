@@ -23,6 +23,8 @@ data class MedicineDto(
     val refillAt: Int,
     val colorArgb: Int,
     val paleArgb: Int,
+    val strength: String = "500 mg",
+    val mealInstruction: String = "With food",
     val takenDates: List<String> = emptyList(),
     val skippedDates: List<String> = emptyList(),
 )
@@ -43,6 +45,8 @@ fun Medicine.toDto(): MedicineDto = MedicineDto(
     refillAt = refillAt,
     colorArgb = color.toArgb(),
     paleArgb = pale.toArgb(),
+    strength = strength,
+    mealInstruction = mealInstruction,
     takenDates = takenDates.toList(),
     skippedDates = skippedDates.toList(),
 )
@@ -72,6 +76,8 @@ fun MedicineDto.toDomain(): Medicine {
         refillAt = refillAt,
         color = Color(colorArgb),
         pale = Color(paleArgb),
+        strength = strength.ifBlank { "500 mg" },
+        mealInstruction = mealInstruction.ifBlank { "With food" },
         takenDates = datesSet,
         skippedDates = skippedDates.toMutableSet(),
     )

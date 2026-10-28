@@ -389,7 +389,17 @@ fun MedAssistApp(dataManager: DataManager) {
                     } else if (tab == "Medicines" || tab == "Medicine") {
                         MedicineListScreen(
                             medicines = medicines,
-                            onEdit = { editing = it }
+                            onEdit = { editing = it },
+                            onUpdateStock = { id, stock, refillAt ->
+                                val i = medicines.indexOfFirst { m -> m.id == id }
+                                if (i >= 0) {
+                                    medicines[i] = medicines[i].copy(stock = stock, refillAt = refillAt)
+                                    persistMedicines()
+                                }
+                            },
+                            onDelete = { id ->
+                                delete(id)
+                            }
                         )
                     } else if (tab == "Profile") {
                         ProfileScreen(

@@ -137,6 +137,8 @@ fun MedicineFormScreen(
     var isScanning by remember { mutableStateOf(false) }
 
     var form by remember(draft.id) { mutableStateOf(draft) }
+    var strengthStr by remember(draft.id) { mutableStateOf(draft.strength) }
+    var mealInstructionChoice by remember(draft.id) { mutableStateOf(draft.mealInstruction) }
     var quantityStr by remember(draft.id) { mutableStateOf(draft.quantity.toString()) }
     var stockStr by remember(draft.id) { mutableStateOf(if (isNew && draft.name.isEmpty()) "" else draft.stock.toString()) }
     var refillAtStr by remember(draft.id) { mutableStateOf(draft.refillAt.toString()) }
@@ -294,7 +296,16 @@ fun MedicineFormScreen(
             val q = quantityStr.toIntOrNull()?.coerceAtLeast(1) ?: 1
             val s = stockStr.toIntOrNull()?.coerceAtLeast(0) ?: 0
             val r = refillAtStr.toIntOrNull()?.coerceAtLeast(0) ?: 2
-            onSave(form.copy(name = form.name.trim(), quantity = q, stock = s, refillAt = r))
+            onSave(
+                form.copy(
+                    name = form.name.trim(),
+                    strength = strengthStr.ifBlank { "500 mg" },
+                    mealInstruction = mealInstructionChoice,
+                    quantity = q,
+                    stock = s,
+                    refillAt = r
+                )
+            )
         }
     }
 
@@ -388,18 +399,31 @@ fun MedicineFormScreen(
                         }
                     }
 
-                    OutlinedTextField(
-                        value = form.name,
-                        onValueChange = {
-                            form = form.copy(name = it)
-                            if (it.isNotBlank()) nameError = false
-                        },
-                        label = { Text("Medicine name *") },
-                        isError = nameError,
-                        supportingText = { if (nameError) Text("Name is required") },
-                        singleLine = true,
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                    )
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = form.name,
+                            onValueChange = {
+                                form = form.copy(name = it)
+                                if (it.isNotBlank()) nameError = false
+                            },
+                            label = { Text("Medicine name *") },
+                            isError = nameError,
+                            supportingText = { if (nameError) Text("Name is required") },
+                            singleLine = true,
+                            modifier = Modifier.weight(1.2f),
+                        )
+                        OutlinedTextField(
+                            value = strengthStr,
+                            onValueChange = { strengthStr = it },
+                            label = { Text("Strength") },
+                            placeholder = { Text("500 mg") },
+                            singleLine = true,
+                            modifier = Modifier.weight(0.8f),
+                        )
+                    }
 
                     SectionLabel("Form")
                     FlowRow(
@@ -418,11 +442,26 @@ fun MedicineFormScreen(
                     OutlinedTextField(
                         value = form.reason,
                         onValueChange = { form = form.copy(reason = it) },
-                        label = { Text("Instructions") },
+                        label = { Text("Dosage Instructions") },
                         placeholder = { Text("After breakfast") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
+
+                    SectionLabel("Meal Instruction")
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        val mealOptions = listOf("Before food", "After food", "With food", "None")
+                        mealOptions.forEach { option ->
+                            FilterChip(
+                                selected = mealInstructionChoice.equals(option, ignoreCase = true),
+                                onClick = { mealInstructionChoice = option },
+                                label = { Text(option) }
+                            )
+                        }
+                    }
 
                     SectionLabel("Frequency")
                     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {

@@ -62,6 +62,8 @@ data class Medicine(
     val refillAt: Int,
     val color: Color,
     val pale: Color,
+    val strength: String = "500 mg",
+    val mealInstruction: String = "With food",
     val takenDates: Set<String> = emptySet(),
     val skippedDates: Set<String> = emptySet(),
 ) {
