@@ -69,6 +69,7 @@ import androidx.core.app.NotificationCompat
 @Composable
 fun SettingsScreen(
     dataManager: DataManager? = null,
+    onLanguageChange: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val dm = remember { dataManager ?: DataManager(context) }
@@ -274,6 +275,7 @@ fun SettingsScreen(
                                 languageCode = "system"
                                 dm.setLanguageCode("system")
                                 LocaleHelper.applyLanguage(context, "system")
+                                onLanguageChange?.invoke("system")
                             },
                             label = { Text("System") },
                             modifier = Modifier.weight(1f)
@@ -284,6 +286,7 @@ fun SettingsScreen(
                                 languageCode = "en"
                                 dm.setLanguageCode("en")
                                 LocaleHelper.applyLanguage(context, "en")
+                                onLanguageChange?.invoke("en")
                             },
                             label = { Text("English") },
                             modifier = Modifier.weight(1f)
@@ -299,6 +302,7 @@ fun SettingsScreen(
                                 languageCode = "hi"
                                 dm.setLanguageCode("hi")
                                 LocaleHelper.applyLanguage(context, "hi")
+                                onLanguageChange?.invoke("hi")
                             },
                             label = { Text("हिंदी") },
                             modifier = Modifier.weight(1f)
@@ -309,6 +313,7 @@ fun SettingsScreen(
                                 languageCode = "te"
                                 dm.setLanguageCode("te")
                                 LocaleHelper.applyLanguage(context, "te")
+                                onLanguageChange?.invoke("te")
                             },
                             label = { Text("తెలుగు") },
                             modifier = Modifier.weight(1f)
@@ -319,6 +324,7 @@ fun SettingsScreen(
                                 languageCode = "pa"
                                 dm.setLanguageCode("pa")
                                 LocaleHelper.applyLanguage(context, "pa")
+                                onLanguageChange?.invoke("pa")
                             },
                             label = { Text("ਪੰਜਾਬੀ") },
                             modifier = Modifier.weight(1f)

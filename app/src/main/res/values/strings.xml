@@ -20,7 +20,7 @@
     <string name="stat_skipped">Skipped</string>
 
     <string name="scan_hero_title">Scan New Prescription</string>
-    <string name="scan_hero_desc">Use Gemini AI to scan prescription images, extract medications, and build your schedule.</string>
+    <string name="scan_hero_desc">Use AI Vision to scan prescription images, extract medications, and build your schedule.</string>
     <string name="scan_hero_button">Scan Prescription</string>
 
     <string name="section_today_schedule">Today\'s Schedule</string>
@@ -40,7 +40,7 @@
 
     <!-- Med Info Chat -->
     <string name="info_title">Medicine Information</string>
-    <string name="info_subtitle">Clinical guidance on uses, side effects, and precautions powered by Gemini AI</string>
+    <string name="info_subtitle">Clinical guidance on uses, side effects, and precautions powered by AI Vision</string>
     <string name="quick_ask_label">Ask about your active medications:</string>
     <string name="chat_hint">Ask about a medicine (e.g. side effects of Amoxicillin)...</string>
     <string name="info_disclaimer">Informational guidance only. Not a medical diagnosis or substitute for healthcare consultation.</string>

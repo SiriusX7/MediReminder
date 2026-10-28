@@ -79,6 +79,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -217,9 +218,15 @@ private val TODAY: Int get() = getTodayDayOfMonth()
 @Composable
 fun MedAssistApp(dataManager: DataManager) {
     val context = LocalContext.current
-    var userProfile by remember { mutableStateOf(dataManager.loadUserProfile()) }
-    var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
-    var tab by remember { mutableStateOf("Today") }
+    var appLanguage by remember { mutableStateOf(dataManager.getLanguageCode()) }
+    val localizedContext = remember(appLanguage) {
+        LocaleHelper.getLocalizedContext(context, appLanguage)
+    }
+
+    CompositionLocalProvider(LocalContext provides localizedContext) {
+        var userProfile by remember { mutableStateOf(dataManager.loadUserProfile()) }
+        var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
+        var tab by remember { mutableStateOf("Today") }
 
     BackHandler(enabled = tab != "Today") {
         tab = "Today"
@@ -317,7 +324,7 @@ fun MedAssistApp(dataManager: DataManager) {
             } else if (tab == "History") {
                 HistoryScreen(medicines = medicines)
             } else if (tab == "Settings") {
-                SettingsScreen(dataManager = dataManager)
+                SettingsScreen(dataManager = dataManager, onLanguageChange = { appLanguage = it })
             } else {
                 Column(
                     Modifier
@@ -450,15 +457,17 @@ fun MedAssistApp(dataManager: DataManager) {
             },
         )
     }
+    }
 }
 
+@Composable
 private fun getGreetingMessage(): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
-        in 5..11 -> "Good morning"
-        in 12..16 -> "Good afternoon"
-        in 17..21 -> "Good evening"
-        else -> "Good night"
+        in 5..11 -> stringResource(R.string.greeting_morning)
+        in 12..16 -> stringResource(R.string.greeting_afternoon)
+        in 17..21 -> stringResource(R.string.greeting_evening)
+        else -> stringResource(R.string.greeting_night)
     }
 }
 

@@ -20,7 +20,7 @@
     <string name="stat_skipped">छोड़ी गई</string>
 
     <string name="scan_hero_title">नया पर्चा स्कैन करें</string>
-    <string name="scan_hero_desc">पर्चे की फोटो स्कैन करने और समय सारिणी बनाने के लिए Gemini AI का उपयोग करें।</string>
+    <string name="scan_hero_desc">पर्चे की फोटो स्कैन करने और समय सारिणी बनाने के लिए AI Vision का उपयोग करें।</string>
     <string name="scan_hero_button">पर्चा स्कैन करें</string>
 
     <string name="section_today_schedule">आज का समय-निर्धारण</string>
@@ -40,7 +40,7 @@
 
     <!-- Med Info Chat -->
     <string name="info_title">दवा जानकारी</string>
-    <string name="info_subtitle">Gemini AI द्वारा दवा के उपयोग, दुष्प्रभाव और सावधानियों की नैदानिक जानकारी</string>
+    <string name="info_subtitle">AI Vision द्वारा दवा के उपयोग, दुष्प्रभाव और सावधानियों की नैदानिक जानकारी</string>
     <string name="quick_ask_label">अपनी सक्रिय दवाओं के बारे में पूछें:</string>
     <string name="chat_hint">दवा के बारे में पूछें (जैसे Amoxicillin के दुष्प्रभाव)...</string>
     <string name="info_disclaimer">केवल सूचनात्मक मार्गदर्शन। यह कोई चिकित्सीय निदान या डॉक्टर के परामर्श का विकल्प नहीं है।</string>
