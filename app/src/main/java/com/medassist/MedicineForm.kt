@@ -148,6 +148,17 @@ fun MedicineFormScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     var showScanOptionDialog by remember { mutableStateOf(false) }
 
+    val initialTimeParts = remember(draft.id) { draft.time24.split(":") }
+    val timePickerState = rememberTimePickerState(
+        initialHour = initialTimeParts.getOrNull(0)?.toIntOrNull() ?: 8,
+        initialMinute = initialTimeParts.getOrNull(1)?.toIntOrNull() ?: 0,
+        is24Hour = false,
+    )
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = dateToMillis(draft.startDate)
+    )
+
     LaunchedEffect(autoOpenScan) {
         if (autoOpenScan) {
             delay(150)
@@ -569,42 +580,35 @@ fun MedicineFormScreen(
         }
 
     if (showTimePicker) {
-        val parts = form.time24.split(":")
-        val timeState = rememberTimePickerState(
-            initialHour = parts.getOrNull(0)?.toIntOrNull() ?: 8,
-            initialMinute = parts.getOrNull(1)?.toIntOrNull() ?: 0,
-            is24Hour = false,
-        )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    form = form.copy(time24 = "%02d:%02d".format(timeState.hour, timeState.minute))
+                    form = form.copy(time24 = "%02d:%02d".format(timePickerState.hour, timePickerState.minute))
                     showTimePicker = false
                 }) { Text("OK") }
             },
             dismissButton = { TextButton(onClick = { showTimePicker = false }) { Text("Cancel") } },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    TimePicker(state = timeState)
+                    TimePicker(state = timePickerState)
                 }
             },
         )
     }
 
     if (showDatePicker) {
-        val dateState = rememberDatePickerState(initialSelectedDateMillis = dateToMillis(form.startDate))
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    dateState.selectedDateMillis?.let { form = form.copy(startDate = millisToIso(it)) }
+                    datePickerState.selectedDateMillis?.let { form = form.copy(startDate = millisToIso(it)) }
                     showDatePicker = false
                 }) { Text("OK") }
             },
             dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Cancel") } },
         ) {
-            DatePicker(state = dateState)
+            DatePicker(state = datePickerState)
         }
     }
 
