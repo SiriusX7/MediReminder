@@ -1,5 +1,7 @@
 package com.medassist
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -60,20 +62,24 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import android.widget.Toast
+import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -93,6 +99,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidedValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -117,8 +124,6 @@ import kotlinx.coroutines.delay
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
@@ -225,7 +230,14 @@ private fun MedAssistSplashScreen() {
     }
 }
 
-private val TODAY: Int get() = getTodayDayOfMonth()
+private fun Context.findActivityOwner(): ActivityResultRegistryOwner? {
+    var ctx = this
+    while (ctx is ContextWrapper) {
+        if (ctx is ActivityResultRegistryOwner) return ctx
+        ctx = ctx.baseContext
+    }
+    return ctx as? ActivityResultRegistryOwner
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -236,7 +248,16 @@ fun MedAssistApp(dataManager: DataManager) {
         LocaleHelper.getLocalizedContext(context, appLanguage)
     }
 
-    CompositionLocalProvider(LocalContext provides localizedContext) {
+    val activityOwner = remember(context) { context.findActivityOwner() }
+    val compositionProviders = remember(localizedContext, activityOwner) {
+        val list = mutableListOf<ProvidedValue<*>>(LocalContext provides localizedContext)
+        if (activityOwner != null) {
+            list.add(LocalActivityResultRegistryOwner provides activityOwner)
+        }
+        list.toTypedArray()
+    }
+
+    CompositionLocalProvider(*compositionProviders) {
         var userProfile by remember { mutableStateOf(dataManager.loadUserProfile()) }
         var selectedCalendar by remember { mutableStateOf(Calendar.getInstance()) }
         var tab by remember { mutableStateOf("Today") }
@@ -252,73 +273,6 @@ fun MedAssistApp(dataManager: DataManager) {
     var autoOpenScan by remember { mutableStateOf(false) }
     var reminder by remember { mutableStateOf<Medicine?>(null) }
     var showCalendar by remember { mutableStateOf(false) }
-
-    val scope = rememberCoroutineScope()
-    var isHomeScanning by remember { mutableStateOf(false) }
-    var showHomeScanDialog by remember { mutableStateOf(false) }
-    var homeTempPhotoUri by remember { mutableStateOf<Uri?>(null) }
-    var homeScannedCandidates by remember { mutableStateOf<List<ScannedMedicineCandidate>>(emptyList()) }
-    var showHomeCandidateDialog by remember { mutableStateOf(false) }
-
-    fun processHomeOcrUri(uri: Uri) {
-        isHomeScanning = true
-        scope.launch {
-            val parsedInfo = OcrTextRecognizer.recognizeTextFromUri(context, uri)
-            isHomeScanning = false
-            if (parsedInfo != null && parsedInfo.isValidPrescription) {
-                if (parsedInfo.candidates.isNotEmpty()) {
-                    homeScannedCandidates = parsedInfo.candidates
-                    showHomeCandidateDialog = true
-                }
-            } else {
-                Toast.makeText(context, "Could not extract medicines from prescription. Please try a clearer photo.", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    val homePhotoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            processHomeOcrUri(uri)
-        }
-    }
-
-    val homeTakePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success && homeTempPhotoUri != null) {
-            processHomeOcrUri(homeTempPhotoUri!!)
-        }
-    }
-
-    fun launchHomeCamera() {
-        try {
-            val tempFile = File.createTempFile("home_ocr_", ".jpg", context.cacheDir).apply {
-                createNewFile()
-                deleteOnExit()
-            }
-            val uri = FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.fileprovider",
-                tempFile
-            )
-            homeTempPhotoUri = uri
-            homeTakePictureLauncher.launch(uri)
-        } catch (e: Exception) {
-            Toast.makeText(context, "Could not open camera: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    val homeCameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            launchHomeCamera()
-        } else {
-            Toast.makeText(context, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     val scheduledMedicines = medicines.filter { isMedicineScheduledOnDate(it, selectedCalendar) }
     val completed = scheduledMedicines.count { it.isTakenOn(selectedCalendar) }
@@ -441,6 +395,61 @@ fun MedAssistApp(dataManager: DataManager) {
                     HistoryScreen(medicines = medicines)
                 } else if (tab == "Settings") {
                     SettingsScreen(dataManager = dataManager, onLanguageChange = { appLanguage = it })
+                } else if (tab == "Medicines" || tab == "Medicine") {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 20.dp)
+                    ) {
+                        Spacer(Modifier.height(12.dp))
+                        TopBar(
+                            userProfile = userProfile,
+                            onBell = {
+                                reminder = scheduledMedicines.firstOrNull { !it.isTakenOn(selectedCalendar) } ?: scheduledMedicines.firstOrNull()
+                            },
+                            onAmbulanceClick = {
+                                val number = userProfile.emergencyContact.trim().ifEmpty { "112" }
+                                val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$number") }
+                                try {
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    // In case dialer not found
+                                }
+                            },
+                            onAvatarClick = { tab = "Profile" },
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        MedicineListScreen(
+                            medicines = medicines,
+                            onEdit = { editing = it },
+                            onUpdateStock = { id, stock, refillAt ->
+                                val i = medicines.indexOfFirst { m -> m.id == id }
+                                if (i >= 0) {
+                                    medicines[i] = medicines[i].copy(stock = stock, refillAt = refillAt)
+                                    persistMedicines()
+                                }
+                            },
+                            onDelete = { id ->
+                                delete(id)
+                            },
+                            onScanClick = {
+                                editing = emptyDraft(nextId)
+                                nextId += 1
+                                autoOpenScan = true
+                            },
+                            onAddClick = {
+                                editing = emptyDraft(nextId)
+                                nextId += 1
+                                autoOpenScan = false
+                            }
+                        )
+                    }
+                } else if (tab == "Profile") {
+                    ProfileScreen(
+                        profile = userProfile,
+                        onSaveProfile = { updateProfile(it) },
+                        onBack = { tab = "Home" },
+                    )
                 } else {
                     Column(
                         Modifier
@@ -489,7 +498,9 @@ fun MedAssistApp(dataManager: DataManager) {
 
                             ScanPrescriptionCard(
                                 onScanClick = {
-                                    showHomeScanDialog = true
+                                    editing = emptyDraft(nextId)
+                                    nextId += 1
+                                    autoOpenScan = true
                                 }
                             )
 
@@ -499,27 +510,6 @@ fun MedAssistApp(dataManager: DataManager) {
                                 selectedCalendar = selectedCalendar,
                                 medicines = scheduledMedicines,
                                 onToggle = { toggle(it, selectedCalendar) }
-                            )
-                        } else if (tab == "Medicines" || tab == "Medicine") {
-                            MedicineListScreen(
-                                medicines = medicines,
-                                onEdit = { editing = it },
-                                onUpdateStock = { id, stock, refillAt ->
-                                    val i = medicines.indexOfFirst { m -> m.id == id }
-                                    if (i >= 0) {
-                                        medicines[i] = medicines[i].copy(stock = stock, refillAt = refillAt)
-                                        persistMedicines()
-                                    }
-                                },
-                                onDelete = { id ->
-                                    delete(id)
-                                }
-                            )
-                        } else if (tab == "Profile") {
-                            ProfileScreen(
-                                profile = userProfile,
-                                onSaveProfile = { updateProfile(it) },
-                                onBack = { tab = "Home" },
                             )
                         } else {
                             EmptyView(tab) { tab = "Home" }
@@ -537,58 +527,6 @@ fun MedAssistApp(dataManager: DataManager) {
                         showCalendar = false
                     },
                     onDismiss = { showCalendar = false },
-                )
-            }
-
-            if (showHomeScanDialog) {
-                ScanOptionDialog(
-                    onDismiss = { showHomeScanDialog = false },
-                    onTakePhoto = {
-                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                            launchHomeCamera()
-                        } else {
-                            homeCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                        }
-                    },
-                    onChooseGallery = {
-                        homePhotoPickerLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-                )
-            }
-
-            if (showHomeCandidateDialog) {
-                CandidateSelectionDialog(
-                    scannedCandidates = homeScannedCandidates,
-                    onSaveMultiple = { candidates ->
-                        val newMeds = candidates.mapIndexed { index, candidate ->
-                            emptyDraft(nextId + index).copy(
-                                name = candidate.name,
-                                form = candidate.form,
-                                reason = candidate.instructions,
-                                quantity = candidate.quantity,
-                                stock = 30,
-                                refillAt = 5
-                            )
-                        }
-                        saveMultiple(newMeds)
-                        nextId += newMeds.size
-                        showHomeCandidateDialog = false
-                        Toast.makeText(context, "Added ${newMeds.size} medicine reminders to schedule!", Toast.LENGTH_LONG).show()
-                    },
-                    onEditIndividual = { candidate ->
-                        val draft = emptyDraft(nextId).copy(
-                            name = candidate.name,
-                            form = candidate.form,
-                            reason = candidate.instructions,
-                            quantity = candidate.quantity
-                        )
-                        nextId += 1
-                        editing = draft
-                        showHomeCandidateDialog = false
-                    },
-                    onDismiss = { showHomeCandidateDialog = false }
                 )
             }
         }
@@ -1282,274 +1220,6 @@ private fun ScanPrescriptionCard(onScanClick: () -> Unit) {
             }
         }
     }
-}
-
-@Composable
-private fun ScanOptionDialog(
-    onDismiss: () -> Unit,
-    onTakePhoto: () -> Unit,
-    onChooseGallery: () -> Unit
-) {
-    val cs = MaterialTheme.colorScheme
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                "Scan Prescription / Label",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    "Choose how you want to scan your prescription photo using Gemini AI:",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = cs.onSurfaceVariant
-                )
-
-                OutlinedCard(
-                    onClick = {
-                        onDismiss()
-                        onTakePhoto()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(cs.primaryContainer),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Outlined.PhotoCamera,
-                                contentDescription = null,
-                                tint = cs.onPrimaryContainer
-                            )
-                        }
-                        Column {
-                            Text(
-                                "Take Photo with Camera",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                "Capture doctor prescription with phone camera",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = cs.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-
-                OutlinedCard(
-                    onClick = {
-                        onDismiss()
-                        onChooseGallery()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(cs.secondaryContainer),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Outlined.PhotoLibrary,
-                                contentDescription = null,
-                                tint = cs.onSecondaryContainer
-                            )
-                        }
-                        Column {
-                            Text(
-                                "Choose from Gallery",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                "Select an existing prescription image from photos",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = cs.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {},
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}
-
-@Composable
-private fun CandidateSelectionDialog(
-    scannedCandidates: List<ScannedMedicineCandidate>,
-    onSaveMultiple: (List<ScannedMedicineCandidate>) -> Unit,
-    onEditIndividual: (ScannedMedicineCandidate) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val cs = MaterialTheme.colorScheme
-    val uriHandler = LocalUriHandler.current
-    var selectedIndices by remember(scannedCandidates) { mutableStateOf(scannedCandidates.indices.toSet()) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Column {
-                Text(
-                    "Select Medicines (${selectedIndices.size}/${scannedCandidates.size})",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    "Check medicines to add simultaneously, or tap ✏️ to edit:",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = cs.onSurfaceVariant
-                )
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(
-                        onClick = {
-                            selectedIndices = if (selectedIndices.size == scannedCandidates.size) emptySet() else scannedCandidates.indices.toSet()
-                        }
-                    ) {
-                        Text(if (selectedIndices.size == scannedCandidates.size) "Deselect All" else "Select All")
-                    }
-                }
-
-                scannedCandidates.forEachIndexed { index, candidate ->
-                    val isChecked = index in selectedIndices
-                    OutlinedCard(
-                        onClick = {
-                            selectedIndices = if (isChecked) selectedIndices - index else selectedIndices + index
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        border = if (isChecked) BorderStroke(2.dp, cs.primary) else CardDefaults.outlinedCardBorder()
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Checkbox(
-                                checked = isChecked,
-                                onCheckedChange = { checked ->
-                                    selectedIndices = if (checked) selectedIndices + index else selectedIndices - index
-                                }
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .size(38.dp)
-                                    .background(
-                                        if (candidate.isDatabaseVerified) cs.primaryContainer else cs.surfaceVariant,
-                                        shape = MaterialTheme.shapes.medium
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    candidate.form.label.take(1),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (candidate.isDatabaseVerified) cs.onPrimaryContainer else cs.onSurfaceVariant
-                                )
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    Text(
-                                        candidate.name,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = cs.onSurface,
-                                        modifier = Modifier.weight(1f, fill = false)
-                                    )
-                                    if (candidate.isDatabaseVerified) {
-                                        Text(
-                                            "✓ Verified (${candidate.apiSource})",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = cs.primary,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                                Text(
-                                    if (candidate.genericSalt.isNotEmpty()) "${candidate.genericSalt} • ${candidate.instructions}" else "${candidate.form.label} • ${candidate.instructions}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = cs.onSurfaceVariant
-                                )
-                            }
-                            IconButton(
-                                onClick = {
-                                    onDismiss()
-                                    onEditIndividual(candidate)
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Outlined.Edit,
-                                    contentDescription = "Edit medicine details",
-                                    tint = cs.primary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val chosen = scannedCandidates.filterIndexed { index, _ -> index in selectedIndices }
-                    onSaveMultiple(chosen)
-                },
-                enabled = selectedIndices.isNotEmpty()
-            ) {
-                Text("Add Selected (${selectedIndices.size})")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
 }
 
 @Composable

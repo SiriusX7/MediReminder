@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.AccessTime
@@ -27,8 +29,11 @@ import androidx.compose.material.icons.outlined.Medication
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +66,8 @@ fun MedicineListScreen(
     onEdit: (Medicine) -> Unit,
     onUpdateStock: ((id: Int, stock: Int, refillAt: Int) -> Unit)? = null,
     onDelete: ((id: Int) -> Unit)? = null,
+    onScanClick: (() -> Unit)? = null,
+    onAddClick: (() -> Unit)? = null,
 ) {
     val cs = MaterialTheme.colorScheme
     var searchQuery by remember { mutableStateOf("") }
@@ -90,6 +97,50 @@ fun MedicineListScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = cs.onSurfaceVariant
             )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Quick Actions Bar
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (onScanClick != null) {
+                    Button(
+                        onClick = onScanClick,
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = cs.primaryContainer,
+                            contentColor = cs.onPrimaryContainer
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AddAPhoto,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text("Scan Prescription", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
+                    }
+                }
+
+                if (onAddClick != null) {
+                    FilledTonalButton(
+                        onClick = onAddClick,
+                        modifier = Modifier.weight(1f),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text("Add Medicine", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
 
             // Search Bar
@@ -133,14 +184,34 @@ fun MedicineListScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = "Tap + below to scan or add a new medicine reminder.",
+                        text = "Scan a prescription or add a new medicine reminder below.",
                         style = MaterialTheme.typography.bodySmall,
                         color = cs.onSurfaceVariant,
                     )
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        if (onScanClick != null) {
+                            Button(onClick = onScanClick) {
+                                Icon(Icons.Default.AddAPhoto, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(6.dp))
+                                Text("Scan Prescription")
+                            }
+                        }
+                        if (onAddClick != null) {
+                            OutlinedButton(onClick = onAddClick) {
+                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(6.dp))
+                                Text("Add Manually")
+                            }
+                        }
+                    }
                 }
             }
         } else {
             LazyColumn(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {

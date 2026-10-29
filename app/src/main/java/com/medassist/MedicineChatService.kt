@@ -94,34 +94,49 @@ class MedicineChatService {
             })
         }
 
-        val urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=$apiKey"
-        val url = URL(urlString)
+        val payloadBytes = payload.toString().toByteArray(Charsets.UTF_8)
+        val candidateModels = listOf(
+            "gemini-3.8-flash",
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-flash-latest"
+        )
 
-        val connection = (url.openConnection() as HttpURLConnection).apply {
-            requestMethod = "POST"
-            connectTimeout = 8000
-            readTimeout = 8000
-            setRequestProperty("Content-Type", "application/json")
-            setRequestProperty("X-goog-api-key", apiKey)
-            setRequestProperty("x-api-key", apiKey)
-            doOutput = true
-        }
+        for (modelName in candidateModels) {
+            try {
+                val urlString = "https://generativelanguage.googleapis.com/v1beta/models/$modelName:generateContent?key=$apiKey"
+                val url = URL(urlString)
 
-        connection.outputStream.use { os ->
-            os.write(payload.toString().toByteArray(Charsets.UTF_8))
-        }
+                val connection = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    connectTimeout = 8000
+                    readTimeout = 8000
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("X-goog-api-key", apiKey)
+                    setRequestProperty("x-api-key", apiKey)
+                    doOutput = true
+                }
 
-        if (connection.responseCode == 200) {
-            val responseString = connection.inputStream.bufferedReader().use { it.readText() }
-            val jsonRoot = JSONObject(responseString)
-            val candidates = jsonRoot.optJSONArray("candidates")
-            val firstCandidate = candidates?.optJSONObject(0)
-            val content = firstCandidate?.optJSONObject("content")
-            val parts = content?.optJSONArray("parts")
-            val reply = parts?.optJSONObject(0)?.optString("text")
+                connection.outputStream.use { os ->
+                    os.write(payloadBytes)
+                }
 
-            if (!reply.isNullOrBlank()) {
-                return reply.trim()
+                if (connection.responseCode == 200) {
+                    val responseString = connection.inputStream.bufferedReader().use { it.readText() }
+                    val jsonRoot = JSONObject(responseString)
+                    val candidates = jsonRoot.optJSONArray("candidates")
+                    val firstCandidate = candidates?.optJSONObject(0)
+                    val content = firstCandidate?.optJSONObject("content")
+                    val parts = content?.optJSONArray("parts")
+                    val reply = parts?.optJSONObject(0)?.optString("text")
+
+                    if (!reply.isNullOrBlank()) {
+                        return reply.trim()
+                    }
+                }
+            } catch (_: Exception) {
+                // Try next candidate model
             }
         }
 

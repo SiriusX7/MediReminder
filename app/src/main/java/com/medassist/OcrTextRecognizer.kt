@@ -1,7 +1,12 @@
 package com.medassist
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
+import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
@@ -10,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.ByteArrayInputStream
 import kotlin.coroutines.resume
 
 data class ScannedMedicineCandidate(
@@ -35,40 +41,110 @@ data class ParsedMedicineInfo(
 object OcrTextRecognizer {
 
     suspend fun recognizeTextFromUri(context: Context, uri: Uri): ParsedMedicineInfo? {
-        // Primary: Query Gemini 1.5 Flash Vision AI for near-100% accurate vision scanning
-        val geminiCandidates = GeminiVisionApiClient.analyzePrescriptionImage(context, uri)
-        if (geminiCandidates != null && geminiCandidates.isNotEmpty()) {
-            val first = geminiCandidates.first()
-            return ParsedMedicineInfo(
-                name = first.name,
-                instructions = first.instructions,
-                quantity = first.quantity,
-                form = first.form,
-                rawText = "Gemini AI Scanned Prescription",
-                isValidPrescription = true,
-                candidates = geminiCandidates
-            )
+        // 1. Primary: Query Gemini Vision AI for near-100% accurate vision scanning
+        try {
+            val geminiCandidates = GeminiVisionApiClient.analyzePrescriptionImage(context, uri)
+            if (geminiCandidates != null && geminiCandidates.isNotEmpty()) {
+                val first = geminiCandidates.first()
+                return ParsedMedicineInfo(
+                    name = first.name,
+                    instructions = first.instructions,
+                    quantity = first.quantity,
+                    form = first.form,
+                    rawText = "Gemini AI Scanned Prescription",
+                    isValidPrescription = true,
+                    candidates = geminiCandidates
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("OcrTextRecognizer", "Gemini vision recognition error: ${e.localizedMessage}")
         }
 
-        // Secondary / Offline Fallback: Local ML Kit OCR + Medicine Database
+        // 2. Secondary / Offline Fallback: Local ML Kit OCR + Medicine Database
         return suspendCancellableCoroutine { continuation ->
             try {
-                val image = InputImage.fromFilePath(context, uri)
+                val bitmap = getOrientedBitmap(context, uri)
+                val image = if (bitmap != null) {
+                    InputImage.fromBitmap(bitmap, 0)
+                } else {
+                    InputImage.fromFilePath(context, uri)
+                }
+
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
                 recognizer.process(image)
                     .addOnSuccessListener { visionText ->
                         CoroutineScope(Dispatchers.Default).launch {
-                            val parsed = parsePrescriptionText(visionText)
-                            continuation.resume(parsed)
+                            try {
+                                val parsed = parsePrescriptionText(visionText)
+                                if (continuation.isActive) {
+                                    continuation.resume(parsed)
+                                }
+                            } catch (e: Exception) {
+                                Log.e("OcrTextRecognizer", "Error parsing OCR text: ${e.localizedMessage}")
+                                if (continuation.isActive) {
+                                    continuation.resume(null)
+                                }
+                            }
                         }
                     }
-                    .addOnFailureListener {
-                        continuation.resume(null)
+                    .addOnFailureListener { e ->
+                        Log.e("OcrTextRecognizer", "ML Kit OCR process failed: ${e.localizedMessage}")
+                        if (continuation.isActive) {
+                            continuation.resume(null)
+                        }
                     }
-            } catch (_: Exception) {
-                continuation.resume(null)
+            } catch (e: Exception) {
+                Log.e("OcrTextRecognizer", "Local ML Kit initialization error: ${e.localizedMessage}")
+                if (continuation.isActive) {
+                    continuation.resume(null)
+                }
             }
+        }
+    }
+
+    private fun getOrientedBitmap(context: Context, uri: Uri): Bitmap? {
+        return try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val bytes = inputStream.use { it.readBytes() }
+            if (bytes.isEmpty()) return null
+
+            val orientation = try {
+                ByteArrayInputStream(bytes).use { bais ->
+                    val exif = ExifInterface(bais)
+                    exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                }
+            } catch (_: Exception) {
+                ExifInterface.ORIENTATION_NORMAL
+            }
+
+            val originalBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
+
+            val rotationDegrees = when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> 90
+                ExifInterface.ORIENTATION_ROTATE_180 -> 180
+                ExifInterface.ORIENTATION_ROTATE_270 -> 270
+                else -> 0
+            }
+
+            val maxDimension = 1280
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+            val scale = (maxDimension.toFloat() / maxOf(width, height)).coerceAtMost(1.0f)
+
+            val matrix = Matrix().apply {
+                if (scale < 1.0f) {
+                    postScale(scale, scale)
+                }
+                if (rotationDegrees != 0) {
+                    postRotate(rotationDegrees.toFloat())
+                }
+            }
+
+            Bitmap.createBitmap(originalBitmap, 0, 0, width, height, matrix, true)
+        } catch (e: Exception) {
+            Log.e("OcrTextRecognizer", "Error loading bitmap: ${e.localizedMessage}")
+            null
         }
     }
 
