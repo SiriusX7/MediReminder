@@ -162,7 +162,8 @@ class MainActivity : ComponentActivity() {
         AlarmScheduler.scheduleAll(applicationContext)
 
         setContent {
-            MedAssistTheme {
+            var appThemeMode by remember { mutableStateOf(dataManager.getThemeMode()) }
+            MedAssistTheme(themeMode = appThemeMode) {
                 var showSplash by remember { mutableStateOf(true) }
                 LaunchedEffect(Unit) {
                     delay(1_400)
@@ -171,7 +172,10 @@ class MainActivity : ComponentActivity() {
                 if (showSplash) {
                     MedAssistSplashScreen()
                 } else {
-                    MedAssistApp(dataManager)
+                    MedAssistApp(
+                        dataManager = dataManager,
+                        onThemeModeChange = { appThemeMode = it }
+                    )
                 }
             }
         }
@@ -241,7 +245,10 @@ private fun Context.findActivityOwner(): ActivityResultRegistryOwner? {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MedAssistApp(dataManager: DataManager) {
+fun MedAssistApp(
+    dataManager: DataManager,
+    onThemeModeChange: ((String) -> Unit)? = null,
+) {
     val context = LocalContext.current
     var appLanguage by remember { mutableStateOf(dataManager.getLanguageCode()) }
     val localizedContext = remember(appLanguage) {
@@ -394,7 +401,11 @@ fun MedAssistApp(dataManager: DataManager) {
                 } else if (tab == "History") {
                     HistoryScreen(medicines = medicines)
                 } else if (tab == "Settings") {
-                    SettingsScreen(dataManager = dataManager, onLanguageChange = { appLanguage = it })
+                    SettingsScreen(
+                        dataManager = dataManager,
+                        onLanguageChange = { appLanguage = it },
+                        onThemeModeChange = onThemeModeChange
+                    )
                 } else if (tab == "Medicines" || tab == "Medicine") {
                     Column(
                         Modifier

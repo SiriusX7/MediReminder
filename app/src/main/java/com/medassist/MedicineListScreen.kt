@@ -1,6 +1,13 @@
 package com.medassist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.Edit
@@ -50,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +93,6 @@ fun MedicineListScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Header
         Column(modifier = Modifier.padding(bottom = 12.dp)) {
             Text(
                 text = stringResource(R.string.medicines_title),
@@ -99,7 +107,6 @@ fun MedicineListScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Quick Actions Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -143,7 +150,6 @@ fun MedicineListScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Search Bar
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -212,7 +218,7 @@ fun MedicineListScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 24.dp)
             ) {
                 items(filteredList, key = { it.id }) { med ->
@@ -273,13 +279,19 @@ private fun PrescriptionCard(
     onDeleteClick: () -> Unit,
 ) {
     val cs = MaterialTheme.colorScheme
+    var isExpanded by remember { mutableStateOf(false) }
+
+    val arrowRotationDegrees by animateFloatAsState(
+        targetValue = if (isExpanded) 180f else 0f,
+        label = "expand_arrow_rotation"
+    )
 
     // Estimate Run-Out Date
     val daysLeft = if (medicine.quantity > 0) (medicine.stock / medicine.quantity) else 30
     val runOutDateStr = remember(medicine.stock, medicine.quantity) {
         val cal = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, daysLeft) }
         val sdf = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
-        "~${sdf.format(cal.time)} (-$daysLeft days remaining based on schedule)"
+        "~${sdf.format(cal.time)} (-$daysLeft days remaining)"
     }
 
     Card(
@@ -289,12 +301,15 @@ private fun PrescriptionCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(14.dp)
         ) {
-            // 1. Top Row
+            // 1. Collapsed Summary Header (Always Visible)
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable { isExpanded = !isExpanded }
+                    .padding(vertical = 2.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -305,7 +320,7 @@ private fun PrescriptionCard(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(46.dp)
+                            .size(44.dp)
                             .clip(CircleShape)
                             .background(cs.primaryContainer),
                         contentAlignment = Alignment.Center
@@ -314,192 +329,219 @@ private fun PrescriptionCard(
                             Icons.Outlined.Medication,
                             contentDescription = null,
                             tint = cs.onPrimaryContainer,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
-                    Column {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = medicine.name,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = cs.onSurface
                         )
+                        Spacer(Modifier.height(2.dp))
                         Text(
-                            text = "${medicine.strength} · ${medicine.form.label}",
+                            text = "${medicine.strength} · ${medicine.form.label} · ${medicine.stock} left",
                             style = MaterialTheme.typography.bodySmall,
                             color = cs.onSurfaceVariant
                         )
                     }
                 }
-                IconButton(onClick = onDeleteClick) {
-                    Icon(
-                        Icons.Outlined.DeleteOutline,
-                        contentDescription = "Delete",
-                        tint = cs.error
-                    )
-                }
-            }
 
-            // 2. Original Prescription Instructions Box
-            Surface(
-                color = cs.surfaceVariant.copy(alpha = 0.6f),
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = "Original Prescription Instructions:",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = cs.onSurfaceVariant
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = medicine.reason.ifBlank { "Take 1 ${medicine.form.noun} as directed by doctor" },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = cs.onSurface
-                    )
-                }
-            }
-
-            // 3. Meal Instruction Tag
-            Surface(
-                color = Color(0xFFE0F2FE),
-                shape = MaterialTheme.shapes.small
-            ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Icon(
-                        Icons.Outlined.Restaurant,
-                        contentDescription = null,
-                        tint = Color(0xFF0284C7),
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Text(
-                        text = medicine.mealInstruction,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF0284C7)
-                    )
+                    IconButton(onClick = { isExpanded = !isExpanded }) {
+                        Icon(
+                            Icons.Default.KeyboardArrowDown,
+                            contentDescription = if (isExpanded) "Collapse details" else "Expand details",
+                            tint = cs.onSurfaceVariant,
+                            modifier = Modifier.rotate(arrowRotationDegrees)
+                        )
+                    }
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(
+                            Icons.Outlined.DeleteOutline,
+                            contentDescription = "Delete",
+                            tint = cs.error
+                        )
+                    }
                 }
             }
 
-            // 4. Refill Inventory Section
-            Surface(
-                color = cs.surfaceVariant.copy(alpha = 0.4f),
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
+            // 2. Expandable Accordion Body
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
             ) {
                 Column(
-                    modifier = Modifier.padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.padding(top = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Column {
-                        Text(
-                            text = "Refill Inventory",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = cs.onSurface
-                        )
-                        Text(
-                            text = "${medicine.stock} ${medicine.form.noun}s remaining · ${medicine.quantity} / dose",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = cs.onSurfaceVariant
-                        )
-                    }
-
-                    // Action Buttons Row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    // Original Prescription Instructions Box
+                    Surface(
+                        color = cs.surfaceVariant.copy(alpha = 0.6f),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        OutlinedButton(
-                            onClick = onEditClick,
-                            modifier = Modifier.weight(1f),
-                            shape = MaterialTheme.shapes.medium
-                        ) {
-                            Icon(
-                                Icons.Outlined.Schedule,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "Original Prescription Instructions:",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = cs.onSurfaceVariant
                             )
-                            Spacer(Modifier.width(6.dp))
-                            Text("Edit Schedule", style = MaterialTheme.typography.labelMedium)
-                        }
-
-                        OutlinedButton(
-                            onClick = onUpdateStockClick,
-                            modifier = Modifier.weight(1f),
-                            shape = MaterialTheme.shapes.medium
-                        ) {
-                            Icon(
-                                Icons.Default.Edit,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                text = medicine.reason.ifBlank { "Take 1 ${medicine.form.noun} as directed by doctor" },
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = cs.onSurface
                             )
-                            Spacer(Modifier.width(6.dp))
-                            Text("Update Stock", style = MaterialTheme.typography.labelMedium)
                         }
                     }
 
-                    Text(
-                        text = "Approx. Run-Out Date: $runOutDateStr",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = cs.onSurfaceVariant
-                    )
-                }
-            }
-
-            // 5. Scheduled Alerts Row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.AccessTime,
-                        contentDescription = null,
-                        tint = cs.primary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = "Scheduled Alerts:",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = cs.onSurface
-                    )
+                    // Meal Instruction Tag
                     Surface(
                         color = Color(0xFFE0F2FE),
                         shape = MaterialTheme.shapes.small
                     ) {
-                        Text(
-                            text = formatTimeFull(medicine.time24),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF0284C7),
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.Restaurant,
+                                contentDescription = null,
+                                tint = Color(0xFF0284C7),
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Text(
+                                text = medicine.mealInstruction,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF0284C7)
+                            )
+                        }
                     }
-                }
 
-                Surface(
-                    color = cs.primaryContainer,
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(
-                        text = frequencyLabel(medicine.frequency),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = cs.onPrimaryContainer,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
+                    // Refill Inventory Section
+                    Surface(
+                        color = cs.surfaceVariant.copy(alpha = 0.4f),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Refill Inventory",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = cs.onSurface
+                                )
+                                Text(
+                                    text = "${medicine.stock} ${medicine.form.noun}s remaining · ${medicine.quantity} / dose",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = cs.onSurfaceVariant
+                                )
+                            }
+
+                            // Action Buttons Row
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                OutlinedButton(
+                                    onClick = onEditClick,
+                                    modifier = Modifier.weight(1f),
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Schedule,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(Modifier.width(6.dp))
+                                    Text("Edit Schedule", style = MaterialTheme.typography.labelMedium)
+                                }
+
+                                OutlinedButton(
+                                    onClick = onUpdateStockClick,
+                                    modifier = Modifier.weight(1f),
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(Modifier.width(6.dp))
+                                    Text("Update Stock", style = MaterialTheme.typography.labelMedium)
+                                }
+                            }
+
+                            Text(
+                                text = "Approx. Run-Out Date: $runOutDateStr",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = cs.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // Scheduled Alerts Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.AccessTime,
+                                contentDescription = null,
+                                tint = cs.primary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = "Scheduled Alerts:",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = cs.onSurface
+                            )
+                            Surface(
+                                color = Color(0xFFE0F2FE),
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Text(
+                                    text = formatTimeFull(medicine.time24),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF0284C7),
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+
+                        Surface(
+                            color = cs.primaryContainer,
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text(
+                                text = frequencyLabel(medicine.frequency),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = cs.onPrimaryContainer,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
                 }
             }
         }

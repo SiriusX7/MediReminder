@@ -70,6 +70,7 @@ import androidx.core.app.NotificationCompat
 fun SettingsScreen(
     dataManager: DataManager? = null,
     onLanguageChange: ((String) -> Unit)? = null,
+    onThemeModeChange: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val dm = remember { dataManager ?: DataManager(context) }
@@ -77,7 +78,11 @@ fun SettingsScreen(
 
     var voiceRemindersEnabled by remember { mutableStateOf(dm.isVoiceRemindersEnabled()) }
     var soundEnabled by remember { mutableStateOf(dm.isSoundEnabled()) }
-    var languageCode by remember { mutableStateOf(dm.getLanguageCode()) }
+    var themeMode by remember { mutableStateOf(dm.getThemeMode()) }
+    var languageCode by remember {
+        val saved = dm.getLanguageCode()
+        mutableStateOf(if (saved == "system" || saved == "te") "en" else saved)
+    }
 
     var showDisclaimerDialog by remember { mutableStateOf(false) }
     var showFeedbackDialog by remember { mutableStateOf(false) }
@@ -250,9 +255,62 @@ fun SettingsScreen(
             }
         }
 
-        // Category 2: Regional & Language
+        // Category 2: Regional & Display Settings
         item {
-            CategoryCard(title = stringResource(R.string.category_regional)) {
+            CategoryCard(title = "Display & Regional") {
+                // Theme Selection Section
+                Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        BadgeIcon(icon = Icons.Default.Settings, bgColor = Color(0xFFF3E8FF), iconColor = Color(0xFF9333EA))
+                        Column {
+                            Text("App Theme", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                            Text("Choose system default, light, or dark theme", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            selected = themeMode == "system",
+                            onClick = {
+                                themeMode = "system"
+                                dm.setThemeMode("system")
+                                onThemeModeChange?.invoke("system")
+                            },
+                            label = { Text("System") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilterChip(
+                            selected = themeMode == "light",
+                            onClick = {
+                                themeMode = "light"
+                                dm.setThemeMode("light")
+                                onThemeModeChange?.invoke("light")
+                            },
+                            label = { Text("Light") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilterChip(
+                            selected = themeMode == "dark",
+                            onClick = {
+                                themeMode = "dark"
+                                dm.setThemeMode("dark")
+                                onThemeModeChange?.invoke("dark")
+                            },
+                            label = { Text("Dark") },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+
+                HorizontalDivider(color = cs.outlineVariant.copy(alpha = 0.5f))
+
+                // Language Selection Section
                 Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -270,17 +328,6 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterChip(
-                            selected = languageCode == "system",
-                            onClick = {
-                                languageCode = "system"
-                                dm.setLanguageCode("system")
-                                LocaleHelper.applyLanguage(context, "system")
-                                onLanguageChange?.invoke("system")
-                            },
-                            label = { Text("System") },
-                            modifier = Modifier.weight(1f)
-                        )
-                        FilterChip(
                             selected = languageCode == "en",
                             onClick = {
                                 languageCode = "en"
@@ -291,11 +338,6 @@ fun SettingsScreen(
                             label = { Text("English") },
                             modifier = Modifier.weight(1f)
                         )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
                         FilterChip(
                             selected = languageCode == "hi",
                             onClick = {
@@ -305,17 +347,6 @@ fun SettingsScreen(
                                 onLanguageChange?.invoke("hi")
                             },
                             label = { Text("हिंदी") },
-                            modifier = Modifier.weight(1f)
-                        )
-                        FilterChip(
-                            selected = languageCode == "te",
-                            onClick = {
-                                languageCode = "te"
-                                dm.setLanguageCode("te")
-                                LocaleHelper.applyLanguage(context, "te")
-                                onLanguageChange?.invoke("te")
-                            },
-                            label = { Text("తెలుగు") },
                             modifier = Modifier.weight(1f)
                         )
                         FilterChip(

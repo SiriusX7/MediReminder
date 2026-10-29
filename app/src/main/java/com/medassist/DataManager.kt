@@ -134,4 +134,7 @@ class DataManager(context: Context) {
 
     fun getLanguageCode(): String = prefs.getString("language_code", "system") ?: "system"
     fun setLanguageCode(code: String) = prefs.edit().putString("language_code", code).apply()
+
+    fun getThemeMode(): String = prefs.getString("theme_mode", "system") ?: "system"
+    fun setThemeMode(mode: String) = prefs.edit().putString("theme_mode", mode).apply()
 }
