@@ -1,6 +1,7 @@
 package com.medassist
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -58,15 +60,18 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import kotlinx.coroutines.delay
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -123,6 +128,7 @@ fun MedicineFormScreen(
     draft: Medicine,
     isNew: Boolean,
     nextId: Int = 100,
+    autoOpenScan: Boolean = false,
     onSave: (Medicine) -> Unit,
     onSaveMultiple: ((List<Medicine>) -> Unit)? = null,
     onDelete: (Int) -> Unit,
@@ -135,6 +141,8 @@ fun MedicineFormScreen(
     var isScanning by remember { mutableStateOf(false) }
 
     var form by remember(draft.id) { mutableStateOf(draft) }
+    var strengthStr by remember(draft.id) { mutableStateOf(draft.strength) }
+    var mealInstructionChoice by remember(draft.id) { mutableStateOf(draft.mealInstruction) }
     var quantityStr by remember(draft.id) { mutableStateOf(draft.quantity.toString()) }
     var stockStr by remember(draft.id) { mutableStateOf(if (isNew && draft.name.isEmpty()) "" else draft.stock.toString()) }
     var refillAtStr by remember(draft.id) { mutableStateOf(draft.refillAt.toString()) }
@@ -143,11 +151,30 @@ fun MedicineFormScreen(
     var showTimePicker by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
     var showScanOptionDialog by remember { mutableStateOf(false) }
+
+    val initialTimeParts = remember(draft.id) { draft.time24.split(":") }
+    val timePickerState = rememberTimePickerState(
+        initialHour = initialTimeParts.getOrNull(0)?.toIntOrNull() ?: 8,
+        initialMinute = initialTimeParts.getOrNull(1)?.toIntOrNull() ?: 0,
+        is24Hour = false,
+    )
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = dateToMillis(draft.startDate)
+    )
+
+    LaunchedEffect(autoOpenScan) {
+        if (autoOpenScan) {
+            delay(150)
+            showScanOptionDialog = true
+        }
+    }
     var showScanWarningDialog by remember { mutableStateOf(false) }
     var showCandidateSelectionDialog by remember { mutableStateOf(false) }
     var scannedCandidates by remember { mutableStateOf<List<ScannedMedicineCandidate>>(emptyList()) }
     var selectedCandidateIndices by remember { mutableStateOf<Set<Int>>(emptySet()) }
-    var tempPhotoUri by remember { mutableStateOf<Uri?>(null) }
+    var tempPhotoUriStr by rememberSaveable { mutableStateOf<String?>(null) }
+    val tempPhotoUri = tempPhotoUriStr?.let { Uri.parse(it) }
 
     fun selectCandidate(candidate: ScannedMedicineCandidate) {
         form = form.copy(
@@ -191,28 +218,33 @@ fun MedicineFormScreen(
     fun processOcrUri(uri: Uri) {
         isScanning = true
         scope.launch {
-            val parsedInfo = OcrTextRecognizer.recognizeTextFromUri(context, uri)
-            isScanning = false
-            if (parsedInfo != null && parsedInfo.isValidPrescription) {
-                if (parsedInfo.candidates.size > 1) {
-                    scannedCandidates = parsedInfo.candidates
-                    selectedCandidateIndices = parsedInfo.candidates.indices.toSet()
-                    showCandidateSelectionDialog = true
-                } else if (parsedInfo.candidates.size == 1) {
-                    selectCandidate(parsedInfo.candidates.first())
-                } else if (parsedInfo.name.isNotEmpty()) {
-                    form = form.copy(
-                        name = parsedInfo.name,
-                        form = parsedInfo.form,
-                        reason = parsedInfo.instructions.ifEmpty { form.reason },
-                        quantity = parsedInfo.quantity,
-                    )
-                    quantityStr = parsedInfo.quantity.toString()
-                    nameError = false
+            try {
+                val parsedInfo = OcrTextRecognizer.recognizeTextFromUri(context, uri)
+                isScanning = false
+                if (parsedInfo != null && parsedInfo.isValidPrescription) {
+                    if (parsedInfo.candidates.size > 1) {
+                        scannedCandidates = parsedInfo.candidates
+                        selectedCandidateIndices = parsedInfo.candidates.indices.toSet()
+                        showCandidateSelectionDialog = true
+                    } else if (parsedInfo.candidates.size == 1) {
+                        selectCandidate(parsedInfo.candidates.first())
+                    } else if (parsedInfo.name.isNotEmpty()) {
+                        form = form.copy(
+                            name = parsedInfo.name,
+                            form = parsedInfo.form,
+                            reason = parsedInfo.instructions.ifEmpty { form.reason },
+                            quantity = parsedInfo.quantity,
+                        )
+                        quantityStr = parsedInfo.quantity.toString()
+                        nameError = false
+                    } else {
+                        showScanWarningDialog = true
+                    }
                 } else {
                     showScanWarningDialog = true
                 }
-            } else {
+            } catch (e: Exception) {
+                isScanning = false
                 showScanWarningDialog = true
             }
         }
@@ -229,8 +261,21 @@ fun MedicineFormScreen(
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
-        if (success && tempPhotoUri != null) {
-            processOcrUri(tempPhotoUri!!)
+        val currentUri = tempPhotoUri
+        if (success && currentUri != null) {
+            processOcrUri(currentUri)
+        }
+    }
+
+    fun launchPhotoPicker() {
+        try {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, "No gallery app found on this device", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Could not open gallery: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -245,8 +290,10 @@ fun MedicineFormScreen(
                 "${context.packageName}.fileprovider",
                 tempFile
             )
-            tempPhotoUri = uri
+            tempPhotoUriStr = uri.toString()
             takePictureLauncher.launch(uri)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, "No camera application found on this device", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(context, "Could not open camera: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
@@ -263,10 +310,16 @@ fun MedicineFormScreen(
     }
 
     fun onTakeCameraPhoto() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            launchCamera()
-        } else {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        try {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                launchCamera()
+            } else {
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, "No camera application found on this device", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Could not request camera: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -285,17 +338,22 @@ fun MedicineFormScreen(
             val q = quantityStr.toIntOrNull()?.coerceAtLeast(1) ?: 1
             val s = stockStr.toIntOrNull()?.coerceAtLeast(0) ?: 0
             val r = refillAtStr.toIntOrNull()?.coerceAtLeast(0) ?: 2
-            onSave(form.copy(name = form.name.trim(), quantity = q, stock = s, refillAt = r))
+            onSave(
+                form.copy(
+                    name = form.name.trim(),
+                    strength = strengthStr.ifBlank { "500 mg" },
+                    mealInstruction = mealInstructionChoice,
+                    quantity = q,
+                    stock = s,
+                    refillAt = r
+                )
+            )
         }
     }
 
-    Dialog(
-        onDismissRequest = onCancel,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Surface(modifier = Modifier.fillMaxSize(), color = cs.surface) {
-            Scaffold(
-                containerColor = cs.surface,
+    Surface(modifier = Modifier.fillMaxSize(), color = cs.surface) {
+        Scaffold(
+            containerColor = cs.surface,
                 topBar = {
                     TopAppBar(
                         title = { Text(if (isNew) "Add medicine" else "Edit medicine") },
@@ -379,18 +437,31 @@ fun MedicineFormScreen(
                         }
                     }
 
-                    OutlinedTextField(
-                        value = form.name,
-                        onValueChange = {
-                            form = form.copy(name = it)
-                            if (it.isNotBlank()) nameError = false
-                        },
-                        label = { Text("Medicine name *") },
-                        isError = nameError,
-                        supportingText = { if (nameError) Text("Name is required") },
-                        singleLine = true,
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                    )
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = form.name,
+                            onValueChange = {
+                                form = form.copy(name = it)
+                                if (it.isNotBlank()) nameError = false
+                            },
+                            label = { Text("Medicine name *") },
+                            isError = nameError,
+                            supportingText = { if (nameError) Text("Name is required") },
+                            singleLine = true,
+                            modifier = Modifier.weight(1.2f),
+                        )
+                        OutlinedTextField(
+                            value = strengthStr,
+                            onValueChange = { strengthStr = it },
+                            label = { Text("Strength") },
+                            placeholder = { Text("500 mg") },
+                            singleLine = true,
+                            modifier = Modifier.weight(0.8f),
+                        )
+                    }
 
                     SectionLabel("Form")
                     FlowRow(
@@ -409,25 +480,40 @@ fun MedicineFormScreen(
                     OutlinedTextField(
                         value = form.reason,
                         onValueChange = { form = form.copy(reason = it) },
-                        label = { Text("Instructions") },
+                        label = { Text("Dosage Instructions") },
                         placeholder = { Text("After breakfast") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
+                    SectionLabel("Meal Instruction")
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        val mealOptions = listOf("Before food", "After food", "With food", "None")
+                        mealOptions.forEach { option ->
+                            FilterChip(
+                                selected = mealInstructionChoice.equals(option, ignoreCase = true),
+                                onClick = { mealInstructionChoice = option },
+                                label = { Text(option) }
+                            )
+                        }
+                    }
+
                     SectionLabel("Frequency")
-                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                        val types = FrequencyType.entries
-                        types.forEachIndexed { index, t ->
-                            SegmentedButton(
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        FrequencyType.entries.forEach { t ->
+                            FilterChip(
                                 selected = form.frequency.type == t,
                                 onClick = {
                                     form = form.copy(frequency = form.frequency.copy(type = t))
                                 },
-                                shape = SegmentedButtonDefaults.itemShape(index = index, count = types.size),
-                            ) {
-                                Text(t.short)
-                            }
+                                label = { Text(t.short) }
+                            )
                         }
                     }
 
@@ -523,45 +609,37 @@ fun MedicineFormScreen(
                 }
             }
         }
-    }
 
     if (showTimePicker) {
-        val parts = form.time24.split(":")
-        val timeState = rememberTimePickerState(
-            initialHour = parts.getOrNull(0)?.toIntOrNull() ?: 8,
-            initialMinute = parts.getOrNull(1)?.toIntOrNull() ?: 0,
-            is24Hour = false,
-        )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    form = form.copy(time24 = "%02d:%02d".format(timeState.hour, timeState.minute))
+                    form = form.copy(time24 = "%02d:%02d".format(timePickerState.hour, timePickerState.minute))
                     showTimePicker = false
                 }) { Text("OK") }
             },
             dismissButton = { TextButton(onClick = { showTimePicker = false }) { Text("Cancel") } },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    TimePicker(state = timeState)
+                    TimePicker(state = timePickerState)
                 }
             },
         )
     }
 
     if (showDatePicker) {
-        val dateState = rememberDatePickerState(initialSelectedDateMillis = dateToMillis(form.startDate))
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    dateState.selectedDateMillis?.let { form = form.copy(startDate = millisToIso(it)) }
+                    datePickerState.selectedDateMillis?.let { form = form.copy(startDate = millisToIso(it)) }
                     showDatePicker = false
                 }) { Text("OK") }
             },
             dismissButton = { TextButton(onClick = { showDatePicker = false }) { Text("Cancel") } },
         ) {
-            DatePicker(state = dateState)
+            DatePicker(state = datePickerState)
         }
     }
 
@@ -624,9 +702,7 @@ fun MedicineFormScreen(
                     OutlinedCard(
                         onClick = {
                             showScanOptionDialog = false
-                            photoPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                            )
+                            launchPhotoPicker()
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -724,124 +800,126 @@ fun MedicineFormScreen(
                 }
             },
             text = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
+                Box(modifier = Modifier.fillMaxWidth().heightIn(max = 380.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        TextButton(
-                            onClick = {
-                                selectedCandidateIndices = if (selectedCandidateIndices.size == scannedCandidates.size) {
-                                    emptySet()
-                                } else {
-                                    scannedCandidates.indices.toSet()
-                                }
-                            }
-                        ) {
-                            Text(if (selectedCandidateIndices.size == scannedCandidates.size) "Deselect All" else "Select All")
-                        }
-                    }
-
-                    scannedCandidates.forEachIndexed { index, candidate ->
-                        val isChecked = index in selectedCandidateIndices
-                        OutlinedCard(
-                            onClick = {
-                                selectedCandidateIndices = if (isChecked) {
-                                    selectedCandidateIndices - index
-                                } else {
-                                    selectedCandidateIndices + index
-                                }
-                            },
+                        Row(
                             modifier = Modifier.fillMaxWidth(),
-                            border = if (isChecked) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else CardDefaults.outlinedCardBorder()
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                Checkbox(
-                                    checked = isChecked,
-                                    onCheckedChange = { checked ->
-                                        selectedCandidateIndices = if (checked) {
-                                            selectedCandidateIndices + index
-                                        } else {
-                                            selectedCandidateIndices - index
-                                        }
+                            TextButton(
+                                onClick = {
+                                    selectedCandidateIndices = if (selectedCandidateIndices.size == scannedCandidates.size) {
+                                        emptySet()
+                                    } else {
+                                        scannedCandidates.indices.toSet()
                                     }
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(38.dp)
-                                        .background(
-                                            if (candidate.isDatabaseVerified) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-                                            shape = MaterialTheme.shapes.medium
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        candidate.form.label.take(1),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (candidate.isDatabaseVerified) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
                                 }
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(if (selectedCandidateIndices.size == scannedCandidates.size) "Deselect All" else "Select All")
+                            }
+                        }
+
+                        scannedCandidates.forEachIndexed { index, candidate ->
+                            val isChecked = index in selectedCandidateIndices
+                            OutlinedCard(
+                                onClick = {
+                                    selectedCandidateIndices = if (isChecked) {
+                                        selectedCandidateIndices - index
+                                    } else {
+                                        selectedCandidateIndices + index
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                border = if (isChecked) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else CardDefaults.outlinedCardBorder()
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    Checkbox(
+                                        checked = isChecked,
+                                        onCheckedChange = { checked ->
+                                            selectedCandidateIndices = if (checked) {
+                                                selectedCandidateIndices + index
+                                            } else {
+                                                selectedCandidateIndices - index
+                                            }
+                                        }
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .size(38.dp)
+                                            .background(
+                                                if (candidate.isDatabaseVerified) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                                                shape = MaterialTheme.shapes.medium
+                                            ),
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            candidate.name,
+                                            candidate.form.label.take(1),
                                             style = MaterialTheme.typography.titleMedium,
-                                            fontWeight = FontWeight.SemiBold,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            modifier = Modifier.weight(1f, fill = false)
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (candidate.isDatabaseVerified) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                        if (candidate.isDatabaseVerified) {
-                                            Text(
-                                                "✓ Verified (${candidate.apiSource})",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.primary,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        }
                                     }
-                                    Text(
-                                        if (candidate.genericSalt.isNotEmpty()) "${candidate.genericSalt} • ${candidate.instructions}" else "${candidate.form.label} • ${candidate.instructions}",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                                IconButton(
-                                    onClick = { selectCandidate(candidate) }
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.Edit,
-                                        contentDescription = "Edit medicine details",
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            Text(
+                                                candidate.name,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                modifier = Modifier.weight(1f, fill = false)
+                                            )
+                                            if (candidate.isDatabaseVerified) {
+                                                Text(
+                                                    "✓ Verified (${candidate.apiSource})",
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
+                                        Text(
+                                            if (candidate.genericSalt.isNotEmpty()) "${candidate.genericSalt} • ${candidate.instructions}" else "${candidate.form.label} • ${candidate.instructions}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    IconButton(
+                                        onClick = { selectCandidate(candidate) }
+                                    ) {
+                                        Icon(
+                                            Icons.Outlined.Edit,
+                                            contentDescription = "Edit medicine details",
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Spacer(Modifier.height(4.dp))
-                    TextButton(
-                        onClick = {
-                            val searchQuery = scannedCandidates.firstOrNull()?.name ?: "prescription medicine"
-                            uriHandler.openUri("https://www.google.com/search?q=" + Uri.encode(searchQuery))
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Search Online for Medicine Info")
+                        Spacer(Modifier.height(4.dp))
+                        TextButton(
+                            onClick = {
+                                val searchQuery = scannedCandidates.firstOrNull()?.name ?: "prescription medicine"
+                                uriHandler.openUri("https://www.google.com/search?q=" + Uri.encode(searchQuery))
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Search Online for Medicine Info")
+                        }
                     }
                 }
             },

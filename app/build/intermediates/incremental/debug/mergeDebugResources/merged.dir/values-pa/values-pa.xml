@@ -27,9 +27,15 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"ਇਸ ਨਾਲ ਸਾਂਝਾ ਕਰੋ"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"<ns1:g id="APPLICATION_NAME">%s</ns1:g> ਨਾਲ ਸਾਂਝਾ ਕਰੋ"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"ਸਮੇਟੋ"</string>
+    <string name="adherence_score_title">7-ਦਿਨਾਂ ਪਾਲਣਾ ਸਕੋਰ</string>
     <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"ਪਾਸਵਰਡ"</string>
     <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"ਪਾਸਕੀ"</string>
+    <string name="app_name">MedAssist</string>
     <string msgid="9020470552698189270" name="autofill">"ਆਟੋਫਿਲ"</string>
+    <string name="btn_skip">ਛੱਡੋ</string>
+    <string name="btn_take_dose">ਲਈ ਗਈ</string>
+    <string name="btn_test_voice">ਵੌਇਸ ਰਿਮਾਈਂਡਰ ਦਾ ਟੈਸਟ ਕਰੋ</string>
+    <string name="btn_undo">ਵਾਪਸ ਕਰੋ</string>
     <string msgid="881409763997275156" name="call_notification_answer_action">"ਜਵਾਬ ਦਿਓ"</string>
     <string msgid="8793775615905189152" name="call_notification_answer_video_action">"ਵੀਡੀਓ"</string>
     <string msgid="3229508546291798546" name="call_notification_decline_action">"ਕਾਲ ਕੱਟੋ"</string>
@@ -37,6 +43,10 @@
     <string msgid="6107532579223922871" name="call_notification_incoming_text">"ਇਨਕਮਿੰਗ ਕਾਲ"</string>
     <string msgid="8623827134497363134" name="call_notification_ongoing_text">"ਜਾਰੀ ਕਾਲ"</string>
     <string msgid="59049573811482460" name="call_notification_screening_text">"ਇਨਕਮਿੰਗ ਕਾਲ ਦੀ ਸਕ੍ਰੀਨਿੰਗ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ"</string>
+    <string name="category_about">ਬਾਰੇ ਅਤੇ ਸਹਾਇਤਾ</string>
+    <string name="category_regional">ਖੇਤਰੀ ਅਤੇ ਭਾਸ਼ਾ</string>
+    <string name="category_reminders">ਰਿਮਾਈਂਡਰ ਅਤੇ ਨੋਟੀਫਿਕੇਸ਼ਨ</string>
+    <string name="chat_hint">ਦਵਾਈ ਬਾਰੇ ਪੁੱਛੋ (ਜਿਵੇਂ Amoxicillin ਦੇ ਮਾੜੇ ਪ੍ਰਭਾਵ)...</string>
     <string msgid="406453423630273620" name="close_drawer">"ਨੈਵੀਗੇਸ਼ਨ ਮੀਨੂ ਬੰਦ ਕਰੋ"</string>
     <string msgid="7573152094250666567" name="close_sheet">"ਸ਼ੀਟ ਬੰਦ ਕਰੋ"</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">ਚਾਲੂ ਕਰੋ</string>
@@ -58,14 +68,25 @@
     <string name="common_signin_button_text">ਸਾਈਨ-ਇਨ ਕਰੋ</string>
     <string name="common_signin_button_text_long">Google ਨਾਲ ਸਾਈਨ-ਇਨ ਕਰੋ</string>
     <string msgid="3260749812566568062" name="copy_toast_msg">"ਲਿੰਕ ਕਲਿੱਪਬੋਰਡ \'ਤੇ ਕਾਪੀ ਹੋ ਗਿਆ"</string>
+    <string name="daily_adherence_title">ਰੋਜ਼ਾਨਾ ਪਾਲਣਾ (ਪਿਛਲੇ 7 ਦਿਨ)</string>
     <string msgid="8038256446254964252" name="default_error_message">"ਅਵੈਧ ਇਨਪੁੱਟ"</string>
     <string msgid="6312721426453364202" name="default_popup_window_title">"ਪੌਪ-ਅੱਪ ਵਿੰਡੋ"</string>
+    <string name="dose_summary_title">ਅੱਜ ਦੀ ਖੁਰਾਕ ਦਾ ਸਾਰ</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"ਡ੍ਰੌਪ-ਡਾਊਨ ਮੀਨੂ"</string>
     <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"ਲਿੰਕ ਕਾਪੀ ਕਰੋ"</string>
     <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਖੋਲ੍ਹੋ"</string>
     <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ"</string>
+    <string name="greeting_afternoon">ਸ਼ੁਭ ਦੁਪਹਿਰ</string>
+    <string name="greeting_evening">ਸ਼ੁਭ ਸ਼ਾਮ</string>
+    <string name="greeting_morning">ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ / ਸੁਭ ਸਵੇਰ</string>
+    <string name="greeting_night">ਸ਼ੁਭ ਰਾਤ</string>
+    <string name="history_subtitle">ਮੌਜੂਦਾ ਦਿਨ ਅਤੇ ਪਿਛਲੇ 6 ਦਿਨਾਂ ਵਿੱਚ ਦਵਾਈਆਂ ਦੀ ਵਰਤੋਂ ਦਾ ਰਿਕਾਰਡ ਦੇਖੋ।</string>
+    <string name="history_title">7-ਦਿਨਾਂ ਇਤਿਹਾਸ ਅਤੇ ਰਿਪੋਰਟ</string>
     <string msgid="6827826412747255547" name="in_progress">"ਜਾਰੀ ਹੈ"</string>
     <string msgid="7933458017204019916" name="indeterminate">"ਅੰਸ਼ਕ ਤੌਰ ਤੇ ਜਾਂਚ ਕੀਤੀ ਗਈ"</string>
+    <string name="info_disclaimer">ਸਿਰਫ ਜਾਣਕਾਰੀ ਦੇ ਮਾਰਗਦਰਸ਼ਨ ਲਈ। ਇਹ ਡਾਕਟਰੀ ਸਲਾਹ ਦਾ ਵਿਕਲਪ ਨਹੀਂ ਹੈ।</string>
+    <string name="info_subtitle">AI Vision ਦੁਆਰਾ ਦਵਾਈਆਂ ਦੇ ਉਪਯੋਗ, ਮਾੜੇ ਪ੍ਰਭਾਵਾਂ ਅਤੇ ਸਾਵਧਾਨੀਆਂ ਬਾਰੇ ਜਾਣਕਾਰੀ</string>
+    <string name="info_title">ਦਵਾਈ ਜਾਣਕਾਰੀ</string>
     <string msgid="2988463736136100848" name="m3c_bottom_sheet_collapse_description">"ਹੇਠਲੀ ਸ਼ੀਟ ਨੂੰ ਸਮੇਟੋ"</string>
     <string msgid="1555567894577437024" name="m3c_bottom_sheet_dismiss_description">"ਹੇਠਲੀ ਸ਼ੀਟ ਨੂੰ ਖਾਰਜ ਕਰੋ"</string>
     <string msgid="8403354765404029791" name="m3c_bottom_sheet_drag_handle_description">"ਘਸੀਟਣ ਵਾਲਾ ਹੈਂਡਲ"</string>
@@ -123,20 +144,57 @@
     <string msgid="6616362054113087709" name="m3c_time_picker_pm">"PM"</string>
     <string msgid="1805687647081129904" name="m3c_tooltip_long_press_label">"ਟੂਲ-ਟਿੱਪ ਦਿਖਾਓ"</string>
     <string msgid="5460405025248574620" name="m3c_tooltip_pane_description">"ਟੂਲ-ਟਿੱਪ"</string>
+    <string name="medicines_title">ਮੇਰੀਆਂ ਦਵਾਈਆਂ</string>
+    <string name="nav_history">ਇਤਿਹਾਸ</string>
+    <string name="nav_home">ਹੋਮ</string>
+    <string name="nav_info">ਦਵਾਈ ਜਾਣਕਾਰੀ</string>
+    <string name="nav_medicines">ਦਵਾਈਆਂ</string>
+    <string name="nav_settings">ਸੈਟਿੰਗਾਂ</string>
     <string msgid="542007171693138492" name="navigation_menu">"ਨੈਵੀਗੇਸ਼ਨ ਮੀਨੂ"</string>
     <string msgid="6610465462668679431" name="not_selected">"ਚੁਣੀ ਨਹੀਂ ਗਈ"</string>
+    <string name="quick_ask_label">ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਬਾਰੇ ਪੁੱਛੋ:</string>
     <string msgid="5941395253238309765" name="range_end">"ਰੇਂਜ ਸਮਾਪਤ"</string>
     <string msgid="7097486360902471446" name="range_start">"ਰੇਂਜ ਸ਼ੁਰੂ"</string>
+    <string name="refill_alert">%d \'ਤੇ ਰੀਫਿਲ ਕਰੋ</string>
+    <string name="scan_hero_button">ਨੁਸਖਾ ਸਕੈਨ ਕਰੋ</string>
+    <string name="scan_hero_desc">ਨੁਸਖੇ ਦੀ ਫੋਟੋ ਸਕੈਨ ਕਰਨ ਅਤੇ ਸਮਾਂ ਸਾਰਣੀ ਬਣਾਉਣ ਲਈ AI Vision ਦੀ ਵਰਤੋਂ ਕਰੋ।</string>
+    <string name="scan_hero_title">ਨਵਾਂ ਨੁਸਖਾ ਸਕੈਨ ਕਰੋ</string>
+    <string name="search_hint">ਦਵਾਈਆਂ ਖੋਜੋ...</string>
     <string msgid="6264217191555673260" name="search_menu_title">"ਖੋਜ"</string>
+    <string name="section_afternoon">ਦੁਪਹਿਰ ਦੀਆਂ ਦਵਾਈਆਂ (01:00 PM)</string>
+    <string name="section_morning">ਸਵੇਰ ਦੀਆਂ ਦਵਾਈਆਂ (08:00 AM)</string>
+    <string name="section_night">ਰਾਤ ਦੀਆਂ ਦਵਾਈਆਂ (08:00 PM)</string>
+    <string name="section_today_schedule">ਅੱਜ ਦਾ ਸ਼ੈਡਿਊਲ</string>
     <string msgid="6043586758067023" name="selected">"ਚੁਣੀ ਗਈ"</string>
+    <string name="setting_disclaimer">ਡਾਕਟਰੀ ਸੁਰੱਖਿਆ ਬੇਦਾਅਵਾ</string>
+    <string name="setting_disclaimer_desc">ਡਾਕਟਰੀ ਸਲਾਹ ਨੋਟਿਸ ਅਤੇ AI ਬੇਦਾਅਵਾ ਦੇਖੋ</string>
+    <string name="setting_feedback">ਫੀਡਬੈਕ ਭੇਜੋ</string>
+    <string name="setting_feedback_desc">ਸੁਝਾਅ ਦਿਓ, ਬੱਗ ਰਿਪੋਰਟ ਕਰੋ</string>
+    <string name="setting_language">ਐਪ ਦੀ ਭਾਸ਼ਾ</string>
+    <string name="setting_language_desc">ਆਪਣੀ ਪਸੰਦੀਦਾ ਐਪ ਭਾਸ਼ਾ ਚੁਣੋ</string>
+    <string name="setting_local_desc">ਸਟੇਟਸ ਬਾਰ ਵਿੱਚ ਤੁਰੰਤ ਟੈਸਟ ਚੇਤਾਵਨੀ ਭੇਜੋ</string>
+    <string name="setting_local_notifications">ਲੋਕਲ ਨੋਟੀਫਿਕੇਸ਼ਨ ਟੈਸਟ ਕਰੋ</string>
+    <string name="setting_sound">ਰਿਮਾਈਂਡਰ ਸਾਊਂਡ ਚਾਈਮ</string>
+    <string name="setting_sound_desc">ਦਵਾਈ ਦੇ ਸਮੇਂ ਵਿਸ਼ੇਸ਼ ਆਵਾਜ਼ ਚਲਾਓ</string>
+    <string name="setting_version">ਐਪ ਵਰਜਨ</string>
+    <string name="setting_voice_desc">TextToSpeech ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਖੁਰਾਕ ਰਿਮਾਈਂਡਰ ਉੱਚੀ ਸੁਣੋ</string>
+    <string name="setting_voice_reminders">ਵੌਇਸ ਰਿਮਾਈਂਡਰ</string>
+    <string name="settings_subtitle">ਰਿਮਾਈਂਡਰ ਸਮਾਂ, ਆਵਾਜ਼ਾਂ, ਥੀਮ ਅਤੇ ਭਾਸ਼ਾ ਨੂੰ ਬਦਲੋ</string>
+    <string name="settings_title">ਸੈਟਿੰਗਾਂ</string>
     <string msgid="2792228137354697160" name="snackbar_pane_title">"ਅਲਰਟ"</string>
+    <string name="stat_pending">ਬਾਕੀ</string>
+    <string name="stat_scheduled">ਨਿਰਧਾਰਤ</string>
+    <string name="stat_skipped">ਛੱਡੀ ਗਈ</string>
+    <string name="stat_taken">ਲਈ ਗਈ</string>
     <string msgid="4139871816613051306" name="state_empty">"ਖਾਲੀ"</string>
     <string msgid="5834637030682409883" name="state_off">"ਬੰਦ ਹੈ"</string>
     <string msgid="1490883874751719580" name="state_on">"ਚਾਲੂ ਹੈ"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="status_taken">ਲਈ ਗਈ</string>
     <string msgid="2561197295334830845" name="switch_role">"ਸਵਿੱਚ ਕਰੋ"</string>
     <string msgid="1672349317127674378" name="tab">"ਟੈਬ"</string>
     <string msgid="5946805113151406391" name="template_percent">"<ns1:g id="PERCENTAGE">%1$d</ns1:g> ਫ਼ੀਸਦ।"</string>
     <string msgid="3765533235322692011" name="tooltip_description">"ਟੂਲ-ਟਿੱਪ"</string>
     <string msgid="3124740595719787496" name="tooltip_label">"ਟੂਲ-ਟਿੱਪ ਦਿਖਾਓ"</string>
+    <string name="version_text">ਵਰਜਨ 1.0.0 (ਅੱਪ ਡੇਟ)</string>
 </resources>

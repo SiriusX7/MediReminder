@@ -123,6 +123,66 @@ object OnlineMedicineApiClient {
         null
     }
 
+    suspend fun fetchDrugClinicalDetails(query: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val cleanName = query.replace(Regex("(?i)\\b(can|you|explain|clinical|uses|side|effects|precautions|for|what|is|dose|tablet|pill|1|2|3|4|5|6|7|8|9|0)\\b"), "").trim()
+            if (cleanName.length < 3) return@withContext null
+
+            val encodedQuery = URLEncoder.encode(cleanName, "UTF-8")
+            val urlString = "https://api.fda.gov/drug/label.json?search=openfda.brand_name:\"$encodedQuery\"+openfda.substance_name:\"$encodedQuery\"&limit=1"
+            val url = URL(urlString)
+
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                connectTimeout = 4000
+                readTimeout = 4000
+                setRequestProperty("Accept", "application/json")
+            }
+
+            if (connection.responseCode == 200) {
+                val jsonString = connection.inputStream.bufferedReader().use { it.readText() }
+                val root = JSONObject(jsonString)
+                val results = root.optJSONArray("results")
+
+                if (results != null && results.length() > 0) {
+                    val firstItem = results.getJSONObject(0)
+                    val openfda = firstItem.optJSONObject("openfda")
+                    val brandName = openfda?.optJSONArray("brand_name")?.optString(0)?.capitalizeWords() ?: cleanName.capitalizeWords()
+                    val substanceName = openfda?.optJSONArray("substance_name")?.optString(0)?.capitalizeWords() ?: ""
+
+                    val purpose = firstItem.optJSONArray("purpose")?.optString(0)?.trim() ?: ""
+                    val indications = firstItem.optJSONArray("indications_and_usage")?.optString(0)?.trim() ?: ""
+                    val warnings = firstItem.optJSONArray("warnings")?.optString(0)?.trim() ?: ""
+
+                    val mainUsage = when {
+                        indications.isNotBlank() -> indications.take(250) + "..."
+                        purpose.isNotBlank() -> purpose.take(200)
+                        else -> "FDA-approved medication for prescribed therapeutic indications."
+                    }
+
+                    val mainWarnings = when {
+                        warnings.isNotBlank() -> warnings.take(200) + "..."
+                        else -> "Use strictly according to doctor's advice and prescription instructions."
+                    }
+
+                    val saltInfo = if (substanceName.isNotBlank()) " ($substanceName)" else ""
+
+                    return@withContext """
+                        💊 $brandName$saltInfo (OpenFDA Web Medical Database)
+                        
+                        • Clinical Indications & Uses: $mainUsage
+                        • Safety Warnings & Precautions: $mainWarnings
+                        
+                        Disclaimer: This information is retrieved from official FDA medical database records and is not a substitute for clinical advice from your doctor or pharmacist.
+                    """.trimIndent()
+                }
+            }
+        } catch (_: Exception) {
+            // Graceful fallback
+        }
+        null
+    }
+
     private fun String.capitalizeWords(): String {
         return this.lowercase().split(" ").joinToString(" ") { word ->
             word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
