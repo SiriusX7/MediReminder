@@ -65,5 +65,5 @@
     <string name="stat_taken">Taken</string>
     <string name="status_taken">Taken</string>
     <string name="version_text">Version 1.0.0 (Up to date)</string>
-    <style name="Theme.MedAssist" parent="android:Theme.Material.Light.NoActionBar"/>
+    <style name="Theme.MedAssist" parent="Theme.Material3.Light.NoActionBar"/>
 </resources>

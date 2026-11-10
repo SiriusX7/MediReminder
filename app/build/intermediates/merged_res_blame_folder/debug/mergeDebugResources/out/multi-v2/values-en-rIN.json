@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medassist.app-mergeDebugResources-62:/values-en-rIN/values-en-rIN.xml",
+            "outputFile": "com.medassist.app-mergeDebugResources-70:/values-en-rIN/values-en-rIN.xml",
             "map": [
                 {
                     "source": "C:\\Users\\aparn\\.gradle\\caches\\9.8.0\\transforms\\70c0cba70429e4cac35d4d65f9a73af9\\transformed\\ui-release\\res\\values-en-rIN\\values-en-rIN.xml",

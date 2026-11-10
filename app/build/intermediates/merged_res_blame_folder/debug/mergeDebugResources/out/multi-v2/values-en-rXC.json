@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medassist.app-mergeDebugResources-62:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.medassist.app-mergeDebugResources-70:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\aparn\\.gradle\\caches\\9.8.0\\transforms\\52c5d9437be8ce1f7a9af293419870f1\\transformed\\core-1.19.1\\res\\values-en-rXC\\values-en-rXC.xml",

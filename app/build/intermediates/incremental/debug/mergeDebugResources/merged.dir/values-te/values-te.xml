@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2" xmlns:ns2="http://schemas.android.com/tools">
+    <plurals name="mtrl_badge_content_description">
+    <item quantity="one">%d కొత్త నోటిఫికేషన్</item>
+    <item quantity="other">%d కొత్త నోటిఫికేషన్‌లు</item>
+  </plurals>
     <string msgid="5976598919945601918" name="abc_action_bar_home_description">"హోమ్‌కు నావిగేట్ చేస్తుంది"</string>
     <string msgid="8388173803310557296" name="abc_action_bar_up_description">"పైకి నావిగేట్ చేస్తుంది"</string>
     <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"మరిన్ని ఆప్షన్‌లు"</string>
@@ -32,6 +36,11 @@
     <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"పాస్-కీ"</string>
     <string name="app_name">MedAssist</string>
     <string msgid="9020470552698189270" name="autofill">"ఆటోఫిల్"</string>
+    <string name="bottomsheet_action_collapse">దిగువున ఉన్న షీట్‌ను కుదిస్తుంది</string>
+    <string name="bottomsheet_action_expand">దిగువున ఉన్న షీట్‌ను విస్తరిస్తుంది</string>
+    <string name="bottomsheet_action_expand_halfway">సగాన్ని విస్తరింపజేయండి</string>
+    <string name="bottomsheet_drag_handle_clicked">లాగే హ్యాండిల్ డబుల్-ట్యాప్ చేయబడింది</string>
+    <string name="bottomsheet_drag_handle_content_description">లాగే హ్యాండిల్</string>
     <string name="btn_skip">వదిలేయి</string>
     <string name="btn_take_dose">తీసుకున్నాను</string>
     <string name="btn_test_voice">వాయిస్ రిమైండర్‌ను పరీక్షించండి</string>
@@ -46,7 +55,10 @@
     <string name="category_about">గురించి &amp; మద్దతు</string>
     <string name="category_regional">ప్రాంతీయ &amp; భాష</string>
     <string name="category_reminders">రిమైండర్లు &amp; నోటిఫికేషన్లు</string>
+    <string name="character_counter_content_description">%2$dలో %1$d అక్షరాలు నమోదు చేయబడ్డాయి</string>
+    <string name="character_counter_overflowed_content_description">అక్షర పరిధి %2$dలో %1$dను అధిగమించింది</string>
     <string name="chat_hint">మందుల గురించి అడగండి ( ఉదా: Amoxicillin దుష్ప్రభావాలు)...</string>
+    <string name="clear_text_end_icon_content_description">రాసినదాన్ని తీసివేయండి</string>
     <string msgid="406453423630273620" name="close_drawer">"నావిగేషన్ మెనూను మూసివేయండి"</string>
     <string msgid="7573152094250666567" name="close_sheet">"షీట్‌ను మూసివేయండి"</string>
     <string msgid="2523291102206661146" name="common_google_play_services_enable_button">ప్రారంభించండి</string>
@@ -73,6 +85,9 @@
     <string msgid="6312721426453364202" name="default_popup_window_title">"పాప్-అప్ విండో"</string>
     <string name="dose_summary_title">ఈనాటి మోతాదు సారాంశం</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"డ్రాప్‌డౌన్ మెనూ"</string>
+    <string name="error_a11y_label">ఎర్రర్: చెల్లదు</string>
+    <string name="error_icon_content_description">ఎర్రర్</string>
+    <string name="exposed_dropdown_menu_content_description">డ్రాప్‌డౌన్ మెనూను చూపు</string>
     <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"లింక్‌ను కాపీ చేయి"</string>
     <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"బ్రౌజర్‌లో తెరువు"</string>
     <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"లింక్‌ను షేర్ చేయి"</string>
@@ -82,11 +97,13 @@
     <string name="greeting_night">శుభ రాత్రి</string>
     <string name="history_subtitle">ప్రస్తుత రోజు మరియు గత 6 రోజులలో మందుల వాడకాన్ని ట్రాక్ చేయండి.</string>
     <string name="history_title">7-రోజుల చరిత్ర మరియు నివేదిక</string>
+    <string name="icon_content_description">డైలాగ్ చిహ్నం</string>
     <string msgid="6827826412747255547" name="in_progress">"ప్రోగ్రెస్‌లో ఉంది"</string>
     <string msgid="7933458017204019916" name="indeterminate">"పాక్షికంగా ఎంచుకోబడింది"</string>
     <string name="info_disclaimer">సమాచార మార్గదర్శకత్వం మాత్రమే. ఇది వైద్య నిర్ధారణ లేదా డాక్టర్ సలహాకు ప్రత్యామ్నాయం కాదు.</string>
     <string name="info_subtitle">AI Vision ద్వారా మందుల ఉపయోగాలు, దుష్ప్రభావాలు మరియు జాగ్రత్తలపై వైద్య సమాచారం</string>
     <string name="info_title">మందుల సమాచారం</string>
+    <string name="item_view_role_description">ట్యాబ్</string>
     <string msgid="2988463736136100848" name="m3c_bottom_sheet_collapse_description">"దిగువున ఉన్న షీట్‌ను కుదిస్తుంది"</string>
     <string msgid="1555567894577437024" name="m3c_bottom_sheet_dismiss_description">"దిగువున ఉన్న షీట్‌ను విస్మరిస్తుంది"</string>
     <string msgid="8403354765404029791" name="m3c_bottom_sheet_drag_handle_description">"లాగే హ్యాండిల్"</string>
@@ -144,7 +161,65 @@
     <string msgid="6616362054113087709" name="m3c_time_picker_pm">"PM"</string>
     <string msgid="1805687647081129904" name="m3c_tooltip_long_press_label">"టూల్‌టిప్‌ను చూడండి"</string>
     <string msgid="5460405025248574620" name="m3c_tooltip_pane_description">"టూల్‌టిప్"</string>
+    <string name="material_clock_toggle_content_description">AM లేదా PMను ఎంచుకోండి</string>
+    <string name="material_hour_24h_suffix">%1$s గంటలు</string>
+    <string name="material_hour_selection">గంటను ఎంచుకోండి</string>
+    <string name="material_hour_suffix">%1$s అవుతుంది</string>
+    <string name="material_minute_selection">నిమిషాలను ఎంచుకోండి</string>
+    <string name="material_minute_suffix">%1$s నిమిషాలు</string>
+    <string name="material_timepicker_am">AM</string>
+    <string name="material_timepicker_clock_mode_description">సమయాన్ని నమోదు చేయడం కోసం గడియారం మోడ్‌కు మారండి.</string>
+    <string name="material_timepicker_hour">గంట</string>
+    <string name="material_timepicker_minute">నిమిషం</string>
+    <string name="material_timepicker_pm">PM</string>
+    <string name="material_timepicker_select_time">సమయాన్ని ఎంచుకోండి</string>
+    <string name="material_timepicker_text_input_mode_description">సమయాన్ని నమోదు చేయడం కోసం వచన నమోదు మోడ్‌కి మారండి.</string>
     <string name="medicines_title">నా ప్రిస్క్రిప్షన్లు</string>
+    <string name="mtrl_badge_numberless_content_description">కొత్త నోటిఫికేషన్</string>
+    <string name="mtrl_checkbox_state_description_checked">ఎంచుకోబడింది</string>
+    <string name="mtrl_checkbox_state_description_indeterminate">పాక్షికంగా ఎంచుకోబడింది</string>
+    <string name="mtrl_checkbox_state_description_unchecked">ఎంచుకోబడలేదు</string>
+    <string name="mtrl_chip_close_icon_content_description">(%1$s)ని తీసివేస్తుంది</string>
+    <string name="mtrl_exceed_max_badge_number_content_description" ns2:ignore="PluralsCandidate">%1$d కంటే ఎక్కువ కొత్త నోటిఫికేషన్‌లు</string>
+    <string name="mtrl_picker_a11y_next_month">వచ్చే నెలకు మార్చుతుంది</string>
+    <string name="mtrl_picker_a11y_prev_month">మునుపటి నెలకు మార్చుతుంది</string>
+    <string name="mtrl_picker_announce_current_range_selection">ప్రారంభ తేదీ ఎంపిక: %1$s – ముగింపు తేదీ ఎంపిక: %2$s</string>
+    <string name="mtrl_picker_announce_current_selection">ప్రస్తుత ఎంపిక: %1$s</string>
+    <string name="mtrl_picker_announce_current_selection_none">ఏదీ వద్దు</string>
+    <string name="mtrl_picker_cancel">రద్దు చేయండి</string>
+    <string name="mtrl_picker_confirm">సరే</string>
+    <string name="mtrl_picker_date_header_selected">%1$s</string>
+    <string name="mtrl_picker_date_header_title">తేదీని ఎంచుకోండి</string>
+    <string name="mtrl_picker_date_header_unselected">ఎంచుకున్న తేది</string>
+    <string name="mtrl_picker_day_of_week_column_header">%1$s</string>
+    <string name="mtrl_picker_end_date_description">ముగింపు తేదీ %1$s</string>
+    <string name="mtrl_picker_invalid_format">ఫార్మాట్ చెల్లదు.</string>
+    <string name="mtrl_picker_invalid_format_example">ఉదాహరణ: %1$s</string>
+    <string name="mtrl_picker_invalid_format_use">ఇలా ఉపయోగించండి: %1$s</string>
+    <string name="mtrl_picker_invalid_range">చెల్లని పరిధి.</string>
+    <string name="mtrl_picker_navigate_to_current_year_description">ప్రస్తుత సంవత్సరానికి %1$d నావిగేట్ చేయండి</string>
+    <string name="mtrl_picker_navigate_to_year_description">%1$dసంవత్సరానికి నావిగేట్ చేస్తుంది</string>
+    <string name="mtrl_picker_out_of_range">పరిధి వెలుపల ఉంది: %1$s</string>
+    <string name="mtrl_picker_range_header_only_end_selected">ప్రారంభ తేదీ – %1$s</string>
+    <string name="mtrl_picker_range_header_only_start_selected">%1$s – ముగింపు తేది</string>
+    <string name="mtrl_picker_range_header_selected">%1$s – %2$s</string>
+    <string name="mtrl_picker_range_header_title">పరిధిని ఎంచుకోండి</string>
+    <string name="mtrl_picker_range_header_unselected">ప్రారంభ తేది - ముగింపు తేది</string>
+    <string name="mtrl_picker_save">సేవ్ చేయండి</string>
+    <string name="mtrl_picker_start_date_description">ప్రారంభ తేదీ %1$s</string>
+    <string name="mtrl_picker_text_input_date_hint">తేదీ</string>
+    <string name="mtrl_picker_text_input_date_range_end_hint">ముగింపు తేదీ</string>
+    <string name="mtrl_picker_text_input_date_range_start_hint">ప్రారంభ తేదీ</string>
+    <string name="mtrl_picker_text_input_day_abbr">రో</string>
+    <string name="mtrl_picker_text_input_month_abbr">నె</string>
+    <string name="mtrl_picker_text_input_year_abbr">సం</string>
+    <string name="mtrl_picker_today_description">ఈరోజు %1$s</string>
+    <string name="mtrl_picker_toggle_to_calendar_input_mode">క్యాలెండర్ ఇన్‌పుట్ మోడ్‌కు మారుస్తుంది</string>
+    <string name="mtrl_picker_toggle_to_day_selection">క్యాలెండర్ వీక్షణకు మారడానికి ట్యాప్ చేయండి</string>
+    <string name="mtrl_picker_toggle_to_text_input_mode">వచన ఇన్‌పుట్ మోడ్‌కు మారుస్తుంది</string>
+    <string name="mtrl_picker_toggle_to_year_selection">సంవత్సర వీక్షణకు మారడానికి ట్యాప్ చేయండి</string>
+    <string name="mtrl_timepicker_cancel">రద్దు చేయండి</string>
+    <string name="mtrl_timepicker_confirm">సరే</string>
     <string name="nav_history">చరిత్ర</string>
     <string name="nav_home">హోమ్</string>
     <string name="nav_info">మందుల సమాచారం</string>
@@ -152,6 +227,7 @@
     <string name="nav_settings">సెట్టింగులు</string>
     <string msgid="542007171693138492" name="navigation_menu">"నావిగేషన్ మెనూ"</string>
     <string msgid="6610465462668679431" name="not_selected">"ఎంచుకోబడలేదు"</string>
+    <string name="password_toggle_content_description">పాస్‌వర్డ్‌ను చూపు</string>
     <string name="quick_ask_label">మీ క్రియాశీల మందుల గురించి అడగండి:</string>
     <string msgid="5941395253238309765" name="range_end">"పరిధి ముగిసింది"</string>
     <string msgid="7097486360902471446" name="range_start">"పరిధి ప్రారంభమయింది"</string>
@@ -161,6 +237,8 @@
     <string name="scan_hero_title">కొత్త ప్రిస్క్రిప్షన్ స్కాన్ చేయండి</string>
     <string name="search_hint">మందుల కోసం వెతకండి...</string>
     <string msgid="6264217191555673260" name="search_menu_title">"సెర్చ్"</string>
+    <string name="searchview_clear_text_content_description">టెక్స్ట్‌ను క్లియర్ చేయండి</string>
+    <string name="searchview_navigation_content_description">వెనుకకు</string>
     <string name="section_afternoon">మధ్యాహ్నం మందులు (01:00 PM)</string>
     <string name="section_morning">ఉదయం మందులు (08:00 AM)</string>
     <string name="section_night">రాత్రి మందులు (08:00 PM)</string>
@@ -181,6 +259,7 @@
     <string name="setting_voice_reminders">వాయిస్ రిమైండర్లు</string>
     <string name="settings_subtitle">రిమైండర్ సమయాలు, శబ్దాలు, థీమ్ మరియు భాషను కాన్ఫిగర్ చేయండి</string>
     <string name="settings_title">సెట్టింగులు</string>
+    <string name="side_sheet_accessibility_pane_title">సైడ్ షీట్</string>
     <string msgid="2792228137354697160" name="snackbar_pane_title">"హెచ్చరిక"</string>
     <string name="stat_pending">మిగిలి ఉంది</string>
     <string name="stat_scheduled">షెడ్యూల్ చేయబడింది</string>

@@ -20,15 +20,20 @@ MERGED from [androidx.navigation:navigation-runtime:2.8.2] C:\Users\aparn\.gradl
 MERGED from [androidx.navigation:navigation-common-ktx:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3fd2f15f990575bf401696c6b8346490\transformed\navigation-common-ktx-2.8.2\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-runtime-ktx:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c764f60d9bfb468670c9c0ae6dbb6d63\transformed\navigation-runtime-ktx-2.8.2\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-compose:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3a455b340a0bda5606f48dc04f42da1c\transformed\navigation-compose-2.8.2\AndroidManifest.xml:2:1-7:12
+MERGED from [com.google.android.material:material:1.12.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b0441d605b1415c3a1f3b79bacb0d544\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf018f39495345d1d613551854da08ce\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:2:1-8:12
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:2:1-18:12
+MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:2:1-26:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.libraries.identity.googleid:googleid:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8cdcc8cbbbefb2cfabbf8a8b69767365\transformed\googleid-1.1.1\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:17:1-75:12
 MERGED from [androidx.credentials:credentials:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3c64eb0946a633587c0852addc5c85c2\transformed\credentials-1.3.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:17:1-44:12
 MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:17:1-40:12
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:2:1-8:12
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:2:1-18:12
-MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:2:1-18:12
-MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:2:1-26:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3b09b3a86d09b71c97d25b8897c327c5\transformed\viewpager2-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [com.google.android.gms:play-services-auth-api-phone:18.0.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\459ed7535299b4f47ad502d9bb7e3547\transformed\play-services-auth-api-phone-18.0.2\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.gms:play-services-auth-base:18.0.10] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7727b9eaa0fb10bd5e33705e61d9c39e\transformed\play-services-auth-base-18.0.10\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.gms:play-services-fido:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\26a58e41483bdc9323bda1af937d738b\transformed\play-services-fido-21.0.0\AndroidManifest.xml:2:1-10:12
@@ -42,9 +47,19 @@ MERGED from [com.google.android.play:integrity:1.3.0] C:\Users\aparn\.gradle\cac
 MERGED from [com.google.firebase:firebase-auth-interop:20.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\353ed0401f874f6c9bd302f0a6a934c3\transformed\firebase-auth-interop-20.0.0\AndroidManifest.xml:2:1-10:12
 MERGED from [com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\e37b7bb8a9a5b929a675ea8e8026b6ee\transformed\firebase-common-ktx-21.0.0\AndroidManifest.xml:2:1-18:12
 MERGED from [com.google.firebase:firebase-common:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\456099cd9114c226a2bd2ed6651fa308\transformed\firebase-common-21.0.0\AndroidManifest.xml:15:1-41:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bbd3bef6d4597e72cfa29ed9b0f0c091\transformed\coordinatorlayout-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4baa86d4321c819ba8a11ad69c246a47\transformed\drawerlayout-1.1.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.5.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\52f10b99c78b734d6bc81f78ddccd5f2\transformed\transition-1.5.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\161c222cd2adfeba37f4203f6612e9bc\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\35fa154f011c56ea79aeebc52b07f7fc\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4b1f654d215ef1db904be050f12e285c\transformed\loader-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.work:work-runtime-ktx:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c4b5fc298443db9bb9560b9e9a40e5d9\transformed\work-runtime-ktx-2.10.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d0bc781c3c47786095cac98daf607fee\transformed\work-runtime-2.10.0\AndroidManifest.xml:17:1-145:12
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\89ef9fc4d7879da00e512a169a1c0769\transformed\recyclerview-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\883a8c337e4b044eed6130f12a66209c\transformed\customview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\371a76d276e622bec209ebb87b63ec4a\transformed\material3-release\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.animation:animation-core-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4c0c25a596dadb08c4f3038b2f99f0a6\transformed\animation-core-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-ripple-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2c30f0ebe02f02239981cfde4f7494d5\transformed\material-ripple-release\AndroidManifest.xml:2:1-7:12
@@ -52,8 +67,6 @@ MERGED from [androidx.navigationevent:navigationevent-android:1.0.0] C:\Users\ap
 MERGED from [androidx.navigationevent:navigationevent-compose-android:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\44e9968cb8a1eabe02d1dfe857e7f3b4\transformed\navigationevent-compose\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-icons-extended-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\e2bc1adbfbe95ad1806ccc1903cbe8a1\transformed\material-icons-extended-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-icons-core-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf1ab98dfd19d556adf2bab503c996ab\transformed\material-icons-core-release\AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.activity:activity-ktx:1.13.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\833c60dcfd26755bd815b879765a9f12\transformed\activity-ktx-1.13.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-util-android:1.9.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\cb5132bb8c03e5b37755e1c948a06892\transformed\ui-util\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-unit-android:1.9.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\23415451648e859f13ea7c88f091c053\transformed\ui-unit\AndroidManifest.xml:2:1-7:12
@@ -85,12 +98,7 @@ MERGED from [androidx.compose.ui:ui-android:1.9.2] C:\Users\aparn\.gradle\caches
 MERGED from [androidx.compose.foundation:foundation-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\deb2761394771b07651aec47d709c313\transformed\foundation-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.animation:animation-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a266fb29fc66cb84689552c457618aca\transformed\animation-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c39a9b2d312799eda9f13d4a9606ec90\transformed\foundation-layout-release\AndroidManifest.xml:2:1-7:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\972bd2e671ffa5923a63a9416c1f49e6\transformed\browser-1.4.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\f2d8748564712fd9b44bc1a5df92d0db\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\1ff5aba2b8771d6475242c5fb31c346d\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\074ab59035a5067f990e58baa376305c\transformed\autofill-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.graphics:graphics-path:1.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c3c99ff4bebac0091a09b4b4dd33c600\transformed\graphics-path-1.0.1\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.core:core:1.19.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\52c5d9437be8ce1f7a9af293419870f1\transformed\core-1.19.1\AndroidManifest.xml:17:1-30:12
@@ -111,17 +119,20 @@ MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\aparn\.g
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b588145542309eff65c10dfbccaed23f\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\cda3382adc777bd05511c13564630685\transformed\tracing-1.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.tracing:tracing-ktx:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\224eca3a7c9b7ba6b74e8221df767789\transformed\tracing-ktx-1.2.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\66d368021bfa8f53637090ff4e698427\transformed\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\218454460ae2b5c1e14f73979a1aeab9\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\106bb0bd69ac873a4cd473ccd3fd9449\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\dbfd812aa279b9a7668c248d164d4b61\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\39cf85d00690e419c19f7f3ffb8f3e51\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:15:1-38:12
 MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ff9918053bed07ad1e391abe431a0310\transformed\transport-runtime-2.2.6\AndroidManifest.xml:15:1-41:12
 MERGED from [com.google.android.datatransport:transport-api:2.2.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7d9150852a2c80739550c1e4c9a900be\transformed\transport-api-2.2.1\AndroidManifest.xml:15:1-22:12
 MERGED from [com.google.firebase:firebase-encoders-json:17.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ca142cdb23126429f6fa7f26264be054\transformed\firebase-encoders-json-17.1.0\AndroidManifest.xml:15:1-23:12
 MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3a3fa0d383f835a08d9923fa4e6346a2\transformed\firebase-components-18.0.0\AndroidManifest.xml:15:1-20:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\543a6ccbb046a8ba867597cd21037d77\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\45cdb9e623a43fdbb4ea40bc5c4a1115\transformed\documentfile-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d1208b186af34a691ca57637d2d06e6\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b4f73e34f23b50e0d864573030db98e5\transformed\exifinterface-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7694ceacef8633ad6119ad112baa8236\transformed\grpc-android-1.62.2\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\939ad51a00948607dd7f4e4724268cc5\transformed\image-1.0.0-beta1\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c805924f313e06bad078032ab12d884a\transformed\protolite-well-known-types-18.0.0\AndroidManifest.xml:2:1-11:12
@@ -213,18 +224,22 @@ ADDED from C:\Users\aparn\AndroidStudioProjects\MediReminder\app\src\main\Androi
 application
 ADDED from C:\Users\aparn\AndroidStudioProjects\MediReminder\app\src\main\AndroidManifest.xml:22:5-73:19
 INJECTED from C:\Users\aparn\AndroidStudioProjects\MediReminder\app\src\main\AndroidManifest.xml:22:5-73:19
-MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:28:5-73:19
-MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:28:5-73:19
-MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:23:5-42:19
-MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:23:5-42:19
-MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:22:5-38:19
-MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:22:5-38:19
+MERGED from [com.google.android.material:material:1.12.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b0441d605b1415c3a1f3b79bacb0d544\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.12.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b0441d605b1415c3a1f3b79bacb0d544\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf018f39495345d1d613551854da08ce\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf018f39495345d1d613551854da08ce\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
 MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:8:5-16:19
 MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:8:5-24:19
 MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:8:5-24:19
+MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:28:5-73:19
+MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:28:5-73:19
+MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:23:5-42:19
+MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:23:5-42:19
+MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:22:5-38:19
+MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:22:5-38:19
 MERGED from [com.google.android.gms:play-services-fido:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\26a58e41483bdc9323bda1af937d738b\transformed\play-services-fido-21.0.0\AndroidManifest.xml:7:5-8:19
 MERGED from [com.google.android.gms:play-services-fido:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\26a58e41483bdc9323bda1af937d738b\transformed\play-services-fido-21.0.0\AndroidManifest.xml:7:5-8:19
 MERGED from [com.google.firebase:firebase-firestore:25.1.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7ce31cb273fe82a865927bd05ece55b9\transformed\firebase-firestore-25.1.2\AndroidManifest.xml:13:5-24:19
@@ -363,6 +378,22 @@ MERGED from [androidx.navigation:navigation-runtime-ktx:2.8.2] C:\Users\aparn\.g
 MERGED from [androidx.navigation:navigation-runtime-ktx:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c764f60d9bfb468670c9c0ae6dbb6d63\transformed\navigation-runtime-ktx-2.8.2\AndroidManifest.xml:5:5-44
 MERGED from [androidx.navigation:navigation-compose:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3a455b340a0bda5606f48dc04f42da1c\transformed\navigation-compose-2.8.2\AndroidManifest.xml:5:5-44
 MERGED from [androidx.navigation:navigation-compose:2.8.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3a455b340a0bda5606f48dc04f42da1c\transformed\navigation-compose-2.8.2\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.material:material:1.12.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b0441d605b1415c3a1f3b79bacb0d544\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.12.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b0441d605b1415c3a1f3b79bacb0d544\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf018f39495345d1d613551854da08ce\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf018f39495345d1d613551854da08ce\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:6:5-44
+MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:6:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.libraries.identity.googleid:googleid:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8cdcc8cbbbefb2cfabbf8a8b69767365\transformed\googleid-1.1.1\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.libraries.identity.googleid:googleid:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8cdcc8cbbbefb2cfabbf8a8b69767365\transformed\googleid-1.1.1\AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:21:5-23:151
@@ -373,14 +404,8 @@ MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users
 MERGED from [androidx.credentials:credentials-play-services-auth:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\712201e9a449b5d539fb16397ce239e0\transformed\credentials-play-services-auth-1.3.0\AndroidManifest.xml:21:5-44
 MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:6:5-44
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition:19.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a01930b365169f716737b985f96ef450\transformed\play-services-mlkit-text-recognition-19.0.1\AndroidManifest.xml:6:5-44
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:6:5-44
-MERGED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:6:5-44
-MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:6:5-44
-MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:6:5-44
-MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:6:5-44
-MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:6:5-44
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3b09b3a86d09b71c97d25b8897c327c5\transformed\viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3b09b3a86d09b71c97d25b8897c327c5\transformed\viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [com.google.android.gms:play-services-auth-api-phone:18.0.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\459ed7535299b4f47ad502d9bb7e3547\transformed\play-services-auth-api-phone-18.0.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-auth-api-phone:18.0.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\459ed7535299b4f47ad502d9bb7e3547\transformed\play-services-auth-api-phone-18.0.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-auth-base:18.0.10] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7727b9eaa0fb10bd5e33705e61d9c39e\transformed\play-services-auth-base-18.0.10\AndroidManifest.xml:5:5-44
@@ -407,12 +432,32 @@ MERGED from [com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\aparn\.gra
 MERGED from [com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\e37b7bb8a9a5b929a675ea8e8026b6ee\transformed\firebase-common-ktx-21.0.0\AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-common:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\456099cd9114c226a2bd2ed6651fa308\transformed\firebase-common-21.0.0\AndroidManifest.xml:19:5-44
 MERGED from [com.google.firebase:firebase-common:21.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\456099cd9114c226a2bd2ed6651fa308\transformed\firebase-common-21.0.0\AndroidManifest.xml:19:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bbd3bef6d4597e72cfa29ed9b0f0c091\transformed\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bbd3bef6d4597e72cfa29ed9b0f0c091\transformed\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4baa86d4321c819ba8a11ad69c246a47\transformed\drawerlayout-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4baa86d4321c819ba8a11ad69c246a47\transformed\drawerlayout-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.5.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\52f10b99c78b734d6bc81f78ddccd5f2\transformed\transition-1.5.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.transition:transition:1.5.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\52f10b99c78b734d6bc81f78ddccd5f2\transformed\transition-1.5.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\161c222cd2adfeba37f4203f6612e9bc\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\161c222cd2adfeba37f4203f6612e9bc\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\35fa154f011c56ea79aeebc52b07f7fc\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\35fa154f011c56ea79aeebc52b07f7fc\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4b1f654d215ef1db904be050f12e285c\transformed\loader-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.loader:loader:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4b1f654d215ef1db904be050f12e285c\transformed\loader-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.work:work-runtime-ktx:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c4b5fc298443db9bb9560b9e9a40e5d9\transformed\work-runtime-ktx-2.10.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.work:work-runtime-ktx:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c4b5fc298443db9bb9560b9e9a40e5d9\transformed\work-runtime-ktx-2.10.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d0bc781c3c47786095cac98daf607fee\transformed\work-runtime-2.10.0\AndroidManifest.xml:21:5-44
 MERGED from [androidx.work:work-runtime:2.10.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d0bc781c3c47786095cac98daf607fee\transformed\work-runtime-2.10.0\AndroidManifest.xml:21:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\89ef9fc4d7879da00e512a169a1c0769\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\89ef9fc4d7879da00e512a169a1c0769\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\883a8c337e4b044eed6130f12a66209c\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\883a8c337e4b044eed6130f12a66209c\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\371a76d276e622bec209ebb87b63ec4a\transformed\material3-release\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material3:material3-android:1.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\371a76d276e622bec209ebb87b63ec4a\transformed\material3-release\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.animation:animation-core-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\4c0c25a596dadb08c4f3038b2f99f0a6\transformed\animation-core-release\AndroidManifest.xml:5:5-44
@@ -427,10 +472,6 @@ MERGED from [androidx.compose.material:material-icons-extended-android:1.7.3] C:
 MERGED from [androidx.compose.material:material-icons-extended-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\e2bc1adbfbe95ad1806ccc1903cbe8a1\transformed\material-icons-extended-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-core-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf1ab98dfd19d556adf2bab503c996ab\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-icons-core-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\bf1ab98dfd19d556adf2bab503c996ab\transformed\material-icons-core-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ced2196df04cda39e9357d05377ecb84\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\743ec24df2051506fb25eb714801a9f5\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.activity:activity-ktx:1.13.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\833c60dcfd26755bd815b879765a9f12\transformed\activity-ktx-1.13.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity-ktx:1.13.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\833c60dcfd26755bd815b879765a9f12\transformed\activity-ktx-1.13.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-util-android:1.9.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\cb5132bb8c03e5b37755e1c948a06892\transformed\ui-util\AndroidManifest.xml:5:5-44
@@ -493,18 +534,8 @@ MERGED from [androidx.compose.animation:animation-android:1.7.3] C:\Users\aparn\
 MERGED from [androidx.compose.animation:animation-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a266fb29fc66cb84689552c457618aca\transformed\animation-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c39a9b2d312799eda9f13d4a9606ec90\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c39a9b2d312799eda9f13d4a9606ec90\transformed\foundation-layout-release\AndroidManifest.xml:5:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ea9001a2cb3e561a9f478a8e47650a48\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\972bd2e671ffa5923a63a9416c1f49e6\transformed\browser-1.4.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\972bd2e671ffa5923a63a9416c1f49e6\transformed\browser-1.4.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\f2d8748564712fd9b44bc1a5df92d0db\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\f2d8748564712fd9b44bc1a5df92d0db\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\1ff5aba2b8771d6475242c5fb31c346d\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\1ff5aba2b8771d6475242c5fb31c346d\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9430cd7c3c43bc9edea9a2b26070d669\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\18f509fe773888fe19dc648632a57394\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\074ab59035a5067f990e58baa376305c\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\074ab59035a5067f990e58baa376305c\transformed\autofill-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.graphics:graphics-path:1.0.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\c3c99ff4bebac0091a09b4b4dd33c600\transformed\graphics-path-1.0.1\AndroidManifest.xml:5:5-44
@@ -545,12 +576,16 @@ MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0
 MERGED from [androidx.tracing:tracing:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\cda3382adc777bd05511c13564630685\transformed\tracing-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.tracing:tracing-ktx:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\224eca3a7c9b7ba6b74e8221df767789\transformed\tracing-ktx-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.tracing:tracing-ktx:1.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\224eca3a7c9b7ba6b74e8221df767789\transformed\tracing-ktx-1.2.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\66d368021bfa8f53637090ff4e698427\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\66d368021bfa8f53637090ff4e698427\transformed\cardview-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\218454460ae2b5c1e14f73979a1aeab9\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\218454460ae2b5c1e14f73979a1aeab9\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\106bb0bd69ac873a4cd473ccd3fd9449\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\106bb0bd69ac873a4cd473ccd3fd9449\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\dbfd812aa279b9a7668c248d164d4b61\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\dbfd812aa279b9a7668c248d164d4b61\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\39cf85d00690e419c19f7f3ffb8f3e51\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:19:5-21:41
 MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\aparn\.gradle\caches\9.8.0\transforms\39cf85d00690e419c19f7f3ffb8f3e51\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:19:5-21:41
 MERGED from [com.google.android.datatransport:transport-runtime:2.2.6] C:\Users\aparn\.gradle\caches\9.8.0\transforms\ff9918053bed07ad1e391abe431a0310\transformed\transport-runtime-2.2.6\AndroidManifest.xml:18:5-20:41
@@ -563,10 +598,12 @@ MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\aparn\.gra
 MERGED from [com.google.firebase:firebase-components:18.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\3a3fa0d383f835a08d9923fa4e6346a2\transformed\firebase-components-18.0.0\AndroidManifest.xml:18:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\543a6ccbb046a8ba867597cd21037d77\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\543a6ccbb046a8ba867597cd21037d77\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\45cdb9e623a43fdbb4ea40bc5c4a1115\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\45cdb9e623a43fdbb4ea40bc5c4a1115\transformed\documentfile-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d1208b186af34a691ca57637d2d06e6\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d1208b186af34a691ca57637d2d06e6\transformed\print-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b4f73e34f23b50e0d864573030db98e5\transformed\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.exifinterface:exifinterface:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\b4f73e34f23b50e0d864573030db98e5\transformed\exifinterface-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\8d278bc14bdea382320c18bfb75c097a\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7694ceacef8633ad6119ad112baa8236\transformed\grpc-android-1.62.2\AndroidManifest.xml:5:5-44
 MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7694ceacef8633ad6119ad112baa8236\transformed\grpc-android-1.62.2\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\aparn\.gradle\caches\9.8.0\transforms\939ad51a00948607dd7f4e4724268cc5\transformed\image-1.0.0-beta1\AndroidManifest.xml:5:5-44
@@ -581,6 +618,48 @@ MERGED from [com.google.android.play:core-common:2.0.3] C:\Users\aparn\.gradle\c
 		INJECTED from C:\Users\aparn\AndroidStudioProjects\MediReminder\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
 		INJECTED from C:\Users\aparn\AndroidStudioProjects\MediReminder\app\src\main\AndroidManifest.xml
+service#com.google.mlkit.common.internal.MlKitComponentDiscoveryService
+ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:9:9-15:19
+MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:15:9-23:19
+MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:15:9-23:19
+	android:exported
+		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:11:13-37
+	tools:targetApi
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:19:13-32
+	android:directBootAware
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:17:13-43
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:10:13-91
+meta-data#com.google.firebase.components:com.google.mlkit.vision.text.internal.TextRegistrar
+ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:13:17-114
+meta-data#com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar
+ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:12:13-14:85
+	android:value
+		ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:14:17-82
+	android:name
+		ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:13:17-124
+provider#com.google.mlkit.common.internal.MlKitInitProvider
+ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:9:9-13:38
+	android:authorities
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:11:13-69
+	android:exported
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:12:13-37
+	android:initOrder
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:13:13-35
+	android:name
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:10:13-78
+meta-data#com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar
+ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:20:13-22:85
+	android:value
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:22:17-82
+	android:name
+		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:21:17-120
 activity#com.google.firebase.auth.internal.GenericIdpActivity
 ADDED from [com.google.firebase:firebase-auth:23.2.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\502144e94c62d1b1e1176157c7479877\transformed\firebase-auth-23.2.0\AndroidManifest.xml:29:9-46:20
 	android:excludeFromRecents
@@ -701,48 +780,6 @@ ADDED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gr
 		ADDED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:36:13-107
 	android:name
 		ADDED from [com.google.android.gms:play-services-auth:21.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\d21f77794a1d8e92793557f107e3afa8\transformed\play-services-auth-21.3.0\AndroidManifest.xml:34:13-89
-service#com.google.mlkit.common.internal.MlKitComponentDiscoveryService
-ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:9:9-15:19
-MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:9:9-15:19
-MERGED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:9:9-15:19
-MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:15:9-23:19
-MERGED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:15:9-23:19
-	android:exported
-		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:11:13-37
-	tools:targetApi
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:19:13-32
-	android:directBootAware
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:17:13-43
-	android:name
-		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:10:13-91
-meta-data#com.google.firebase.components:com.google.mlkit.vision.text.internal.TextRegistrar
-ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:12:13-14:85
-	android:value
-		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:14:17-82
-	android:name
-		ADDED from [com.google.android.gms:play-services-mlkit-text-recognition-common:19.1.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\2f4af5dc10f911696179d97718eca86e\transformed\play-services-mlkit-text-recognition-common-19.1.0\AndroidManifest.xml:13:17-114
-meta-data#com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar
-ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:12:13-14:85
-	android:value
-		ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:14:17-82
-	android:name
-		ADDED from [com.google.mlkit:vision-common:17.3.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\9e7199e072311b83f61fa0ead426b8bf\transformed\vision-common-17.3.0\AndroidManifest.xml:13:17-124
-provider#com.google.mlkit.common.internal.MlKitInitProvider
-ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:9:9-13:38
-	android:authorities
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:11:13-69
-	android:exported
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:12:13-37
-	android:initOrder
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:13:13-35
-	android:name
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:10:13-78
-meta-data#com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar
-ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:20:13-22:85
-	android:value
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:22:17-82
-	android:name
-		ADDED from [com.google.mlkit:common:18.11.0] C:\Users\aparn\.gradle\caches\9.8.0\transforms\a787f24579db292f6a32ea7bf40b66b9\transformed\common-18.11.0\AndroidManifest.xml:21:17-120
 meta-data#com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar
 ADDED from [com.google.firebase:firebase-firestore:25.1.2] C:\Users\aparn\.gradle\caches\9.8.0\transforms\7ce31cb273fe82a865927bd05ece55b9\transformed\firebase-firestore-25.1.2\AndroidManifest.xml:17:13-19:85
 	android:value

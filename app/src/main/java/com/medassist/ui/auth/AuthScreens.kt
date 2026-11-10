@@ -100,6 +100,10 @@ fun LoginScreen(
                 onValueChange = { if (it.length <= 6) otpCode = it },
                 label = { Text("Verification Code") },
                 modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 singleLine = true
             )
@@ -122,6 +126,10 @@ fun LoginScreen(
                         .semantics { 
                             contentType = androidx.compose.ui.autofill.ContentType.EmailAddress 
                         },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                    ),
                     leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -142,6 +150,10 @@ fun LoginScreen(
                         .semantics { 
                             contentType = androidx.compose.ui.autofill.ContentType.Password 
                         },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                    ),
                     leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
                     trailingIcon = {
                         val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -166,11 +178,17 @@ fun LoginScreen(
             } else {
                 OutlinedTextField(
                     value = phoneNumber,
-                    onValueChange = { phoneNumber = it },
+                    onValueChange = { input -> 
+                        phoneNumber = if (input.startsWith("+") || input.isEmpty()) input else "+$input"
+                    },
                     label = { Text("Phone Number (with country code)") },
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = { Icon(Icons.Outlined.Phone, contentDescription = null) },
                     placeholder = { Text("+1234567890") },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                    ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
                         imeAction = ImeAction.Done
@@ -189,6 +207,7 @@ fun LoginScreen(
                 )
             }
 
+            val isPhoneValid = phoneNumber.startsWith("+") && phoneNumber.length >= 10
             Button(
                 onClick = { 
                     if (isPhoneLogin) {
@@ -200,7 +219,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                enabled = uiState !is AuthUiState.Loading
+                enabled = uiState !is AuthUiState.Loading && (!isPhoneLogin || isPhoneValid)
             ) {
                 if (uiState is AuthUiState.Loading) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp))
@@ -321,6 +340,10 @@ fun SignUpScreen(
             onValueChange = { name = it },
             label = { Text("Full Name") },
             modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -337,6 +360,10 @@ fun SignUpScreen(
             onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -353,6 +380,10 @@ fun SignUpScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -376,6 +407,10 @@ fun SignUpScreen(
             onValueChange = { confirmPassword = it },
             label = { Text("Confirm Password") },
             modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
             trailingIcon = {
                 val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -465,6 +500,10 @@ fun ForgotPasswordScreen(
             onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
             leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,

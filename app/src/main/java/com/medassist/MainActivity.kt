@@ -102,90 +102,95 @@ class MainActivity : ComponentActivity() {
                 if (showSplash) {
                     MedAssistSplashScreen()
                 } else {
-                    NavHost(navController = navController, startDestination = startDestination) {
-                        composable("login") {
-                            LoginScreen(
-                                viewModel = authViewModel,
-                                onNavigateToSignUp = { navController.navigate("signup") },
-                                onNavigateToForgotPassword = { navController.navigate("forgot_password") },
-                                onLoginSuccess = {
-                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
-                                    if (uid != null) {
-                                        triggerSync(uid)
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        NavHost(navController = navController, startDestination = startDestination) {
+                            composable("login") {
+                                LoginScreen(
+                                    viewModel = authViewModel,
+                                    onNavigateToSignUp = { navController.navigate("signup") },
+                                    onNavigateToForgotPassword = { navController.navigate("forgot_password") },
+                                    onLoginSuccess = {
+                                        val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                        if (uid != null) {
+                                            triggerSync(uid)
+                                        }
+                                        navController.navigate("main") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
                                     }
-                                    navController.navigate("main") {
-                                        popUpTo("login") { inclusive = true }
+                                )
+                            }
+                            composable("signup") {
+                                SignUpScreen(
+                                    viewModel = authViewModel,
+                                    onNavigateToLogin = { navController.popBackStack() },
+                                    onSignUpSuccess = {
+                                        val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                        if (uid != null) {
+                                            triggerSync(uid)
+                                        }
+                                        navController.navigate("main") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
                                     }
-                                }
-                            )
-                        }
-                        composable("signup") {
-                            SignUpScreen(
-                                viewModel = authViewModel,
-                                onNavigateToLogin = { navController.popBackStack() },
-                                onSignUpSuccess = {
-                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
-                                    if (uid != null) {
-                                        triggerSync(uid)
-                                    }
-                                    navController.navigate("main") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
-                                }
-                            )
-                        }
-                        composable("forgot_password") {
-                            ForgotPasswordScreen(
-                                viewModel = authViewModel,
-                                onBackToLogin = { navController.popBackStack() }
-                            )
-                        }
-                        composable("main") {
-                            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "local_user"
-                            val context = LocalContext.current
-                            val scope = rememberCoroutineScope()
-                            val workInfo by WorkManager.getInstance(context)
-                                .getWorkInfosByTagFlow("sync_worker")
-                                .collectAsState(initial = emptyList())
-                            
-                            val isSyncing = workInfo.any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED }
+                                )
+                            }
+                            composable("forgot_password") {
+                                ForgotPasswordScreen(
+                                    viewModel = authViewModel,
+                                    onBackToLogin = { navController.popBackStack() }
+                                )
+                            }
+                            composable("main") {
+                                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "local_user"
+                                val context = LocalContext.current
+                                val scope = rememberCoroutineScope()
+                                val workInfo by WorkManager.getInstance(context)
+                                    .getWorkInfosByTagFlow("sync_worker")
+                                    .collectAsState(initial = emptyList())
+                                
+                                val isSyncing = workInfo.any { it.state == WorkInfo.State.RUNNING || it.state == WorkInfo.State.ENQUEUED }
 
-                            MedAssistApp(
-                                userId = uid,
-                                medicationDao = medicationDao,
-                                userProfileDao = userProfileDao,
-                                isSyncing = isSyncing,
-                                onSignOut = {
-                                    scope.launch {
-                                        val unsyncedCount = withContext(Dispatchers.IO) {
-                                            medicationDao.getUnsyncedCount(uid)
-                                        }
-                                        if (unsyncedCount > 0) {
-                                            // Handled inside MedAssistApp via a state if we want a dialog
-                                            // But for now, let's assume MedAssistApp will call onSignOut 
-                                            // and we just need to provide the logic.
-                                            // Actually, let's move the unsynced check into MedAssistApp
-                                        } else {
-                                            authRepository.signOut()
-                                            withContext(Dispatchers.IO) {
-                                                app.database.clearAllTables()
+                                MedAssistApp(
+                                    userId = uid,
+                                    medicationDao = medicationDao,
+                                    userProfileDao = userProfileDao,
+                                    isSyncing = isSyncing,
+                                    onSignOut = {
+                                        scope.launch {
+                                            val unsyncedCount = withContext(Dispatchers.IO) {
+                                                medicationDao.getUnsyncedCount(uid)
                                             }
-                                            navController.navigate("login") {
-                                                popUpTo("main") { inclusive = true }
+                                            if (unsyncedCount > 0) {
+                                                // Handled inside MedAssistApp via a state if we want a dialog
+                                                // But for now, let's assume MedAssistApp will call onSignOut 
+                                                // and we just need to provide the logic.
+                                                // Actually, let's move the unsynced check into MedAssistApp
+                                            } else {
+                                                authRepository.signOut()
+                                                withContext(Dispatchers.IO) {
+                                                    app.database.clearAllTables()
+                                                }
+                                                navController.navigate("login") {
+                                                    popUpTo("main") { inclusive = true }
+                                                }
                                             }
                                         }
+                                    },
+                                    onForceSignOut = {
+                                        authRepository.signOut()
+                                        scope.launch(Dispatchers.IO) {
+                                            app.database.clearAllTables()
+                                        }
+                                        navController.navigate("login") {
+                                            popUpTo("login") { inclusive = true }
+                                        }
                                     }
-                                },
-                                onForceSignOut = {
-                                    authRepository.signOut()
-                                    scope.launch(Dispatchers.IO) {
-                                        app.database.clearAllTables()
-                                    }
-                                    navController.navigate("login") {
-                                        popUpTo("login") { inclusive = true }
-                                    }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }

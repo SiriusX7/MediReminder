@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.medassist.app-mergeDebugResources-62:/values-pt/values-pt.xml",
+            "outputFile": "com.medassist.app-mergeDebugResources-70:/values-pt/values-pt.xml",
             "map": [
                 {
                     "source": "C:\\Users\\aparn\\.gradle\\caches\\9.8.0\\transforms\\972bd2e671ffa5923a63a9416c1f49e6\\transformed\\browser-1.4.0\\res\\values-pt\\values-pt.xml",
