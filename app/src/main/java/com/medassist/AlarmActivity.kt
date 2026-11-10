@@ -179,7 +179,7 @@ class AlarmActivity : ComponentActivity() {
         if (index >= 0) {
             val med = medicines[index]
             val todayIso = getIsoDateForCalendar(Calendar.getInstance())
-            
+
             val newSkippedDates = med.skippedDates.toMutableSet()
             newSkippedDates.add(todayIso)
             

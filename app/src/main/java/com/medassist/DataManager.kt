@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.medassist.data.local.UserProfile
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.medassist.data.local.UserProfile
 
 data class MedicineDto(
     val id: Int,

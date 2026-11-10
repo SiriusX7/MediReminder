@@ -23,7 +23,7 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             // 1. Download Phase: Fetch all medications from Firestore
             val snapshot = firestore.collection("users").document(userId)
                 .collection("medications").get().await()
-            
+
             val remoteMeds = snapshot.documents.mapNotNull { doc ->
                 doc.toObject(Medication::class.java)?.copy(userId = userId, syncStatus = "SYNCED")
             }
